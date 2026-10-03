@@ -1,4 +1,5 @@
 import { Box, Pagination } from 'rangkaui';
+import styles from './ProductPagination.module.css';
 
 type ProductPaginationProps = {
   currentPage: number;
@@ -18,8 +19,8 @@ export const ProductPagination = ({
   if (totalPages <= 1) return null;
 
   return (
-    <Box className="product-pagination">
-      {isFetching ? <span className="product-pagination-status">Updating…</span> : null}
+    <Box className={styles.wrapper}>
+      {isFetching ? <span className={styles.status}>Updating…</span> : null}
       <Pagination
         currentPage={currentPage}
         totalItems={totalItems}
@@ -27,7 +28,7 @@ export const ProductPagination = ({
         pageSizeOptions={[12]}
         onPageChange={onPageChange}
         onPageSizeChange={() => undefined}
-        className="product-pagination-controls"
+        className={styles.controls}
       />
     </Box>
   );

@@ -1,0 +1,36 @@
+@reference 'tailwindcss';
+
+.section {
+  @apply flex flex-col gap-6;
+}
+
+.intro {
+  @apply flex flex-col gap-1;
+}
+
+.eyebrow {
+  @apply m-0 text-[0.8125rem] font-bold uppercase tracking-[0.12em] text-neutral-500;
+}
+
+.title {
+  @apply m-0 font-extrabold leading-none text-slate-50;
+  font-size: clamp(2rem, 2.5vw, 2.75rem);
+}
+
+.description {
+  @apply m-0 text-[0.9375rem] leading-7 text-neutral-400;
+  max-width: 48rem;
+}
+
+.errorCard,
+.paginationCard {
+  @apply rounded-2xl border border-white/10 bg-neutral-900 p-5;
+}
+
+.errorTitle {
+  @apply m-0 text-base font-bold text-slate-50;
+}
+
+.errorText {
+  @apply m-0 mt-1 text-sm text-neutral-400;
+}

@@ -1,0 +1,42 @@
+@reference 'tailwindcss';
+
+.wrapper {
+  @apply flex w-full flex-wrap items-center justify-between gap-4;
+}
+
+.status {
+  @apply text-sm font-medium text-neutral-400;
+}
+
+.controls:global([class*='_pagination_']) {
+  color: #d4d4d8;
+  background: #171717;
+  border: 1px solid rgb(255 255 255 / 8%);
+  border-radius: 0.75rem;
+}
+
+.controls :global([class*='_pageButton_']) {
+  color: #d4d4d8;
+  background: #1f1f1f;
+  border-color: rgb(255 255 255 / 8%);
+}
+
+.controls :global([class*='_pageButton_']:hover:not(:disabled):not([class*='_active_'])) {
+  color: #fff;
+  background: #1d4ed8;
+}
+
+.controls :global([class*='_active_']) {
+  color: #fff;
+  background: #2563eb;
+}
+
+.controls :global([class*='_pageSizeLabel_']) {
+  display: none;
+}
+
+.controls :global([class*='_goToInput_']) {
+  color: #d4d4d8;
+  background: #1f1f1f;
+  border-color: rgb(255 255 255 / 12%);
+}

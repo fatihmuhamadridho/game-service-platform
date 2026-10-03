@@ -1,0 +1,62 @@
+@reference 'tailwindcss';
+
+.header {
+  @apply border-b border-white/10 bg-neutral-950/85 backdrop-blur-md;
+}
+
+.inner {
+  @apply mx-auto flex w-full max-w-7xl items-center justify-between gap-4 px-4 py-4;
+}
+
+.titleGroup {
+  @apply flex flex-col gap-0;
+}
+
+.title {
+  @apply m-0 text-lg font-extrabold leading-tight text-slate-50;
+}
+
+.subtitle {
+  @apply m-0 text-xs text-neutral-500;
+}
+
+.userGroup {
+  @apply flex items-center gap-3;
+}
+
+.avatar,
+.avatarFallback {
+  @apply h-10 w-10 shrink-0 rounded-full border border-white/10 bg-neutral-800;
+}
+
+.avatar {
+  @apply object-cover;
+}
+
+.avatarFallback {
+  @apply flex items-center justify-center text-slate-50;
+}
+
+.userMeta {
+  @apply flex flex-col gap-0 text-right;
+}
+
+.userName {
+  @apply m-0 text-sm font-bold leading-tight text-slate-50;
+}
+
+.userRole {
+  @apply m-0 mt-0.5 text-[0.6875rem] text-neutral-500;
+}
+
+@media (min-width: 48rem) {
+  .inner {
+    @apply px-6;
+  }
+}
+
+@media (min-width: 64rem) {
+  .inner {
+    @apply px-8;
+  }
+}

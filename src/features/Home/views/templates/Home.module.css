@@ -1,0 +1,21 @@
+@reference 'tailwindcss';
+
+.root {
+  @apply min-h-screen bg-neutral-950 font-sans text-slate-50;
+}
+
+.main {
+  @apply mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-10;
+}
+
+@media (min-width: 48rem) {
+  .main {
+    @apply px-6;
+  }
+}
+
+@media (min-width: 64rem) {
+  .main {
+    @apply px-8;
+  }
+}

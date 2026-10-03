@@ -1,28 +1,28 @@
 import { Box } from 'rangkaui';
+import styles from './ProductCardSkeleton.module.css';
 
 export const ProductCardSkeleton = () => {
   return (
-    <article className="product-card-skeleton">
-      <Box className="product-card-skeleton-stack">
-        <div className="skeleton-media skeleton-pulse" />
+    <article aria-label="Loading product" aria-busy="true" className={styles.card}>
+      <Box className={styles.stack}>
+        <div className={styles.media} />
 
-        <Box className="product-card-meta">
-          <Box className="product-card-meta-row">
-            <Box className="skeleton-title-stack">
-              <div className="skeleton-line skeleton-line-short skeleton-pulse" />
-              <div className="skeleton-line skeleton-line-mid skeleton-pulse" />
+        <Box className={styles.meta}>
+          <Box className={styles.metaRow}>
+            <Box className={styles.titleStack}>
+              <div className={`${styles.shimmer} ${styles.titleShort}`} />
+              <div className={`${styles.shimmer} ${styles.titleMid}`} />
             </Box>
-            <div className="skeleton-badge skeleton-pulse" />
+            <div className={`${styles.shimmer} ${styles.badge}`} />
           </Box>
-
-          <div className="skeleton-line skeleton-line-full skeleton-pulse" />
-          <div className="skeleton-line skeleton-line-wide skeleton-pulse" />
-          <div className="skeleton-line skeleton-line-short skeleton-pulse" />
+          <div className={`${styles.shimmer} ${styles.lineFull}`} />
+          <div className={`${styles.shimmer} ${styles.lineWide}`} />
+          <div className={`${styles.shimmer} ${styles.lineShort}`} />
         </Box>
 
-        <Box className="product-card-footer">
-          <div className="skeleton-price skeleton-pulse" />
-          <div className="skeleton-stock skeleton-pulse" />
+        <Box className={styles.footer}>
+          <div className={`${styles.shimmer} ${styles.price}`} />
+          <div className={`${styles.shimmer} ${styles.stock}`} />
         </Box>
       </Box>
     </article>

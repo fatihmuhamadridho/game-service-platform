@@ -1,4 +1,5 @@
 import { Box } from 'rangkaui';
+import styles from './HomeHeader.module.css';
 
 type HomeHeaderProps = {
   title: string;
@@ -11,20 +12,22 @@ type HomeHeaderProps = {
 
 export const HomeHeader = ({ title, subtitle, userName, userRole, avatarSrc, avatarLabel }: HomeHeaderProps) => {
   return (
-    <header className="home-header">
-      <Box className="home-header-inner">
-        <Box className="home-header-title-group">
-          <h1 className="home-header-title">
-            {title}
-          </h1>
-          <p className="home-header-subtitle">{subtitle}</p>
+    <header className={styles.header}>
+      <Box className={styles.inner}>
+        <Box className={styles.titleGroup}>
+          <h1 className={styles.title}>{title}</h1>
+          <p className={styles.subtitle}>{subtitle}</p>
         </Box>
 
-        <Box className="home-header-user-group">
-          {avatarSrc ? <img src={avatarSrc} alt={userName} className="home-header-avatar" /> : <span className="home-header-avatar">{avatarLabel}</span>}
-          <Box className="home-header-user-stack">
-            <p className="home-header-user-name">{userName}</p>
-            <p className="home-header-user-role">{userRole}</p>
+        <Box className={styles.userGroup}>
+          {avatarSrc ? (
+            <img src={avatarSrc} alt={userName} className={styles.avatar} />
+          ) : (
+            <span className={styles.avatarFallback}>{avatarLabel}</span>
+          )}
+          <Box className={styles.userMeta}>
+            <p className={styles.userName}>{userName}</p>
+            <p className={styles.userRole}>{userRole}</p>
           </Box>
         </Box>
       </Box>

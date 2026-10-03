@@ -1,4 +1,5 @@
 import { Box } from 'rangkaui';
+import styles from './Home.module.css';
 import { HomeHeader } from '../organisms/HomeHeader.organism';
 import { ProductList } from '../organisms/ProductList.organism';
 import type { ProductCardView } from '../interfaces/product.interface';
@@ -39,7 +40,7 @@ export const HomeTemplate = ({
   onPageChange,
 }: HomeTemplateProps) => {
   return (
-    <Box className="home-template">
+    <Box className={styles.root}>
       <HomeHeader
         title={headerTitle}
         subtitle={headerSubtitle}
@@ -48,7 +49,7 @@ export const HomeTemplate = ({
         avatarSrc={avatarSrc}
         avatarLabel={avatarLabel}
       />
-      <main className="home-content">
+      <main className={styles.main}>
         <ProductList
           products={products}
           isLoading={isLoading}

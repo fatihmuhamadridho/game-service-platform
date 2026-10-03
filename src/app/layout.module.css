@@ -1,0 +1,14 @@
+@reference 'tailwindcss';
+
+.html,
+.body {
+  @apply min-h-full;
+}
+
+.html {
+  @apply antialiased;
+}
+
+.body {
+  @apply m-0 font-sans;
+}
