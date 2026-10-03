@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es2020",
+    "target": "ES2017",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
@@ -13,18 +13,22 @@
     "isolatedModules": true,
     "jsx": "react-jsx",
     "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
     "paths": {
-      "@core/*": ["./src/core/*"],
-      "@styles/*": ["./src/styles/*"],
-      "@features/*": ["./src/features/*"],
-      "@libs/*": ["./src/common/libs/*"],
-      "@interfaces/*": ["./src/common/interfaces/*"],
-      "@utils/*": ["./src/common/utils/*"],
-      "@configs/*": ["./src/common/configs/*"],
-      "@services/*": ["./src/common/services/*"],
-      "@contexts/*": ["./src/common/contexts/*"]
+      "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", ".next/dev/types/**/*.ts", "**/*.mts"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts",
+    "**/*.mts"
+  ],
   "exclude": ["node_modules"]
 }
