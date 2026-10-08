@@ -1,0 +1,192 @@
+.hero {
+  height: 128px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  border-bottom: 1px solid #233348;
+}
+.text {
+  position: relative;
+  z-index: 2;
+  max-width: 600px;
+}
+.text h1 {
+  font-size: 29px;
+  letter-spacing: -0.6px;
+  margin: 0 0 7px;
+}
+.text p {
+  font-size: 12px;
+  color: #c4d0df;
+  margin: 0;
+}
+.art {
+  position: absolute;
+  inset: 0 0 0 43%;
+  overflow: hidden;
+  background: radial-gradient(ellipse at 75% 45%, #115fd0 0%, #0d3b80 34%, #101f39 63%, transparent 78%);
+  clip-path: polygon(8% 0, 100% 0, 100% 100%, 0 100%);
+}
+.orb {
+  position: absolute;
+  width: 300px;
+  height: 200px;
+  right: 6%;
+  top: -40px;
+  background: radial-gradient(circle, #2d8fffaa, #1257b200 68%);
+  filter: blur(10px);
+}
+.pad {
+  position: absolute;
+  right: 32%;
+  top: -14px;
+  width: 138px;
+  height: 105px;
+  display: grid;
+  place-items: center;
+  color: #c9e5ff;
+  transform: rotate(-28deg);
+}
+.pad svg {
+  width: 138px;
+  height: 138px;
+  filter: drop-shadow(0 4px 12px #071c3c);
+}
+.figure {
+  position: absolute;
+  right: 7%;
+  bottom: -27px;
+  width: 210px;
+  height: 175px;
+  border-radius: 49% 40% 0 0;
+  background: linear-gradient(145deg, #d2d9f2, #747fba 48%, #17294c 80%);
+  box-shadow: inset 8px 10px 25px #d6e0ff66;
+  transform: rotate(-6deg);
+}
+.figure i {
+  position: absolute;
+  width: 127px;
+  height: 138px;
+  top: -80px;
+  left: 36px;
+  background: linear-gradient(140deg, #e0e5ff, #8ba4e2 61%, #374a7d);
+  border-radius: 48% 50% 43% 43%;
+}
+.figure i:before {
+  content: '';
+  position: absolute;
+  left: -13px;
+  top: -3px;
+  width: 100px;
+  height: 55px;
+  background: #dce4ff;
+  clip-path: polygon(0 0, 100% 0, 70% 100%, 35% 65%);
+}
+.figure b {
+  position: absolute;
+  left: 68px;
+  top: -27px;
+  width: 61px;
+  height: 5px;
+  background: #1e2d4c;
+  transform: rotate(-10deg);
+}
+.figure em {
+  position: absolute;
+  left: 25px;
+  top: -14px;
+  width: 16px;
+  height: 108px;
+  background: #27385d;
+  transform: rotate(-32deg);
+}
+.slash {
+  position: absolute;
+  width: 120px;
+  height: 145px;
+  left: 25%;
+  top: 15px;
+  background: linear-gradient(145deg, #56b2ff, #1360db);
+  clip-path: polygon(52% 0, 100% 0, 46% 47%, 87% 45%, 0 100%, 36% 56%, 0 58%);
+  opacity: 0.58;
+}
+@media (max-width: 680px) {
+  .hero {
+    height: auto;
+    min-height: 94px;
+    border-bottom: 0;
+    align-items: flex-start;
+    padding: 9px 0 10px;
+  }
+  .text {
+    max-width: 78%;
+  }
+  .text h1 {
+    font-size: 22px;
+    margin-bottom: 5px;
+  }
+  .text p {
+    font-size: 10px;
+    line-height: 1.45;
+  }
+  .art {
+    inset: 0 0 0 46%;
+    opacity: 0.65;
+  }
+  .pad {
+    width: 70px;
+    height: 68px;
+    right: 33%;
+    top: -1px;
+  }
+  .pad svg {
+    width: 75px;
+    height: 75px;
+  }
+  .figure {
+    width: 85px;
+    height: 93px;
+    right: 2%;
+    bottom: -18px;
+  }
+  .figure i {
+    width: 55px;
+    height: 70px;
+    top: -38px;
+    left: 16px;
+  }
+  .figure i:before {
+    width: 49px;
+    height: 25px;
+    left: -6px;
+  }
+  .figure b {
+    left: 30px;
+    top: -12px;
+    width: 30px;
+  }
+  .figure em {
+    left: 10px;
+    top: -9px;
+    height: 52px;
+    width: 8px;
+  }
+  .slash {
+    width: 53px;
+    height: 71px;
+    left: 19%;
+    top: 9px;
+  }
+}
+@media (max-width: 360px) {
+  .text {
+    max-width: 83%;
+  }
+  .text h1 {
+    font-size: 20px;
+  }
+  .text p {
+    font-size: 9px;
+  }
+}

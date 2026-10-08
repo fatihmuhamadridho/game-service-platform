@@ -1,0 +1,31 @@
+.panel {
+  border: 1px solid #26374b !important;
+  border-radius: 12px !important;
+  background: linear-gradient(150deg, #111d2b, #0c1622) !important;
+  padding: 16px !important;
+}
+.picker {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 8px;
+}
+@media (max-width: 900px) {
+  .picker {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (max-width: 640px) {
+  .panel {
+    padding: 12px !important;
+    border-radius: 10px !important;
+  }
+  .picker {
+    display: flex;
+    overflow-x: auto;
+    gap: 7px;
+    margin: 0 -2px;
+    padding: 2px 2px 6px;
+    scrollbar-width: thin;
+    scrollbar-color: #354a63 transparent;
+  }
+}

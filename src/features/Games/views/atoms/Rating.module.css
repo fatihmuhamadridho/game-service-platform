@@ -1,0 +1,28 @@
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+  color: #e6eef8;
+  font-size: 9px;
+}
+.rating svg {
+  width: 11px;
+  height: 11px;
+  color: #ffbd24;
+}
+.rating small {
+  color: #91a2b7;
+  font-size: 9px;
+}
+@media (max-width: 680px) {
+  .rating {
+    font-size: 9px;
+  }
+  .rating svg {
+    width: 10px;
+  }
+  .rating small {
+    font-size: 8px;
+  }
+}

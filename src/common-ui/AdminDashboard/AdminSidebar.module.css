@@ -1,0 +1,153 @@
+.sidebar {
+  position: fixed;
+  top: 64px;
+  bottom: 0;
+  left: 0;
+  z-index: 20;
+  width: 212px;
+  display: flex;
+  flex-direction: column;
+  padding: 12px 10px 10px;
+  border-right: 1px solid #1d3045;
+  background: #091421;
+  color: #c5d2e1;
+}
+.sidebar nav {
+  flex: 1;
+  overflow: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #263b52 transparent;
+}
+.sidebar section {
+  margin-bottom: 8px;
+}
+.sidebar h2 {
+  margin: 12px 9px 5px;
+  color: #8094ad;
+  font-size: 10px;
+  font-weight: 500;
+}
+.sidebar a {
+  height: 32px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 1px 0;
+  padding: 0 10px;
+  border-radius: 6px;
+  color: #c1cede;
+  text-decoration: none;
+  font-size: 10px;
+}
+.sidebar a svg {
+  width: 15px;
+  height: 15px;
+  flex: none;
+}
+.sidebar a:hover {
+  background: #122136;
+}
+.sidebar a.active {
+  background: linear-gradient(90deg, #075bd0, #0749a7);
+  color: white;
+}
+.sidebar a i {
+  width: 20px;
+  height: 18px;
+  display: grid;
+  place-items: center;
+  margin-left: auto;
+  border-radius: 10px;
+  background: #0875ff;
+  color: #fff;
+  font-style: normal;
+  font-size: 9px;
+}
+.sidebarBrand {
+  min-height: 50px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  border: 1px solid #20364d;
+  border-radius: 8px;
+  background: #0d1c2b;
+  color: #1685ff;
+}
+.sidebarBrand > svg {
+  width: 24px;
+  height: 24px;
+  padding: 3px;
+  border-radius: 7px;
+  background: #086cf0;
+  color: white;
+}
+.sidebarBrand b,
+.sidebarBrand small {
+  display: block;
+}
+.sidebarBrand b {
+  font-size: 10px;
+}
+.sidebarBrand small {
+  margin-top: 3px;
+  color: #95a9bf;
+  font-size: 8px;
+}
+.mobileTop {
+  display: none;
+}
+.backdrop {
+  display: none;
+}
+@media (max-width: 800px) {
+  .sidebar {
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 60;
+    width: min(285px, 82vw);
+    padding: 12px 10px;
+    transform: translateX(-105%);
+    transition: transform 0.2s;
+    box-shadow: 14px 0 34px #0006;
+  }
+  .sidebar.open {
+    transform: translateX(0);
+  }
+  .mobileTop {
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 8px 10px;
+    margin-bottom: 7px;
+    border-bottom: 1px solid #26374b;
+  }
+  .mobileTop b {
+    font-size: 13px;
+  }
+  .mobileTop button {
+    border: 0;
+    background: none;
+    color: #e7eef7;
+  }
+  .mobileTop svg {
+    width: 18px;
+  }
+  .sidebar h2 {
+    font-size: 11px;
+  }
+  .sidebar a {
+    height: 38px;
+    font-size: 11px;
+  }
+  .backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 55;
+    display: block;
+    border: 0;
+    background: #020711b8;
+  }
+}

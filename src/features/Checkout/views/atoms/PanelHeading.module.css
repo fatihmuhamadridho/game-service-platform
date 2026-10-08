@@ -1,0 +1,35 @@
+.heading {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.heading > span {
+  font-weight: 800;
+  color: #e8f1ff;
+  font-size: 15px;
+}
+.heading h2 {
+  font-size: 15px;
+  margin: 0 0 4px;
+}
+.heading p {
+  font-size: 11px;
+  color: #aab8c9;
+  margin: 0;
+}
+@media (max-width: 640px) {
+  .heading {
+    gap: 6px;
+    margin-bottom: 11px;
+  }
+  .heading > span {
+    font-size: 13px;
+  }
+  .heading h2 {
+    font-size: 13px;
+  }
+  .heading p {
+    font-size: 10px;
+  }
+}

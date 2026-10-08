@@ -1,0 +1,64 @@
+.sticky {
+  display: none;
+}
+@media (max-width: 640px) {
+  .sticky {
+    position: fixed;
+    z-index: 15;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    min-height: 70px;
+    padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-top: 1px solid #2a3c53;
+    background: #0b1522f5;
+    backdrop-filter: blur(14px);
+  }
+  .sticky > div {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 95px;
+  }
+  .sticky small {
+    font-size: 9px;
+    color: #a9b8ca;
+  }
+  .sticky b {
+    color: #208aff;
+    font-size: 16px;
+  }
+  .button {
+    height: 46px !important;
+    flex: 1;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 0 14px !important;
+    border: 0 !important;
+    border-radius: 7px !important;
+    background: linear-gradient(110deg, #0865ef, #087dff) !important;
+    color: #fff !important;
+    font-size: 10px !important;
+    font-weight: 700 !important;
+  }
+  .button svg {
+    width: 16px;
+  }
+}
+@media (max-width: 360px) {
+  .sticky {
+    padding-left: 9px;
+    padding-right: 9px;
+  }
+  .sticky > div {
+    min-width: 82px;
+  }
+  .button {
+    padding: 0 8px !important;
+  }
+}

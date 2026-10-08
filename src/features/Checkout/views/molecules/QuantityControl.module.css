@@ -1,0 +1,30 @@
+.control {
+  height: 28px;
+  display: flex;
+  align-items: center;
+  border: 1px solid #2e4056;
+  border-radius: 6px;
+  background: #172538;
+}
+.control button {
+  width: 28px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  color: #b8c7d8;
+}
+.control button:hover {
+  color: #fff;
+  background: #233854;
+}
+.control svg {
+  width: 14px;
+}
+.control b {
+  min-width: 27px;
+  text-align: center;
+  font-size: 11px;
+}

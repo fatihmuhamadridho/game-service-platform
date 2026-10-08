@@ -1,0 +1,503 @@
+.hero {
+  min-height: 460px;
+  display: grid;
+  grid-template-columns: 1.04fr 0.96fr;
+  align-items: center;
+  position: relative;
+  border-bottom: 1px solid #172638;
+}
+.copy {
+  padding: 34px 0 42px;
+  z-index: 2;
+}
+.eyebrow {
+  display: inline-flex;
+  padding: 7px 12px;
+  border: 1px solid #34435a;
+  border-radius: 30px;
+  background: #142033;
+  color: #dae4f2;
+  font-size: 12px;
+  margin-bottom: 16px;
+}
+.copy h1 {
+  font-size: clamp(42px, 4vw, 56px);
+  line-height: 1.02;
+  letter-spacing: -2px;
+  margin: 0 0 14px;
+  font-weight: 800;
+}
+.copy h1 span {
+  color: #1683ff;
+}
+.copy > p {
+  color: #d2d9e5;
+  line-height: 1.55;
+  font-size: 15px;
+  max-width: 485px;
+  margin: 0;
+}
+.trust {
+  display: flex;
+  gap: 22px;
+  margin: 28px 0 25px;
+}
+.trust > div {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+}
+.trust > div > i,
+.icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: #092f69;
+  color: #54a4ff;
+  border: 1px solid #0c6fe3;
+  flex: none;
+}
+.trust svg {
+  width: 17px;
+}
+.trust b,
+.trust small {
+  display: block;
+}
+.trust b {
+  font-size: 11px;
+  margin-bottom: 4px;
+}
+.trust small {
+  font-size: 10px;
+  color: #a4b1c2;
+  white-space: nowrap;
+}
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.primary,
+.secondary {
+  height: 46px !important;
+  padding: 0 20px !important;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 11px;
+  border-radius: 8px !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  transition:
+    transform 0.2s,
+    background 0.2s;
+}
+.primary {
+  background: linear-gradient(110deg, #0865ef, #087dff) !important;
+  box-shadow: 0 6px 18px #006aff30;
+}
+.primary:hover {
+  background: #1686ff !important;
+  transform: translateY(-1px);
+}
+.primary svg {
+  width: 17px;
+}
+.secondary {
+  min-width: 140px;
+  border: 1px solid #334257 !important;
+  background: #0b1420 !important;
+}
+.secondary:hover {
+  background: #16243a !important;
+}
+.visual {
+  height: 430px;
+  position: relative;
+  overflow: hidden;
+}
+.glow {
+  position: absolute;
+  width: 450px;
+  height: 390px;
+  right: 7%;
+  top: 20px;
+  background: radial-gradient(ellipse, #0e3f86a6, #06101b00 70%);
+  filter: blur(9px);
+}
+.halo {
+  position: absolute;
+  inset: 0 0 0 4%;
+  background: linear-gradient(144deg, transparent 33%, #0d2f68 33.3%, #092654 61%, transparent 61.3%);
+  clip-path: polygon(19% 22%, 67% 8%, 100% 23%, 84% 84%, 41% 100%, 0 73%);
+  opacity: 0.75;
+}
+.gamer {
+  position: absolute;
+  width: 270px;
+  height: 380px;
+  left: 34%;
+  top: 28px;
+  filter: drop-shadow(0 15px 18px #030912a8);
+}
+.head {
+  position: absolute;
+  z-index: 3;
+  width: 132px;
+  height: 145px;
+  left: 70px;
+  top: 54px;
+  border: 5px solid #18283d;
+  border-radius: 48% 47% 43% 45%;
+  background: linear-gradient(140deg, #ffd6b1, #f3b78e);
+  box-shadow: inset -13px -8px #df9e7d;
+}
+.hair {
+  position: absolute;
+  inset: -12px -9px 91px -10px;
+  border-radius: 80% 65% 35% 30%;
+  background: #172843;
+  transform: rotate(-5deg);
+}
+.hair:after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 10px;
+  width: 36px;
+  height: 70px;
+  background: #1d304c;
+  transform: rotate(-22deg);
+  border-radius: 4px 40px 10px 35px;
+}
+.eyeLeft,
+.eyeRight {
+  position: absolute;
+  top: 73px;
+  width: 10px;
+  height: 16px;
+  border-radius: 50%;
+  background: #17263a;
+}
+.eyeLeft {
+  left: 31px;
+}
+.eyeRight {
+  right: 27px;
+}
+.smile {
+  position: absolute;
+  left: 52px;
+  top: 103px;
+  width: 22px;
+  height: 10px;
+  border-bottom: 3px solid #a94d4b;
+  border-radius: 0 0 15px 15px;
+}
+.headphones {
+  position: absolute;
+  z-index: 2;
+  left: 55px;
+  top: 49px;
+  width: 162px;
+  height: 166px;
+  border: 11px solid #175ef0;
+  border-bottom-color: transparent;
+  border-radius: 90px 90px 60px 60px;
+  transform: rotate(6deg);
+  filter: drop-shadow(0 3px 3px #05152f);
+}
+.headphones:before,
+.headphones:after {
+  content: '';
+  position: absolute;
+  top: 63px;
+  width: 23px;
+  height: 52px;
+  border-radius: 9px;
+  background: #0d55dc;
+  border: 4px solid #19365e;
+}
+.headphones:before {
+  left: -17px;
+}
+.headphones:after {
+  right: -18px;
+}
+.body {
+  position: absolute;
+  z-index: 2;
+  width: 250px;
+  height: 195px;
+  left: 11px;
+  top: 193px;
+  background: linear-gradient(140deg, #1b2b43, #0b1524 62%);
+  clip-path: polygon(23% 0, 76% 0, 100% 100%, 0 100%);
+  border: 1px solid #34445a;
+  border-radius: 46px 46px 8px 8px;
+}
+.line {
+  position: absolute;
+  left: 117px;
+  top: 3px;
+  width: 4px;
+  height: 142px;
+  background: #35445a;
+  transform: rotate(-7deg);
+}
+.controller {
+  position: absolute;
+  width: 93px;
+  height: 42px;
+  left: 86px;
+  top: 82px;
+  border-radius: 16px 16px 22px 22px;
+  background: linear-gradient(130deg, #293a54, #0b1421);
+  border: 3px solid #4b5c73;
+  transform: rotate(-8deg);
+}
+.controller:before,
+.controller:after {
+  content: '';
+  position: absolute;
+  top: 13px;
+  width: 22px;
+  height: 6px;
+  border-radius: 5px;
+  background: #73849a;
+}
+.controller:before {
+  left: 12px;
+  transform: rotate(25deg);
+}
+.controller:after {
+  left: 20px;
+  transform: rotate(-25deg);
+}
+.controller i {
+  position: absolute;
+  top: 11px;
+  right: 20px;
+  width: 6px;
+  height: 6px;
+  background: #1e84ff;
+  border-radius: 50%;
+}
+.controller i:nth-child(2) {
+  right: 10px;
+  top: 18px;
+  background: #f04e67;
+}
+.controller b {
+  position: absolute;
+  width: 17px;
+  height: 17px;
+  border: 2px solid #687a90;
+  border-radius: 50%;
+  right: 40px;
+  top: 10px;
+}
+.floor {
+  position: absolute;
+  bottom: 16px;
+  left: 2%;
+  right: 0;
+  height: 65px;
+  background: linear-gradient(170deg, #10294f, #06101a 75%);
+  clip-path: polygon(6% 53%, 74% 0, 100% 33%, 58% 100%);
+  opacity: 0.95;
+}
+.badge,
+.badge2 {
+  position: absolute;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 12px;
+  border: 1px solid #314663;
+  border-radius: 10px;
+  background: #17263bed;
+  box-shadow: 0 8px 25px #02091470;
+  transform: rotate(-5deg);
+}
+.badge {
+  top: 88px;
+  left: 8%;
+}
+.badge2 {
+  top: 172px;
+  left: 9%;
+  transform: rotate(-4deg);
+}
+.badge > svg,
+.badge2 > svg {
+  color: #46a4ff;
+  width: 24px;
+  height: 24px;
+}
+.badge b,
+.badge small,
+.badge2 b,
+.badge2 small {
+  display: block;
+}
+.badge b,
+.badge2 b {
+  font-size: 12px;
+}
+.badge small,
+.badge2 small {
+  font-size: 10px;
+  color: #b1bfd0;
+  margin-top: 3px;
+}
+@media (max-width: 1000px) {
+  .hero {
+    min-height: 410px;
+  }
+  .copy h1 {
+    font-size: 44px;
+  }
+  .trust {
+    gap: 12px;
+  }
+  .trust small {
+    font-size: 9px;
+  }
+  .visual {
+    transform: scale(0.9);
+    transform-origin: center;
+  }
+}
+@media (max-width: 700px) {
+  .hero {
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 24px 0 18px;
+  }
+  .copy {
+    padding: 0;
+  }
+  .eyebrow {
+    font-size: 10px;
+    padding: 6px 9px;
+    margin-bottom: 12px;
+  }
+  .copy h1 {
+    font-size: 35px;
+    letter-spacing: -1.2px;
+    margin-bottom: 10px;
+  }
+  .copy > p {
+    font-size: 12px;
+    line-height: 1.5;
+    max-width: 440px;
+  }
+  .visual {
+    order: 2;
+    height: 210px;
+    width: 100%;
+    transform: none;
+    margin-top: 2px;
+  }
+  .gamer {
+    transform: scale(0.58);
+    transform-origin: top center;
+    left: calc(50% - 135px);
+    top: 1px;
+  }
+  .glow {
+    width: 90%;
+    height: 220px;
+    right: 5%;
+    top: 0;
+  }
+  .halo {
+    inset: -5px 6% 2px;
+    clip-path: polygon(17% 25%, 70% 0, 100% 17%, 85% 78%, 43% 100%, 0 75%);
+  }
+  .floor {
+    bottom: 1px;
+    height: 38px;
+  }
+  .badge {
+    top: 29px;
+    left: 2%;
+    padding: 7px 8px;
+  }
+  .badge2 {
+    top: 94px;
+    left: 1%;
+    padding: 7px 8px;
+  }
+  .badge > svg,
+  .badge2 > svg {
+    width: 19px;
+  }
+  .badge b,
+  .badge2 b {
+    font-size: 10px;
+  }
+  .badge small,
+  .badge2 small {
+    font-size: 8px;
+  }
+  .trust {
+    gap: 8px;
+    justify-content: space-between;
+    margin: 8px 0 15px;
+  }
+  .trust > div {
+    gap: 6px;
+  }
+  .trust > div > i {
+    width: 25px;
+    height: 25px;
+  }
+  .trust svg {
+    width: 14px;
+  }
+  .trust b {
+    font-size: 9px;
+  }
+  .trust small {
+    font-size: 8px;
+    white-space: normal;
+  }
+  .actions {
+    display: flex;
+  }
+  .primary {
+    flex: 1;
+    height: 47px !important;
+    font-size: 12px !important;
+  }
+  .secondary {
+    display: none;
+  }
+}
+@media (max-width: 360px) {
+  .copy h1 {
+    font-size: 32px;
+  }
+  .trust {
+    gap: 4px;
+  }
+  .trust b {
+    font-size: 8px;
+  }
+  .trust small {
+    font-size: 7px;
+  }
+  .trust > div > i {
+    width: 23px;
+    height: 23px;
+  }
+}

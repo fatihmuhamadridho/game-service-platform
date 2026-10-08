@@ -1,0 +1,20 @@
+.panel {
+  border: 1px solid #26374b !important;
+  border-radius: 12px !important;
+  background: linear-gradient(150deg, #111d2b, #0c1622) !important;
+  padding: 16px !important;
+}
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+@media (max-width: 640px) {
+  .panel {
+    padding: 12px !important;
+    border-radius: 10px !important;
+  }
+  .list {
+    gap: 4px;
+  }
+}

@@ -1,0 +1,43 @@
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 11px;
+  color: #d8e1ed;
+}
+.field input {
+  width: 100%;
+  min-height: 41px;
+  padding: 0 11px;
+  border: 1px solid #2a3b50;
+  border-radius: 7px;
+  outline: none;
+  background: linear-gradient(110deg, #172538, #131f2e);
+  color: #f5f7fb;
+  font: inherit;
+  font-size: 11px;
+}
+.field input::placeholder {
+  color: #8293a8;
+}
+.field input:focus {
+  border-color: #1782ff;
+  box-shadow: 0 0 0 2px #0875ff2b;
+}
+.invalid input {
+  border-color: #fb6477;
+}
+.field small {
+  color: #ff8290;
+  font-size: 10px;
+}
+@media (max-width: 640px) {
+  .field {
+    font-size: 10px;
+    gap: 5px;
+  }
+  .field input {
+    min-height: 44px;
+    font-size: 11px;
+  }
+}

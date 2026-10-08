@@ -1,0 +1,14 @@
+.tag {
+  padding: 4px 6px;
+  border-radius: 10px;
+  background: #172a44;
+  color: #a8d1ff;
+  font-size: 9px;
+  white-space: nowrap;
+}
+@media (max-width: 680px) {
+  .tag {
+    font-size: 8px;
+    padding: 4px 6px;
+  }
+}

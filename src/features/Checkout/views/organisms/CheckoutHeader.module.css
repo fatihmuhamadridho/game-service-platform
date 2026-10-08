@@ -1,0 +1,33 @@
+.content {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+.title h1 {
+  font-size: 26px;
+  letter-spacing: -0.4px;
+  margin: 4px 0 5px;
+}
+.title p {
+  font-size: 13px;
+  color: #c1ccda;
+  margin: 0;
+}
+@media (max-width: 900px) {
+  .content {
+    padding: 0 18px;
+  }
+}
+@media (max-width: 640px) {
+  .content {
+    padding: 0 12px;
+  }
+  .title h1 {
+    font-size: 22px;
+    margin-top: 3px;
+  }
+  .title p {
+    font-size: 11px;
+    line-height: 1.45;
+  }
+}

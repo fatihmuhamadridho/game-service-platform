@@ -10,9 +10,7 @@ export class UserRepositoryImpl implements UserRepository {
 
   async getDetailUser(params: UserRequest.getDetailUser): Promise<UserResponse.getDetailUser> {
     try {
-      const response: UserResponse.getDetailUser = await this.axiosService.get(
-        `/users/${encodeURIComponent(params.id)}`
-      );
+      const response: UserResponse.getDetailUser = await this.axiosService.get(`/users/${encodeURIComponent(params.id)}`);
       return response;
     } catch (error) {
       handleHttpError(error as HttpErrorLike, 'Something went wrong');

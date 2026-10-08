@@ -49,7 +49,7 @@ const HomePage = () => {
   return (
     <>
       <Head>
-        <title>Home | nextjs-boilerplate</title>
+        <title>Home | game-service-platform</title>
         <meta name="description" content="Home page with product listing from Fake Store API" />
       </Head>
       <HomeTemplate

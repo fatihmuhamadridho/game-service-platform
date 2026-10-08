@@ -1,0 +1,253 @@
+.card {
+  min-width: 0;
+  overflow: hidden;
+  padding: 0 !important;
+  border: 1px solid #23354a !important;
+  border-radius: 11px !important;
+  background: linear-gradient(145deg, #131e2d, #0c1520) !important;
+  transition:
+    transform 0.2s,
+    border-color 0.2s;
+}
+.card:hover {
+  transform: translateY(-2px);
+  border-color: #1b79e8 !important;
+}
+.card > a {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+.art {
+  height: 96px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  padding: 8px;
+  background: radial-gradient(ellipse at 70% 30%, #4c8ad4, #172d4e 63%, #101924);
+}
+.art:before,
+.art:after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+.art:before {
+  background: linear-gradient(125deg, transparent 34%, #ffffff12 35%, transparent 68%);
+}
+.art:after {
+  background: linear-gradient(0deg, #0a111bc7, transparent 60%);
+}
+.art span {
+  position: relative;
+  z-index: 1;
+  max-width: 75%;
+  font-size: 19px;
+  line-height: 1.05;
+  font-weight: 900;
+  letter-spacing: -0.6px;
+  color: #f8fbff;
+  text-shadow: 0 3px 8px #000;
+  white-space: normal;
+}
+.art i {
+  position: absolute;
+  z-index: 0;
+  right: 8%;
+  top: 8%;
+  width: 88px;
+  height: 120px;
+  border-radius: 50% 50% 10% 10%;
+  background: linear-gradient(145deg, #e5ecff, #526fa8 55%, #182742);
+  transform: rotate(18deg);
+  opacity: 0.9;
+}
+.art i:after {
+  content: '';
+  position: absolute;
+  left: -19px;
+  top: -14px;
+  width: 74px;
+  height: 45px;
+  background: #e7efff;
+  clip-path: polygon(10% 0, 100% 0, 78% 100%, 45% 58%);
+}
+.ml {
+  background: radial-gradient(ellipse at 70% 20%, #6ab8ff, #143772 55%, #101827);
+}
+.ml span {
+  color: #f5e8d9;
+  font-size: 17px;
+}
+.ml i {
+  background: linear-gradient(145deg, #e9edff, #8091c7 50%, #132449);
+}
+.valo {
+  background: radial-gradient(ellipse at 70% 20%, #ec475d, #472438 60%, #131722);
+}
+.valo span {
+  color: #ff6673;
+}
+.valo i {
+  background: linear-gradient(145deg, #dcc7c3, #604b60 55%, #1c1b2b);
+}
+.pubg {
+  background: radial-gradient(ellipse at 70% 20%, #d3962c, #59442e 55%, #151923);
+}
+.pubg span {
+  color: #ffbf35;
+  background: #171d29;
+  padding: 5px;
+  border: 2px solid #ffd257;
+  font-size: 18px;
+}
+.pubg i {
+  background: linear-gradient(145deg, #aeb6b4, #55616a 55%, #18222c);
+  border-radius: 30% 30% 5% 5%;
+}
+.ff {
+  background: radial-gradient(ellipse at 70% 20%, #dc7649, #57313a 55%, #141722);
+}
+.ff span {
+  color: #ffe7c0;
+}
+.ff i {
+  background: linear-gradient(145deg, #bdacd5, #694865 55%, #191b31);
+}
+.roblox {
+  background: radial-gradient(ellipse at 70% 20%, #69a7ef, #255079 55%, #121a25);
+}
+.roblox span {
+  color: #fff;
+}
+.roblox i {
+  background: linear-gradient(145deg, #e5b06f, #9a652f 55%, #252f43);
+  border-radius: 28% 28% 8% 8%;
+}
+.genshin {
+  background: radial-gradient(ellipse at 70% 20%, #9bc7f1, #3d608e 55%, #141c2b);
+}
+.genshin i,
+.hsr i,
+.ragnarok i {
+  background: linear-gradient(145deg, #f5dfcc, #8d9fc8 55%, #34345e);
+}
+.hsr {
+  background: radial-gradient(ellipse at 70% 20%, #b85a9d, #4a3169 55%, #141a29);
+}
+.cod {
+  background: radial-gradient(ellipse at 70% 20%, #876a50, #343637 55%, #141a23);
+}
+.cod i,
+.fc i {
+  background: linear-gradient(145deg, #c49b70, #435046 55%, #17231f);
+}
+.fc {
+  background: radial-gradient(ellipse at 70% 20%, #449856, #183c38 55%, #101a21);
+}
+.efootball {
+  background: radial-gradient(ellipse at 70% 20%, #176cd7, #261e77 55%, #14172a);
+}
+.minecraft {
+  background: radial-gradient(ellipse at 70% 20%, #67b45f, #235342 55%, #141b24);
+}
+.ragnarok {
+  background: radial-gradient(ellipse at 70% 20%, #e0bb78, #735d85 55%, #171b2c);
+}
+.lol {
+  background: radial-gradient(ellipse at 70% 20%, #dbbd55, #446477 55%, #111e2d);
+}
+.aov {
+  background: radial-gradient(ellipse at 70% 20%, #63b8b1, #285265 55%, #111b29);
+}
+.steam {
+  background: radial-gradient(ellipse at 70% 20%, #71a8d5, #1b3855 55%, #111820);
+}
+.coc {
+  background: radial-gradient(ellipse at 70% 20%, #81b54c, #435333 55%, #1b2026);
+}
+.body {
+  padding: 8px 9px;
+}
+.body h3 {
+  font-size: 11px;
+  margin: 0 0 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tags {
+  display: flex;
+  gap: 4px;
+  overflow: hidden;
+}
+.meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  margin-top: 8px;
+  color: #b6c4d5;
+  font-size: 9px;
+}
+@media (max-width: 1050px) {
+  .art {
+    height: 92px;
+  }
+}
+@media (max-width: 680px) {
+  .card {
+    border-radius: 10px !important;
+  }
+  .card > a {
+    min-height: 83px;
+    display: grid;
+    grid-template-columns: 82px minmax(0, 1fr);
+    align-items: stretch;
+  }
+  .art {
+    height: auto;
+    min-height: 81px;
+    padding: 6px;
+    border-radius: 0;
+  }
+  .art span {
+    font-size: 12px;
+    max-width: 95%;
+    text-align: center;
+  }
+  .art i {
+    width: 47px;
+    height: 63px;
+    right: 5%;
+    top: 12%;
+  }
+  .body {
+    min-width: 0;
+    padding: 8px 9px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .body h3 {
+    font-size: 11px;
+    margin-bottom: 6px;
+  }
+  .tags {
+    gap: 4px;
+  }
+  .meta {
+    margin-top: auto;
+    padding-top: 6px;
+    font-size: 9px;
+  }
+}
+@media (max-width: 360px) {
+  .card > a {
+    grid-template-columns: 74px minmax(0, 1fr);
+  }
+  .meta {
+    font-size: 8px;
+  }
+}

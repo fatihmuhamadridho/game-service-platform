@@ -1,0 +1,43 @@
+.title {
+  font-size: 12px;
+  margin: 0 0 7px;
+}
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.list button {
+  height: 33px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: #d1dceb;
+  font-size: 10px;
+  cursor: pointer;
+}
+.list button > span {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+.list svg {
+  width: 15px;
+  height: 15px;
+}
+.list small {
+  color: #8094ac;
+  font-size: 9px;
+}
+.list button:hover {
+  background: #121e2d;
+}
+.list .active {
+  background: linear-gradient(90deg, #10326b, #102448);
+  color: #fff;
+  border-left: 2px solid #1684ff;
+}

@@ -10,11 +10,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
   return (
     <article className={styles.card}>
       <Box className={styles.stack}>
-        <img
-          alt={product.title}
-          src={product.thumbnail || product.images?.[0] || ''}
-          className={styles.media}
-        />
+        <img alt={product.title} src={product.thumbnail || product.images?.[0] || ''} className={styles.media} />
 
         <Box className={styles.meta}>
           <Box className={styles.metaRow}>

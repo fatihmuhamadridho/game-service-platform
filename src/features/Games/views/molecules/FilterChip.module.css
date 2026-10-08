@@ -1,0 +1,33 @@
+.chip {
+  height: 32px !important;
+  min-width: max-content;
+  display: inline-flex !important;
+  align-items: center;
+  gap: 6px;
+  padding: 0 12px !important;
+  border: 1px solid #29384c !important;
+  border-radius: 8px !important;
+  background: linear-gradient(120deg, #151f2e, #101925) !important;
+  color: #d5dfed !important;
+  font-size: 10px !important;
+}
+.chip svg {
+  width: 13px;
+  height: 13px;
+}
+.active {
+  border-color: #0876ff !important;
+  background: #0868ef !important;
+  color: #fff !important;
+}
+@media (max-width: 680px) {
+  .chip {
+    height: 29px !important;
+    padding: 0 10px !important;
+    font-size: 9px !important;
+    border-radius: 20px !important;
+  }
+  .chip svg {
+    width: 12px;
+  }
+}

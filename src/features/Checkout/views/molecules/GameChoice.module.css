@@ -1,0 +1,113 @@
+.choice {
+  position: relative;
+  min-width: 0;
+  min-height: 83px;
+  padding: 7px 5px !important;
+  border: 1px solid #27384b !important;
+  border-radius: 9px !important;
+  background: linear-gradient(150deg, #192638, #121c2a) !important;
+  cursor: pointer;
+}
+.choice:hover {
+  border-color: #4f83bd !important;
+}
+.selected {
+  border: 2px solid #0783ff !important;
+  background: #0e2949 !important;
+  box-shadow: 0 0 0 2px #0875ff28;
+}
+.art {
+  height: 43px;
+  display: grid;
+  place-items: center;
+  border-radius: 6px;
+  margin-bottom: 6px;
+  overflow: hidden;
+  position: relative;
+  background: radial-gradient(circle at 50% 25%, #849dbb, #263b55 65%, #101925);
+}
+.art i {
+  font-size: 23px;
+  font-weight: 900;
+  color: #eff5ff;
+  font-style: normal;
+  text-shadow: 0 2px 8px #000;
+}
+.roblox i {
+  background: #eef3fa;
+  color: #263547;
+  width: 24px;
+  height: 24px;
+  border-radius: 3px;
+  display: grid;
+  place-items: center;
+  transform: rotate(14deg);
+}
+.ml {
+  background: radial-gradient(circle at 50% 30%, #6386c0, #203863);
+}
+.ml i {
+  color: #d3e5ff;
+  font-size: 27px;
+}
+.ff {
+  background: radial-gradient(circle at 50% 30%, #b37852, #422e2e);
+}
+.pubg {
+  background: radial-gradient(circle at 50% 30%, #997041, #32323a);
+}
+.pubg i {
+  font-size: 14px;
+  background: #e8a52d;
+  color: #20232d;
+  padding: 2px 4px;
+}
+.valo {
+  background: radial-gradient(circle at 50% 30%, #903d49, #381e30);
+}
+.valo i {
+  font-size: 27px;
+  color: #fc6170;
+}
+.genshin {
+  background: radial-gradient(circle at 50% 30%, #a6bad7, #546c91);
+}
+.choice > b {
+  display: block;
+  font-size: 9px;
+  line-height: 1.2;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.check {
+  position: absolute;
+  right: -4px;
+  top: -5px;
+  width: 17px;
+  height: 17px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #0875ff;
+  color: #fff;
+  border: 1px solid #9bcaff;
+}
+.check svg {
+  width: 11px;
+}
+@media (max-width: 640px) {
+  .choice {
+    width: 78px;
+    min-width: 78px;
+    min-height: 77px;
+    padding: 6px 4px !important;
+  }
+  .art {
+    height: 41px;
+  }
+  .choice > b {
+    font-size: 8px;
+  }
+}

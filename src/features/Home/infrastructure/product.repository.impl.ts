@@ -15,11 +15,7 @@ export class ProductRepositoryImpl implements ProductRepository {
       const skip = limit === undefined ? undefined : Math.max(0, (page - 1) * limit);
       const search = params?.name?.trim();
       const category = params?.categoryName?.trim();
-      const path = search
-        ? '/products/search'
-        : category
-          ? `/products/category/${encodeURIComponent(category)}`
-          : '/products';
+      const path = search ? '/products/search' : category ? `/products/category/${encodeURIComponent(category)}` : '/products';
       const query = new URLSearchParams();
 
       if (search) query.set('q', search);
@@ -35,9 +31,7 @@ export class ProductRepositoryImpl implements ProductRepository {
       }
       if (params?.sort) query.set('order', params.sort.toLowerCase());
 
-      const response = await this.fetchService.get<ProductResponse.getProducts>(
-        `${path}${query.size ? `?${query.toString()}` : ''}`
-      );
+      const response = await this.fetchService.get<ProductResponse.getProducts>(`${path}${query.size ? `?${query.toString()}` : ''}`);
       return response;
     } catch (error) {
       throw handleHttpError(error as HttpErrorLike, 'Something went wrong');

@@ -1,0 +1,98 @@
+.banner {
+  position: relative;
+  overflow: hidden;
+  min-height: 94px;
+  margin: 20px 0 6px;
+  padding: 17px 24px !important;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border: 1px solid #253a59 !important;
+  border-radius: 13px !important;
+  background: linear-gradient(100deg, #152c50, #0f2038 48%, #122540) !important;
+}
+.diamond {
+  width: 53px;
+  height: 53px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(145deg, #3287ff, #0750bb);
+  color: #dff1ff;
+  box-shadow: 0 5px 20px #1278ff55;
+  transform: rotate(-9deg);
+}
+.diamond svg {
+  width: 36px;
+  height: 36px;
+}
+.copy {
+  flex: 1;
+}
+.copy h2 {
+  font-size: 17px;
+  margin: 0 0 5px;
+}
+.copy p {
+  font-size: 12px;
+  margin: 0;
+  color: #bac8d9;
+}
+.button {
+  height: 40px !important;
+  padding: 0 18px !important;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 0 !important;
+  border-radius: 8px !important;
+  background: linear-gradient(110deg, #0865ef, #087dff) !important;
+  color: #fff !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+}
+.button svg {
+  width: 17px;
+}
+.spark {
+  position: absolute;
+  right: 22%;
+  top: 11px;
+  color: #a3cfff;
+  font-size: 28px;
+  opacity: 0.5;
+}
+@media (max-width: 700px) {
+  .banner {
+    margin: 15px 0 4px;
+    padding: 15px !important;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: 40px 1fr;
+    gap: 10px;
+  }
+  .diamond {
+    width: 40px;
+    height: 40px;
+    border-radius: 11px;
+  }
+  .diamond svg {
+    width: 27px;
+  }
+  .copy h2 {
+    font-size: 14px;
+  }
+  .copy p {
+    font-size: 10px;
+  }
+  .button {
+    grid-column: 1/-1;
+    width: 100%;
+    height: 44px !important;
+  }
+  .spark {
+    right: 14px;
+    top: 11px;
+  }
+}

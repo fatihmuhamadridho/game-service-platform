@@ -1,0 +1,24 @@
+.breadcrumb {
+  height: 34px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #91a3b9;
+  font-size: 10px;
+}
+.breadcrumb a {
+  color: inherit;
+  text-decoration: none;
+}
+.breadcrumb svg {
+  width: 12px;
+}
+.breadcrumb span {
+  color: #d5deeb;
+}
+@media (max-width: 680px) {
+  .breadcrumb {
+    height: 25px;
+    font-size: 9px;
+  }
+}

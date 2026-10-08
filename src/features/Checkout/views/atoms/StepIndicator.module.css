@@ -1,0 +1,87 @@
+.stepper {
+  list-style: none;
+  margin: 25px 0 22px;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  position: relative;
+}
+.stepper:before {
+  position: absolute;
+  content: '';
+  height: 1px;
+  left: 12.5%;
+  right: 12.5%;
+  top: 17px;
+  background: #35465c;
+}
+.stepper:after {
+  position: absolute;
+  content: '';
+  height: 2px;
+  left: 12.5%;
+  width: calc(var(--step-progress, 0%) * 0.75);
+  top: 17px;
+  background: #0875ff;
+}
+.stepper li {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.stepper li > span {
+  width: 35px;
+  height: 35px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid #55677f;
+  background: #101b29;
+  color: #e2eaf4;
+  font-weight: 700;
+  font-size: 12px;
+}
+.stepper li > span svg {
+  width: 17px;
+}
+.stepper li > b {
+  font-size: 12px;
+  margin-top: 8px;
+}
+.stepper li > small {
+  font-size: 10px;
+  color: #a6b4c6;
+  margin-top: 4px;
+}
+.stepper .current > span {
+  background: #0875ff;
+  border-color: #0875ff;
+  box-shadow: 0 0 0 4px #0875ff20;
+}
+.stepper .current > b {
+  color: #58aaff;
+}
+@media (max-width: 640px) {
+  .stepper {
+    margin: 18px 0 15px;
+  }
+  .stepper:before,
+  .stepper:after {
+    top: 14px;
+  }
+  .stepper li > span {
+    width: 29px;
+    height: 29px;
+    font-size: 10px;
+  }
+  .stepper li > b {
+    font-size: 9px;
+    margin-top: 6px;
+  }
+  .stepper li > small {
+    display: none;
+  }
+}

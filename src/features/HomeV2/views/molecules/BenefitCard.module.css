@@ -1,0 +1,62 @@
+.card {
+  min-height: 69px;
+  padding: 12px !important;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid #26374b !important;
+  border-radius: 10px !important;
+  background: linear-gradient(145deg, #142235, #0e1825) !important;
+}
+.icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  flex: none;
+  border: 0;
+  background: linear-gradient(145deg, #0875ff, #0750bb);
+  color: white;
+}
+.icon svg {
+  width: 17px;
+}
+.card b,
+.card small {
+  display: block;
+}
+.card b {
+  font-size: 11px;
+}
+.card small {
+  font-size: 9px;
+  color: #a9b7c9;
+  margin-top: 4px;
+  line-height: 1.4;
+}
+@media (max-width: 700px) {
+  .card {
+    min-height: 62px;
+    padding: 9px !important;
+    gap: 7px;
+  }
+  .icon {
+    width: 27px;
+    height: 27px;
+  }
+  .icon svg {
+    width: 15px;
+  }
+  .card b {
+    font-size: 9px;
+  }
+  .card small {
+    font-size: 8px;
+  }
+}
+@media (max-width: 360px) {
+  .card {
+    padding: 7px 6px !important;
+  }
+}

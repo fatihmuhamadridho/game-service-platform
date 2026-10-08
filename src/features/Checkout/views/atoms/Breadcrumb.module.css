@@ -1,0 +1,35 @@
+.breadcrumb {
+  height: 43px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #9eafc2;
+  font-size: 11px;
+}
+.breadcrumb a {
+  color: inherit;
+  text-decoration: none;
+}
+.breadcrumb svg {
+  width: 12px;
+  height: 12px;
+}
+.breadcrumb span {
+  color: #d6e0ee;
+}
+.breadcrumb b {
+  color: #49a2ff;
+}
+@media (max-width: 640px) {
+  .breadcrumb {
+    height: 37px;
+    font-size: 9px;
+    gap: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  .breadcrumb svg {
+    width: 10px;
+    flex: none;
+  }
+}

@@ -1,0 +1,162 @@
+.footer {
+  border-top: 1px solid #1d2b3d;
+  background: #080e17;
+  padding: 26px max(24px, calc((100vw - 1232px) / 2)) 0;
+  color: #f4f7fc;
+}
+.grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1fr 1.2fr;
+  gap: 30px;
+  padding-bottom: 23px;
+}
+.grid h3 {
+  font-size: 11px;
+  margin: 5px 0 12px;
+}
+.grid > div:not(:first-child) {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.grid > div > a,
+.grid > div > span {
+  font-size: 10px;
+  color: #aab7c7;
+  line-height: 1.4;
+  text-decoration: none;
+}
+.grid > div > a:hover {
+  color: #55a6ff;
+}
+.brand p {
+  max-width: 240px;
+  font-size: 10px;
+  color: #aab7c7;
+  line-height: 1.5;
+  margin: 12px 0;
+}
+.socials {
+  display: flex;
+  gap: 8px;
+}
+.socials a {
+  width: 25px;
+  height: 25px;
+  display: grid;
+  place-items: center;
+  border-radius: 7px;
+  background: #152235;
+  color: #d8e8fa;
+}
+.socials svg {
+  width: 15px;
+}
+.bottom {
+  min-height: 42px;
+  border-top: 1px solid #1c2939;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #93a2b5;
+  font-size: 10px;
+}
+.bottom > span:last-child {
+  display: flex;
+  gap: 17px;
+}
+.bottom a {
+  color: inherit;
+  text-decoration: none;
+}
+.bottom a:hover {
+  color: #55a6ff;
+}
+.compact {
+  max-width: 1232px;
+  margin: 30px auto 0;
+  padding: 20px 0;
+  border-top: 1px solid #1d2b3d;
+  color: #f3f6fb;
+}
+.compact p {
+  max-width: 400px;
+  color: #aab7c7;
+  font-size: 11px;
+  line-height: 1.5;
+}
+.compact > small {
+  display: block;
+  margin-top: 17px;
+  padding-top: 12px;
+  border-top: 1px solid #1c2939;
+  color: #8b9cb0;
+  font-size: 10px;
+}
+@media (max-width: 1000px) {
+  .footer {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+  .grid {
+    gap: 16px;
+  }
+}
+@media (max-width: 900px) {
+  .compact {
+    margin-left: 18px;
+    margin-right: 18px;
+  }
+}
+@media (max-width: 680px) {
+  .footer {
+    padding: 20px 14px 0;
+  }
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 21px 14px;
+    padding-bottom: 18px;
+  }
+  .brand {
+    grid-column: 1/-1;
+  }
+  .brand p {
+    max-width: 330px;
+  }
+  .grid h3 {
+    margin: 0 0 7px;
+  }
+  .grid > div:not(:first-child) {
+    gap: 7px;
+  }
+  .grid > div > a,
+  .grid > div > span {
+    font-size: 9px;
+  }
+  .bottom {
+    align-items: flex-start;
+    padding: 12px 0;
+    gap: 8px;
+    flex-direction: column;
+    font-size: 9px;
+  }
+  .bottom > span:last-child {
+    gap: 12px;
+  }
+  .compact {
+    margin: 20px 12px 0;
+    padding-bottom: 8px;
+  }
+  .compact p {
+    font-size: 10px;
+  }
+  .compact > small {
+    font-size: 9px;
+  }
+}
+@media (max-width: 360px) {
+  .footer {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
