@@ -9,8 +9,8 @@ import {
   IconTargetArrow,
   IconUsers,
 } from '@tabler/icons-react';
-import { Header } from '@common-ui/Header/Header';
-import { Footer } from '@common-ui/Footer/Footer';
+import { Header } from '@common-ui/organisms/Header/Header';
+import { Footer } from '@common-ui/organisms/Footer/Footer';
 import styles from './About.module.css';
 
 const values = [

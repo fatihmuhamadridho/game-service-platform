@@ -17,8 +17,8 @@ import {
   IconUsers,
   IconWallet,
 } from '@tabler/icons-react';
-import { AdminHeader } from '@common-ui/AdminDashboard/AdminHeader';
-import { AdminSidebar } from '@common-ui/AdminDashboard/AdminSidebar';
+import { AdminHeader } from '@common-ui/organisms/AdminDashboard/AdminHeader';
+import { AdminSidebar } from '@common-ui/organisms/AdminDashboard/AdminSidebar';
 import styles from './AdminDashboard.module.css';
 
 const metrics = [

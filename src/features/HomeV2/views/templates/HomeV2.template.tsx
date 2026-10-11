@@ -4,8 +4,8 @@ import { PopularGames } from '../organisms/PopularGames.organism';
 import { ServiceCategories } from '../organisms/ServiceCategories.organism';
 import { PromoBanner } from '../organisms/PromoBanner.organism';
 import { Benefits } from '../organisms/Benefits.organism';
-import { Footer } from '@common-ui/Footer/Footer';
-import { Header } from '@common-ui/Header/Header';
+import { Footer } from '@common-ui/organisms/Footer/Footer';
+import { Header } from '@common-ui/organisms/Header/Header';
 import styles from './HomeV2.module.css';
 
 type Props = {

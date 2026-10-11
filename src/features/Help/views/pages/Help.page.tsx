@@ -18,8 +18,8 @@ import {
   IconTag,
   IconWallet,
 } from '@tabler/icons-react';
-import { Header } from '@common-ui/Header/Header';
-import { Footer } from '@common-ui/Footer/Footer';
+import { Header } from '@common-ui/organisms/Header/Header';
+import { Footer } from '@common-ui/organisms/Footer/Footer';
 import styles from './Help.module.css';
 
 const topics = [

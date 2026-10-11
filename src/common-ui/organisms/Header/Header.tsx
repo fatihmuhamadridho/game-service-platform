@@ -84,10 +84,10 @@ export const Header = ({
                 <IconShoppingCart />
                 <i>2</i>
               </button>
-              <a className={styles.login} href="#masuk">
+              <a className={styles.login} href="/login">
                 Masuk
               </a>
-              <a className={styles.register} href="#daftar">
+              <a className={styles.register} href="/register">
                 Daftar
               </a>
               {showMobileSearch && (

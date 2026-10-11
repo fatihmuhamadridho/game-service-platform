@@ -5,7 +5,7 @@ import { ServicePicker } from '../organisms/ServicePicker.organism';
 import { OrderDetailsForm } from '../organisms/OrderDetailsForm.organism';
 import { OrderSummary } from '../organisms/OrderSummary.organism';
 import { SecurityChecklist } from '../molecules/SecurityChecklist.molecule';
-import { Footer } from '@common-ui/Footer/Footer';
+import { Footer } from '@common-ui/organisms/Footer/Footer';
 import { StickyCheckout } from '../organisms/StickyCheckout.organism';
 import styles from './Checkout.module.css';
 type Props = {

@@ -1,7 +1,7 @@
 import { IconChevronRight } from '@tabler/icons-react';
 import { Breadcrumb } from '../atoms/Breadcrumb.atom';
 import { StepIndicator } from '../atoms/StepIndicator.atom';
-import { Header } from '@common-ui/Header/Header';
+import { Header } from '@common-ui/organisms/Header/Header';
 import styles from './CheckoutHeader.module.css';
 type Props = { game: string; step: number };
 export const CheckoutHeader = ({ game, step }: Props) => (

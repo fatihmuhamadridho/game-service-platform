@@ -1,6 +1,6 @@
 import type { GameCardView } from '../interfaces/game.interface';
-import { Header } from '@common-ui/Header/Header';
-import { Footer } from '@common-ui/Footer/Footer';
+import { Header } from '@common-ui/organisms/Header/Header';
+import { Footer } from '@common-ui/organisms/Footer/Footer';
 import { Catalog } from '../organisms/Catalog.organism';
 import styles from './Games.module.css';
 type Props = {
