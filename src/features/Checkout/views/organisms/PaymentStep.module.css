@@ -1,0 +1,698 @@
+.layout {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(300px, 0.92fr);
+  gap: 16px;
+  align-items: start;
+}
+.mainColumn,
+.sideColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  min-width: 0;
+}
+.sideColumn {
+  position: sticky;
+  top: 84px;
+}
+.panel {
+  border: 1px solid #26374b !important;
+  border-radius: 11px !important;
+  background: linear-gradient(150deg, #101e2e, #0c1724) !important;
+  padding: 15px !important;
+  color: #f3f6fb;
+}
+.methods {
+  min-width: 0;
+  margin: 10px 0 0;
+  padding: 0;
+  border: 0;
+}
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+.group {
+  margin-top: 9px;
+}
+.groupTitle {
+  min-height: 25px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0 4px 5px;
+  color: #eaf2fc;
+}
+.groupTitle > svg {
+  width: 17px;
+  height: 17px;
+  color: #8ecaff;
+}
+.groupTitle strong {
+  font-size: 11px;
+}
+.groupTitle small {
+  margin-left: auto;
+  color: #99aabe;
+  font-size: 9px;
+  text-align: right;
+}
+.method {
+  position: relative;
+  min-height: 48px;
+  padding: 6px 11px;
+  display: grid;
+  grid-template-columns: 18px 50px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid #23364b;
+  border-radius: 8px;
+  background: #0e1b2a;
+  cursor: pointer;
+  transition:
+    border-color 0.16s,
+    background 0.16s;
+}
+.method + .method {
+  margin-top: 4px;
+}
+.method:hover {
+  border-color: #3972a9;
+  background: #11263c;
+}
+.selected {
+  border-color: #0785ff;
+  background: linear-gradient(100deg, #0e2944, #10243a);
+  box-shadow: inset 0 0 0 1px #0879ff35;
+}
+.method input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+.radio {
+  width: 16px;
+  height: 16px;
+  display: grid;
+  place-items: center;
+  border: 2px solid #8ea9c7;
+  border-radius: 50%;
+}
+.selected .radio {
+  border-color: #0787ff;
+}
+.selected .radio::after {
+  content: '';
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #0787ff;
+}
+.method:focus-within {
+  outline: 2px solid #4ca2ff;
+  outline-offset: 2px;
+}
+.methodIcon {
+  width: 48px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 6px;
+  color: #fff;
+  background: linear-gradient(135deg, #087bdf, #00badb);
+}
+.methodIcon svg {
+  width: 22px;
+  height: 22px;
+}
+.purple {
+  background: linear-gradient(135deg, #5828c3, #7844e5);
+}
+.blue {
+  background: linear-gradient(135deg, #0678dc, #08b9df);
+}
+.bank {
+  background: linear-gradient(135deg, #153968, #236ab7);
+}
+.retail {
+  background: linear-gradient(135deg, #1865a2, #008ccc);
+}
+.methodCopy {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.methodCopy b {
+  color: #f4f7fc;
+  font-size: 10px;
+  line-height: 1.25;
+}
+.methodCopy small {
+  overflow: hidden;
+  color: #aebdd0;
+  font-size: 9px;
+  line-height: 1.3;
+  text-overflow: ellipsis;
+}
+.fee {
+  color: #aab9cb;
+  font-size: 9px;
+  text-align: right;
+  white-space: nowrap;
+}
+.lowerPanels {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.subheading {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+}
+.subheading svg {
+  width: 16px;
+  height: 16px;
+  color: #83c7ff;
+}
+.panelDescription {
+  margin: 6px 0 10px;
+  color: #aab8ca;
+  font-size: 9px;
+  line-height: 1.45;
+}
+.promoForm {
+  display: flex;
+  gap: 6px;
+}
+.promoForm input {
+  min-width: 0;
+  height: 36px;
+  flex: 1;
+  padding: 0 9px;
+  border: 1px solid #293d54;
+  border-radius: 6px;
+  outline: 0;
+  color: #f2f6fb;
+  background: #0b1724;
+  font: inherit;
+  font-size: 10px;
+}
+.promoForm input:focus {
+  border-color: #1685ff;
+  box-shadow: 0 0 0 2px #0879ff26;
+}
+.promoForm input::placeholder {
+  color: #8395ab;
+}
+.applyButton {
+  min-width: 58px;
+  height: 36px !important;
+  border: 1px solid #0879ff !important;
+  border-radius: 6px !important;
+  color: white !important;
+  background: #0b2c4c !important;
+  font-size: 10px !important;
+}
+.inlineMessage {
+  margin: 8px 0 0;
+  color: #8dc8ff;
+  font-size: 9px;
+  line-height: 1.45;
+}
+.paymentInstructions {
+  margin: 8px 0;
+  padding: 10px;
+  border: 1px solid #263e58;
+  border-radius: 8px;
+  background: #0b1928;
+}
+.paymentInstructions > p {
+  margin: 8px 0 0;
+  color: #f4c56d;
+  font-size: 9px;
+  line-height: 1.4;
+}
+.qrPlaceholder {
+  min-height: 124px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: 1px dashed #416080;
+  border-radius: 7px;
+  color: #9db2c9;
+  font-size: 9px;
+  text-align: center;
+}
+.qrPlaceholder svg {
+  width: 42px;
+  height: 42px;
+  color: #67bdff;
+}
+.bankPlaceholder {
+  min-height: 70px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.bankPlaceholder > svg {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  color: #8dcaff;
+}
+.bankPlaceholder > span {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.bankPlaceholder b {
+  color: #f3f7fc;
+  font-size: 10px;
+}
+.bankPlaceholder small {
+  color: #aebdd0;
+  font-size: 9px;
+  line-height: 1.4;
+}
+.proofField {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: #e7eff9;
+  font-size: 9px;
+  font-weight: 600;
+}
+.proofField input {
+  max-width: 100%;
+  padding: 8px;
+  border: 1px solid #293d54;
+  border-radius: 6px;
+  color: #c4d2e2;
+  background: #0b1724;
+  font: inherit;
+  font-weight: 400;
+}
+.proofField small {
+  color: #91a5bc;
+  font-size: 8px;
+  font-weight: 400;
+  line-height: 1.4;
+}
+.instructions {
+  margin: 8px 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  list-style: none;
+}
+.instructions li {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  color: #cad5e2;
+  font-size: 9px;
+  line-height: 1.35;
+}
+.instructions li span {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: white;
+  background: #0879ff;
+  font-size: 8px;
+  font-weight: 700;
+}
+.paymentCard {
+  padding: 11px !important;
+}
+.timer {
+  min-height: 78px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  border: 1px solid #0879ff;
+  border-radius: 9px;
+  background: linear-gradient(115deg, #0e2942, #0a1b2b);
+}
+.clockIcon {
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  color: #8fd2ff;
+  background: #133759;
+}
+.clockIcon svg {
+  width: 25px;
+  height: 25px;
+}
+.timer > span:last-child {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.timer small {
+  color: #d5e1ef;
+  font-size: 9px;
+}
+.timer strong {
+  color: #168cff;
+  font-size: 24px;
+  letter-spacing: 1px;
+  line-height: 1.15;
+}
+.timer em {
+  color: #aebfd2;
+  font-size: 8px;
+  font-style: normal;
+  line-height: 1.3;
+}
+.expired {
+  margin: 8px 2px;
+  color: #ff9d9d;
+  font-size: 10px;
+}
+.paymentCard > h2 {
+  margin: 13px 2px 9px;
+  font-size: 14px;
+}
+.gameRow {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 0 2px 9px;
+  border-bottom: 1px solid #28394d;
+  font-size: 10px;
+}
+.gameIcon {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #2b3f56;
+  border-radius: 7px;
+  color: #d4e8ff;
+  background: #172940;
+}
+.gameIcon svg {
+  width: 20px;
+  height: 20px;
+}
+.orderDetails {
+  margin: 0;
+  padding: 7px 2px;
+  border-bottom: 1px solid #28394d;
+}
+.orderDetails > div,
+.amounts > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+  padding: 4px 0;
+}
+.orderDetails dt,
+.amounts span {
+  color: #aebcd0;
+  font-size: 9px;
+}
+.orderDetails dd {
+  max-width: 62%;
+  margin: 0;
+  color: #ecf2fa;
+  font-size: 9px;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+.amounts {
+  padding: 6px 2px;
+  border-bottom: 1px solid #28394d;
+}
+.amounts b {
+  max-width: 64%;
+  color: #edf3fb;
+  font-size: 9px;
+  font-weight: 600;
+  text-align: right;
+}
+.total {
+  padding: 9px 2px 11px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.total span {
+  color: #e0e7f1;
+  font-size: 10px;
+  font-weight: 650;
+}
+.total strong {
+  color: #078cff;
+  font-size: 23px;
+}
+.total small {
+  color: #91a5bc;
+  font-size: 8px;
+}
+.payButton {
+  width: 100%;
+  min-height: 44px;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 0 !important;
+  border-radius: 7px !important;
+  color: white !important;
+  background: linear-gradient(110deg, #0865ef, #087dff) !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+}
+.payButton svg {
+  width: 16px;
+  height: 16px;
+}
+.payButton:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.secure {
+  margin: 8px 0 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  color: #98abc0;
+  font-size: 8px;
+  text-align: center;
+}
+.secure svg {
+  width: 13px;
+  height: 13px;
+}
+.securityList {
+  margin: 10px 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+  list-style: none;
+}
+.securityList li {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  color: #c0cedd;
+  font-size: 9px;
+  line-height: 1.4;
+}
+.securityList svg {
+  width: 14px;
+  height: 14px;
+  flex: 0 0 14px;
+  padding: 2px;
+  border-radius: 50%;
+  color: white;
+  background: #0879ff;
+}
+.securityNote {
+  color: #8fa2b8;
+  font-size: 8px;
+}
+.mobilePayBar {
+  display: none;
+}
+@media (max-width: 900px) {
+  .layout {
+    padding: 0 18px;
+    grid-template-columns: minmax(0, 1.6fr) minmax(270px, 0.9fr);
+    gap: 12px;
+  }
+  .method {
+    grid-template-columns: 17px 40px minmax(0, 1fr);
+    gap: 7px;
+  }
+  .methodIcon {
+    width: 39px;
+  }
+  .fee {
+    grid-column: 3;
+    justify-self: start;
+    margin-top: -2px;
+  }
+  .methodCopy small {
+    white-space: normal;
+  }
+  .lowerPanels {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 640px) {
+  .layout {
+    padding: 0 12px calc(90px + env(safe-area-inset-bottom));
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .mainColumn,
+  .sideColumn {
+    width: 100%;
+    gap: 10px;
+  }
+  .sideColumn {
+    position: static;
+    order: -1;
+  }
+  .lowerPanels {
+    grid-template-columns: 1fr;
+  }
+  .panel {
+    padding: 12px !important;
+  }
+  .groupTitle small {
+    font-size: 8px;
+  }
+  .method {
+    min-height: 54px;
+    grid-template-columns: 18px 43px minmax(0, 1fr) auto;
+    gap: 8px;
+    padding: 6px 8px;
+  }
+  .methodIcon {
+    width: 42px;
+    height: 34px;
+  }
+  .methodCopy b {
+    font-size: 10px;
+  }
+  .methodCopy small {
+    font-size: 8px;
+  }
+  .fee {
+    grid-column: auto;
+    justify-self: end;
+    margin: 0;
+    font-size: 8px;
+    white-space: normal;
+    text-align: right;
+    max-width: 80px;
+  }
+  .instructions {
+    gap: 9px;
+  }
+  .sideColumn > :last-child {
+    margin-bottom: 4px;
+  }
+  .mobilePayBar {
+    position: fixed;
+    z-index: 25;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    min-height: 70px;
+    padding: 9px 12px calc(9px + env(safe-area-inset-bottom));
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-top: 1px solid #293e55;
+    background: #0b1522f5;
+    backdrop-filter: blur(14px);
+  }
+  .mobilePayBar > div {
+    min-width: 100px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .mobilePayBar small {
+    color: #a9b8ca;
+    font-size: 9px;
+  }
+  .mobilePayBar strong {
+    color: #168cff;
+    font-size: 16px;
+  }
+  .mobilePayBar button {
+    min-height: 46px;
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 7px;
+    border: 0;
+    border-radius: 7px;
+    color: white;
+    background: linear-gradient(110deg, #0865ef, #087dff);
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .mobilePayBar button svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+@media (max-width: 360px) {
+  .layout {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+  .method {
+    grid-template-columns: 16px 36px minmax(0, 1fr);
+    gap: 6px;
+  }
+  .methodIcon {
+    width: 35px;
+    height: 32px;
+  }
+  .fee {
+    grid-column: 3;
+    justify-self: start;
+  }
+  .timer strong {
+    font-size: 22px;
+  }
+}

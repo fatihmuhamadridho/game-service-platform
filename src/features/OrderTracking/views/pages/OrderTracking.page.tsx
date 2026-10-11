@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, type FormEvent } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Box, Button } from 'rangkaui';
 import {
   IconArrowRight,
@@ -15,16 +17,18 @@ import { Footer } from '@common-ui/organisms/Footer/Footer';
 import styles from './OrderTracking.module.css';
 
 export const OrderTrackingPage = () => {
+  const router = useRouter();
   const [orderId, setOrderId] = useState('');
   const [phone, setPhone] = useState('');
   const [errors, setErrors] = useState<string[]>([]);
-  const [submitted, setSubmitted] = useState(false);
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const missing = [!orderId.trim() ? 'orderId' : '', !phone.trim() ? 'phone' : ''].filter(Boolean);
     setErrors(missing);
-    setSubmitted(missing.length === 0);
+    if (missing.length) return;
+    window.sessionStorage.setItem('jokihub-tracking-phone', phone.trim());
+    router.push(`/cek-pesanan/${encodeURIComponent(orderId.trim())}`);
   };
 
   return (
@@ -32,7 +36,7 @@ export const OrderTrackingPage = () => {
       <Header />
       <div className={styles.content}>
         <nav className={styles.breadcrumb} aria-label="Breadcrumb">
-          <a href="/homepagev2">Beranda</a>
+          <Link href="/homepagev2">Beranda</Link>
           <span>/</span>
           <b>Cek Pesanan</b>
         </nav>
@@ -61,7 +65,7 @@ export const OrderTrackingPage = () => {
                   value={orderId}
                   onChange={(event) => {
                     setOrderId(event.target.value);
-                    setSubmitted(false);
+                    setErrors((current) => current.filter((error) => error !== 'orderId'));
                   }}
                   placeholder="Contoh: JH-2026-000123"
                   aria-invalid={errors.includes('orderId')}
@@ -74,7 +78,7 @@ export const OrderTrackingPage = () => {
                   value={phone}
                   onChange={(event) => {
                     setPhone(event.target.value);
-                    setSubmitted(false);
+                    setErrors((current) => current.filter((error) => error !== 'phone'));
                   }}
                   placeholder="Nomor WhatsApp saat memesan"
                   inputMode="tel"
@@ -86,15 +90,6 @@ export const OrderTrackingPage = () => {
                 Cek Status Pesanan <IconArrowRight />
               </Button>
             </form>
-            {submitted && (
-              <div className={styles.notice} role="status">
-                <IconShieldCheck />
-                <span>
-                  <b>Pengecekan belum tersedia</b>
-                  <small>Data pesanan belum terhubung ke sistem. Coba lagi nanti atau hubungi tim bantuan.</small>
-                </span>
-              </div>
-            )}
             <p className={styles.privacy}>
               <IconShieldCheck /> Data pesanan kamu hanya digunakan untuk verifikasi.
             </p>
@@ -102,9 +97,9 @@ export const OrderTrackingPage = () => {
           <aside className={styles.helpCard}>
             <h2>Butuh bantuan?</h2>
             <p>Pastikan nomor pesanan dan nomor WhatsApp sesuai dengan detail pesanan kamu.</p>
-            <a href="#bantuan">
+            <Link href="/bantuan">
               <IconHeadset /> Hubungi Bantuan <IconArrowRight />
-            </a>
+            </Link>
           </aside>
         </section>
         <section className={styles.steps}>

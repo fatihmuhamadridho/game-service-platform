@@ -1,6 +1,7 @@
 # Game Catalog ERD
 
-> **Status:** Draft  
+> **Document Type:** ERD
+> **Status:** Draft
 > **Scope:** Data used by Admin Dashboard game create/list and public popular-games list.
 
 ## ERD

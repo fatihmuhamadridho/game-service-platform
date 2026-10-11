@@ -1,0 +1,380 @@
+@reference 'tailwindcss';
+.page {
+  --line: #20344a;
+  min-height: 100vh;
+  overflow-x: clip;
+  background: #07121e;
+  color: #eff5fc;
+  font-family: Arial, Helvetica, sans-serif;
+}
+.page * {
+  box-sizing: border-box;
+}
+.main {
+  max-width: calc(100% - 212px);
+  min-height: calc(100vh - 64px);
+  margin-left: 212px;
+  padding: 22px 20px 40px;
+}
+.heading {
+  margin: 0 0 17px;
+}
+.breadcrumb {
+  margin: 0 0 9px !important;
+  color: #8197af !important;
+  font-size: 10px !important;
+}
+.breadcrumb span {
+  margin: 0 6px;
+  color: #536a82;
+}
+.breadcrumb b {
+  color: #6dbaff;
+  font-weight: 600;
+}
+.heading h1 {
+  margin: 0 0 5px;
+  font-size: 23px;
+  letter-spacing: -0.4px;
+}
+.heading p:last-child {
+  margin: 0;
+  color: #a6b8cc;
+  font-size: 11px;
+}
+.metrics {
+  max-width: 850px;
+  margin-bottom: 12px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+.metric,
+.panel {
+  border: 1px solid var(--line) !important;
+  border-radius: 9px !important;
+  background: linear-gradient(145deg, #0e1d2b, #0a1724) !important;
+  color: #eff5fc;
+}
+.metric {
+  min-height: 77px;
+  padding: 13px !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 7px;
+}
+.metric span {
+  color: #a8b9cd;
+  font-size: 10px;
+}
+.metric b {
+  font-size: 19px;
+}
+.accentValue {
+  color: #69b5ff;
+}
+.successValue {
+  color: #39d5a2;
+}
+.panel {
+  padding: 15px !important;
+}
+.toolbar {
+  margin-bottom: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.toolbar h2 {
+  margin: 0;
+  font-size: 14px;
+}
+.toolbar small {
+  display: block;
+  margin-top: 4px;
+  color: #8fa5bd;
+  font-size: 9px;
+}
+.search {
+  width: min(320px, 34vw);
+  height: 35px;
+  padding: 0 9px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid #263b52;
+  border-radius: 7px;
+  background: #0b1927;
+  color: #8fa8c1;
+}
+.search svg {
+  width: 15px;
+  height: 15px;
+  flex: none;
+}
+.search input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #eff5fc;
+  font: inherit;
+  font-size: 10px;
+}
+.search input::placeholder {
+  color: #8195ab;
+}
+.filters {
+  margin-bottom: 12px;
+  display: flex;
+  align-items: flex-end;
+  gap: 9px;
+}
+.filter {
+  min-width: 145px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  color: #91a5bc;
+  font-size: 9px;
+}
+.filter select,
+.dateInput {
+  height: 34px;
+  padding: 0 9px;
+  border: 1px solid #263b52;
+  border-radius: 6px;
+  background: #0b1927;
+  color: #dce7f3;
+  font: inherit;
+  font-size: 10px;
+}
+.filter select {
+  min-width: 145px;
+}
+.dateInput {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.dateInput svg {
+  width: 14px;
+  color: #78b8f6;
+}
+.dateInput input {
+  width: 130px;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #dce7f3;
+  color-scheme: dark;
+  font: inherit;
+  font-size: 9px;
+}
+.clearButton {
+  height: 34px;
+  padding: 0 10px;
+  border: 1px solid #2b4158;
+  border-radius: 6px;
+  background: #122236;
+  color: #b7c9dc;
+  font: inherit;
+  font-size: 9px;
+  cursor: pointer;
+}
+.clearButton:hover {
+  border-color: #3981c4;
+}
+.tableWrap {
+  overflow-x: auto;
+  border: 1px solid #1d3044;
+  border-radius: 7px;
+}
+.tableWrap table {
+  width: 100%;
+  border-collapse: collapse;
+  white-space: nowrap;
+}
+.tableWrap th {
+  padding: 10px 11px;
+  background: #0b1927;
+  color: #92a7bf;
+  text-align: left;
+  font-size: 9px;
+  font-weight: 600;
+}
+.tableWrap td {
+  height: 60px;
+  padding: 8px 11px;
+  border-top: 1px solid #1b2d40;
+  color: #cad7e5;
+  font-size: 9px;
+}
+.activityCell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #f1f6fc;
+}
+.activityCell > i {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  flex: none;
+  border: 1px solid #1b4d84;
+  border-radius: 7px;
+  background: #10345a;
+  color: #69b5ff;
+}
+.activityCell svg {
+  width: 15px;
+}
+.activityCell > span,
+.adminCell {
+  max-width: 250px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.activityCell b,
+.adminCell b {
+  overflow: hidden;
+  color: #e9f1fa;
+  font-size: 9px;
+  text-overflow: ellipsis;
+}
+.activityCell small,
+.adminCell small {
+  overflow: hidden;
+  color: #8fa5bb;
+  font-size: 8px;
+  text-overflow: ellipsis;
+}
+.category {
+  padding: 4px 7px;
+  border: 1px solid #28415a;
+  border-radius: 12px;
+  background: #13243a;
+  color: #a9c8e8;
+  font-size: 8px;
+}
+.tableWrap code {
+  color: #9fcaff;
+  font-size: 9px;
+}
+.result {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 9px;
+}
+.result i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+}
+.resultSuccess {
+  color: #42d9a8;
+}
+.resultFailed {
+  color: #ff8999;
+}
+.empty {
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #9eb1c7;
+  font-size: 10px;
+}
+.empty svg {
+  width: 27px;
+  color: #5caaff;
+}
+.empty b {
+  color: #e2ebf6;
+  font-size: 12px;
+}
+.demoNote {
+  margin: 11px 0 0;
+  color: #71879f;
+  font-size: 9px;
+}
+.page button:focus-visible,
+.page input:focus-visible,
+.page select:focus-visible {
+  outline: 2px solid #4ca2ff;
+  outline-offset: 2px;
+}
+@media (max-width: 1000px) {
+  .filters {
+    flex-wrap: wrap;
+  }
+  .toolbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .search {
+    width: 100%;
+  }
+}
+@media (max-width: 800px) {
+  .main {
+    max-width: none;
+    margin-left: 0;
+    padding: 17px 13px 80px;
+  }
+  .tableWrap table {
+    min-width: 900px;
+  }
+}
+@media (max-width: 480px) {
+  .main {
+    padding: 14px 9px 70px;
+  }
+  .heading h1 {
+    font-size: 20px;
+  }
+  .metrics {
+    gap: 6px;
+  }
+  .metric {
+    min-height: 66px;
+    padding: 9px !important;
+  }
+  .metric span {
+    font-size: 8px;
+  }
+  .metric b {
+    font-size: 16px;
+  }
+  .panel {
+    padding: 10px !important;
+  }
+  .filters {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .filter,
+  .filter select {
+    min-width: 0;
+    width: 100%;
+  }
+  .dateInput {
+    min-width: 0;
+    padding: 0 5px;
+  }
+  .dateInput input {
+    width: 100%;
+  }
+  .clearButton {
+    width: 100%;
+  }
+}

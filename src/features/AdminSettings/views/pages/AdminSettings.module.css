@@ -1,0 +1,257 @@
+@reference 'tailwindcss';
+.page {
+  min-height: 100vh;
+  overflow-x: clip;
+  background: #07121e;
+  color: #eff5fc;
+  font-family: Arial, Helvetica, sans-serif;
+}
+.page * {
+  box-sizing: border-box;
+}
+.main {
+  max-width: calc(100% - 212px);
+  min-height: calc(100vh - 64px);
+  margin-left: 212px;
+  padding: 22px 20px 40px;
+}
+.heading {
+  margin: 0 0 18px;
+}
+.breadcrumb {
+  margin: 0 0 9px !important;
+  color: #8197af !important;
+  font-size: 10px !important;
+}
+.breadcrumb span {
+  margin: 0 6px;
+  color: #536a82;
+}
+.breadcrumb b {
+  color: #6dbaff;
+  font-weight: 600;
+}
+.heading h1 {
+  margin: 0 0 5px;
+  font-size: 23px;
+  letter-spacing: -0.4px;
+}
+.heading p:last-child {
+  margin: 0;
+  color: #a6b8cc;
+  font-size: 11px;
+}
+.main form {
+  width: 100%;
+  max-width: none;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.panel {
+  width: 100%;
+  padding: 20px !important;
+  border: 1px solid #203a52 !important;
+  border-radius: 11px !important;
+  background: linear-gradient(145deg, #0f1e2d, #0a1724) !important;
+  color: #eff5fc;
+  box-shadow: 0 10px 26px #02091420;
+}
+.sectionTitle {
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.sectionTitle > i {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #1b4d84;
+  border-radius: 10px;
+  background: linear-gradient(145deg, #123c67, #0d2d4d);
+  color: #69b5ff;
+}
+.sectionTitle svg {
+  width: 20px;
+  height: 20px;
+}
+.sectionTitle h2 {
+  margin: 0;
+  font-size: 15px;
+}
+.sectionTitle p {
+  margin: 5px 0 0;
+  color: #8fa5bd;
+  font-size: 10px;
+}
+.fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 13px;
+}
+.fields label {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  color: #d8e3f0;
+  font-size: 10px;
+  font-weight: 600;
+}
+.fields label:nth-child(2):has(textarea) {
+  grid-column: 1 / -1;
+}
+.fields input,
+.fields textarea,
+.fields select {
+  width: 100%;
+  min-height: 39px;
+  padding: 9px 10px;
+  border: 1px solid #2a4058;
+  border-radius: 6px;
+  outline: 0;
+  background: #0a1724;
+  color: #eef5fc;
+  font: inherit;
+  font-size: 11px;
+}
+.fields textarea {
+  min-height: 75px;
+  resize: vertical;
+  line-height: 1.5;
+}
+.fields input:focus,
+.fields textarea:focus,
+.fields select:focus {
+  border-color: #1685ff;
+  box-shadow: 0 0 0 2px #0875ff26;
+}
+.fields select option {
+  background: #0a1724;
+}
+.inputWithIcon {
+  position: relative;
+}
+.inputWithIcon svg {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  width: 15px;
+  height: 15px;
+  color: #7ea6ce;
+  transform: translateY(-50%);
+}
+.inputWithIcon input {
+  padding-left: 33px;
+}
+.toggles {
+  margin-top: 17px;
+  border-top: 1px solid #20344a;
+}
+.toggles label {
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  border-bottom: 1px solid #1b2d40;
+}
+.toggles label:last-child {
+  border-bottom: 0;
+}
+.toggles span {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.toggles b {
+  color: #e7eff8;
+  font-size: 11px;
+}
+.toggles small {
+  color: #8fa5bd;
+  font-size: 9px;
+}
+.toggles input {
+  width: 17px;
+  height: 17px;
+  accent-color: #087dff;
+  cursor: pointer;
+}
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+.actions > span {
+  color: #91a5bc;
+  font-size: 10px;
+}
+.saveButton {
+  min-height: 39px;
+  padding: 0 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: 1px solid #1683ff;
+  border-radius: 7px;
+  background: linear-gradient(110deg, #0865ef, #087dff);
+  color: #fff;
+  font: inherit;
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.saveButton:hover {
+  background: #1686ff;
+}
+.saveButton svg {
+  width: 16px;
+  height: 16px;
+}
+.demoNote {
+  margin: -4px 0 0;
+  color: #71879f;
+  font-size: 9px;
+}
+.page button:focus-visible,
+.page input:focus-visible,
+.page select:focus-visible,
+.page textarea:focus-visible {
+  outline: 2px solid #4ca2ff;
+  outline-offset: 2px;
+}
+@media (max-width: 800px) {
+  .main {
+    max-width: none;
+    margin-left: 0;
+    padding: 17px 13px 80px;
+  }
+}
+@media (max-width: 560px) {
+  .main {
+    padding: 14px 9px 70px;
+  }
+  .heading h1 {
+    font-size: 20px;
+  }
+  .panel {
+    padding: 13px !important;
+  }
+  .fields {
+    grid-template-columns: 1fr;
+  }
+  .fields label:nth-child(2):has(textarea) {
+    grid-column: auto;
+  }
+  .actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .saveButton {
+    width: 100%;
+  }
+}

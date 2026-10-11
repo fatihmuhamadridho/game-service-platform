@@ -89,6 +89,7 @@
   font-size: 9px;
 }
 .actions {
+  position: relative;
   height: 100%;
   margin-left: auto;
   display: flex;
@@ -158,6 +159,56 @@
 .mobileAvatar {
   display: none;
 }
+.profileDropdown {
+  position: absolute;
+  z-index: 60;
+  top: calc(100% - 4px);
+  right: 14px;
+  width: 205px;
+  padding: 7px;
+  border: 1px solid #2a3e55;
+  border-radius: 9px;
+  background: #0d1a29;
+  box-shadow: 0 12px 30px #0008;
+}
+.dropdownIdentity {
+  padding: 8px 9px 10px;
+  border-bottom: 1px solid #26394e;
+}
+.dropdownIdentity b,
+.dropdownIdentity small {
+  display: block;
+}
+.dropdownIdentity b {
+  color: #eaf1f9;
+  font-size: 10px;
+}
+.dropdownIdentity small {
+  margin-top: 4px;
+  color: #96a8bd;
+  font-size: 9px;
+}
+.profileDropdown > a {
+  min-height: 37px;
+  margin-top: 5px;
+  padding: 0 9px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 6px;
+  color: #ff9ba5;
+  text-decoration: none;
+  font-size: 10px;
+  font-weight: 650;
+}
+.profileDropdown > a:hover,
+.profileDropdown > a:focus-visible {
+  background: #34202a;
+}
+.profileDropdown > a svg {
+  width: 15px;
+  height: 15px;
+}
 .backdrop {
   display: none;
 }
@@ -217,6 +268,10 @@
     width: 27px;
     height: 27px;
     font-size: 10px;
+  }
+  .profileDropdown {
+    right: 7px;
+    top: calc(100% - 2px);
   }
   .backdrop {
     position: fixed;

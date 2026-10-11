@@ -20,7 +20,7 @@ import {
 } from '@tabler/icons-react';
 import styles from './AdminSidebar.module.css';
 
-type Props = { open: boolean; onClose: () => void };
+type Props = { open: boolean; onClose: () => void; activeItem?: string };
 const groups = [
   { label: '', items: [['Dashboard', IconHomeFilled]] },
   {
@@ -75,7 +75,7 @@ const groups = [
     ],
   },
 ] as const;
-export const AdminSidebar = ({ open, onClose }: Props) => (
+export const AdminSidebar = ({ open, onClose, activeItem = 'Dashboard' }: Props) => (
   <>
     <aside className={`${styles.sidebar} ${open ? styles.open : ''}`}>
       <div className={styles.mobileTop}>
@@ -85,14 +85,58 @@ export const AdminSidebar = ({ open, onClose }: Props) => (
         </button>
       </div>
       <nav aria-label="Navigasi admin">
-        {groups.map((group, index) => (
+        {groups.map((group) => (
           <section key={group.label || 'dashboard'}>
             {group.label && <h2>{group.label}</h2>}
             {group.items.map(([label, Icon]) => (
               <a
                 key={label}
-                href={label === 'Dashboard' ? '/admin' : `/admin#${label.toLowerCase().replaceAll(' ', '-')}`}
-                className={index === 0 ? styles.active : ''}
+                href={
+                  label === 'Dashboard'
+                    ? '/admin'
+                    : label === 'Pesanan'
+                      ? '/admin/orders'
+                      : label === 'Top Up Manual'
+                        ? '/admin/manual-top-ups'
+                        : label === 'Refund'
+                          ? '/admin/refunds'
+                          : label === 'Komplain'
+                            ? '/admin/complaints'
+                            : label === 'Transaksi'
+                              ? '/admin/transactions'
+                              : label === 'Payout'
+                                ? '/admin/payouts'
+                                : label === 'Rekening'
+                                  ? '/admin/bank-accounts'
+                                  : label === 'Game'
+                                    ? '/admin/games'
+                                    : label === 'Kategori Layanan'
+                                      ? '/admin/service-categories'
+                                      : label === 'Layanan'
+                                        ? '/admin/services'
+                                        : label === 'User'
+                                          ? '/admin/users'
+                                          : label === 'Member'
+                                            ? '/admin/members'
+                                            : label === 'Admin'
+                                              ? '/admin/admins'
+                                              : label === 'Banner'
+                                                ? '/admin/banners'
+                                                : label === 'Pengumuman'
+                                                  ? '/admin/announcements'
+                                                  : label === 'Halaman'
+                                                    ? '/admin/pages'
+                                                    : label === 'FAQ'
+                                                      ? '/admin/faqs'
+                                                      : label === 'Pengaturan Umum'
+                                                        ? '/admin/settings'
+                                                        : label === 'Akun & Role'
+                                                          ? '/admin/settings/accounts-roles'
+                                                          : label === 'Log Aktivitas'
+                                                            ? '/admin/activity-logs'
+                                                            : `/admin#${label.toLowerCase().replaceAll(' ', '-')}`
+                }
+                className={label === activeItem ? styles.active : ''}
                 onClick={onClose}
               >
                 <Icon />

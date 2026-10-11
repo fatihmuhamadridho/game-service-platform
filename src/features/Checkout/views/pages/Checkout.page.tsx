@@ -28,7 +28,9 @@ export const CheckoutPage = ({ gameSlug }: { gameSlug: string }) => {
   const [selectedService, setSelectedService] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [step, setStep] = useState(0);
+  const [paymentSubmitted, setPaymentSubmitted] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
+  const [orderDetails, setOrderDetails] = useState<Record<string, string>>({});
   const selected = services[selectedService];
   const total = useMemo(() => (selected.price ? selected.price * quantity : 0), [selected.price, quantity]);
 
@@ -45,6 +47,7 @@ export const CheckoutPage = ({ gameSlug }: { gameSlug: string }) => {
       document.getElementById('order-details')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
       return;
     }
+    setOrderDetails(Object.fromEntries(Array.from(formData.entries(), ([key, value]) => [key, String(value)])));
     setStep(3);
   };
 
@@ -56,8 +59,10 @@ export const CheckoutPage = ({ gameSlug }: { gameSlug: string }) => {
       selectedService={selectedService}
       quantity={quantity}
       step={step}
+      paymentSubmitted={paymentSubmitted}
       errors={errors}
       total={total}
+      orderDetails={orderDetails}
       formatPrice={formatPrice}
       onGameSelect={(game) => {
         setSelectedGame(game);
@@ -66,6 +71,7 @@ export const CheckoutPage = ({ gameSlug }: { gameSlug: string }) => {
       onServiceSelect={setSelectedService}
       onQuantity={setQuantity}
       onContinue={continueOrder}
+      onPaymentSubmit={() => setPaymentSubmitted(true)}
       onDetailsChange={() => setErrors([])}
     />
   );
