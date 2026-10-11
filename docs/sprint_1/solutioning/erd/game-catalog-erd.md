@@ -1,8 +1,8 @@
-# Game Catalog ERD
+# Game ERD
 
-> **Document Type:** ERD
-> **Status:** Draft
-> **Scope:** Data used by Admin Dashboard game create/list and public popular-games list.
+> **Document Type:** ERD  
+> **Status:** Draft  
+> **Scope:** Data used by Admin Dashboard game create/list/update and public popular-games list.
 
 ## ERD
 
@@ -41,12 +41,12 @@ Current scope needs one entity only. Admin identity belongs to the authenticatio
 
 ## Indexes
 
-| Index                             | Columns                                 | Type                                                 | Purpose                                                                                                                          |
-| --------------------------------- | --------------------------------------- | ---------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| `uq_game_catalog_slug`            | `slug`                                  | Unique                                               | Enforce unique game route.                                                                                                       |
-| `uq_game_catalog_name_normalized` | normalized `name`                       | Unique (proposed)                                    | Prevent duplicate display names ignoring case and surrounding whitespace. Normalization/index method depends on database engine. |
-| `ix_game_catalog_admin_list`      | `sort_order`, `name`, `game_id`         | Non-unique                                           | Support deterministic Admin Dashboard list ordering.                                                                             |
-| `ix_game_catalog_popular`         | `is_active`, `is_popular`, `sort_order` | Non-unique; partial index where supported (proposed) | Support active popular-games lookup.                                                                                             |
+| Index                             | Columns                                 | Type                                                 | Purpose                                                                   |
+| --------------------------------- | --------------------------------------- | ---------------------------------------------------- | ------------------------------------------------------------------------- |
+| `uq_game_catalog_slug`            | `slug`                                  | Unique                                               | Enforce unique game route.                                                |
+| `uq_game_catalog_name_normalized` | normalized `name`                       | Unique (proposed)                                    | Prevent duplicate display names ignoring case and surrounding whitespace. |
+| `ix_game_catalog_admin_list`      | `sort_order`, `name`, `game_id`         | Non-unique                                           | Support deterministic Admin Dashboard list ordering.                      |
+| `ix_game_catalog_popular`         | `is_active`, `is_popular`, `sort_order` | Non-unique; partial index where supported (proposed) | Support active popular-games lookup.                                      |
 
 ## Relationships
 
@@ -62,18 +62,20 @@ Current scope needs one entity only. Admin identity belongs to the authenticatio
 4. `is_popular=true` requires `is_active=true`.
 5. `sort_order` cannot be negative.
 6. `created_at` is immutable; service updates `updated_at` on every successful change.
-7. Deletion strategy is not defined by current Create/List solutioning. Do not add cascading deletes until relationships and retention policy are approved.
+7. Deletion strategy is not defined by current solutioning. Do not add cascading deletes until relationships and retention policy are approved.
+8. Updating a game changes only supplied mutable attributes; `game_id` and `created_at` remain immutable.
 
 ## Assumptions / Decisions Needed
 
 - Table and column names, data types, identifier generation, defaults, uniqueness, and indexes are proposed; database engine and naming convention are TBD.
-- `service_summary` and `artwork_key` come from the existing storefront card needs. `mark` is excluded because there is no confirmed product requirement.
+- `service_summary` and `artwork_key` come from existing storefront-card needs. `mark` is excluded because there is no confirmed product requirement.
 - Confirm whether game name must be unique, whether inactive games remain stored, and whether a soft-delete field is required.
-- Create Game solutioning proposes defaults `is_active=false`, `is_popular=false`, and `sort_order=0`; confirm these before schema implementation.
+- Create Game solutioning proposes defaults `is_active=false`, `is_popular=false`, and `sort_order=0`; confirm before schema implementation.
 - Audit actor/history model is outside this ERD and remains TBD.
 
 ## References
 
 - `docs/sprint_1/solutioning/dashboard/games/create-game.md`
 - `docs/sprint_1/solutioning/dashboard/games/get-list-games.md`
+- `docs/sprint_1/solutioning/dashboard/games/update-game.md`
 - `docs/sprint_1/solutioning/public/games/get-popular-games.md`
