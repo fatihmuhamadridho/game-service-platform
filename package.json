@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "lint:fix": "eslint . --ext .ts,.tsx --fix",
-    "prettier": "prettier . --write"
+    "prettier": "prettier --write",
+    "prettier:all": "prettier . --write"
   },
   "dependencies": {
     "@tabler/icons-react": "^3.48.0",
