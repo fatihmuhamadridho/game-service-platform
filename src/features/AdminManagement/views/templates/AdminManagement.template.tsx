@@ -8,7 +8,6 @@ import { AdminSidebar } from '@common-ui/organisms/AdminDashboard/AdminSidebar';
 import type {
   AdminAccountForm,
   AdminAccountFormMode,
-  AdminAccountRole,
   AdminAccountRoleFilter,
   AdminAccountStatus,
   AdminAccountStatusFilter,
@@ -18,6 +17,8 @@ import styles from '../pages/AdminManagement.module.css';
 
 type Props = {
   admins: AdminAccountView[];
+  roles: Array<{ id: string; name: string; protected?: boolean }>;
+  error?: string;
   filteredAdmins: AdminAccountView[];
   query: string;
   onQueryChange: (value: string) => void;
@@ -39,10 +40,13 @@ type Props = {
   onDeleteConfirm: () => void;
   viewTarget: AdminAccountView | null;
   onView: (admin: AdminAccountView | null) => void;
+  onViewDetail: (admin: AdminAccountView) => void;
 };
 
 export const AdminManagementTemplate = ({
   admins,
+  roles,
+  error = '',
   filteredAdmins,
   query,
   onQueryChange,
@@ -64,6 +68,7 @@ export const AdminManagementTemplate = ({
   onDeleteConfirm,
   viewTarget,
   onView,
+  onViewDetail,
 }: Props) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const updateField = <K extends keyof AdminAccountForm>(field: K, value: AdminAccountForm[K]) =>
@@ -193,7 +198,7 @@ export const AdminManagementTemplate = ({
                     <td>{admin.lastActive}</td>
                     <td>
                       <div className={styles.rowActions}>
-                        <button aria-label={`Lihat ${admin.name}`} onClick={() => onView(admin)}>
+                        <button aria-label={`Lihat ${admin.name}`} onClick={() => onViewDetail(admin)}>
                           <IconEye /> Detail
                         </button>
                         <button aria-label={`Edit ${admin.name}`} onClick={() => onEdit(admin)}>
@@ -220,7 +225,11 @@ export const AdminManagementTemplate = ({
               </div>
             )}
           </div>
-          <p className={styles.demoNote}>Data contoh. Perubahan hanya tersimpan selama halaman ini terbuka.</p>
+          {error && (
+            <p role="alert" className={styles.demoNote}>
+              {error}
+            </p>
+          )}
         </Box>
       </div>
 
@@ -235,7 +244,7 @@ export const AdminManagementTemplate = ({
             <div className={styles.dialogHeading}>
               <div>
                 <h2 id="admin-dialog-title">{formMode === 'create' ? 'Tambah Admin' : 'Edit Admin'}</h2>
-                <p>Atur identitas, role, dan status admin.</p>
+                <p>Role admin dikelola melalui assignment RBAC.</p>
               </div>
               <button className={styles.closeButton} aria-label="Tutup" onClick={onCloseForm}>
                 <IconX />
@@ -253,6 +262,17 @@ export const AdminManagementTemplate = ({
                 />
               </label>
               <label>
+                Username
+                <input
+                  required
+                  value={form.username}
+                  onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                    updateField('username', event.target.value.toLowerCase().replace(/[^a-z0-9._-]/g, ''))
+                  }
+                  placeholder="username"
+                />
+              </label>
+              <label>
                 Email
                 <input
                   required
@@ -262,33 +282,53 @@ export const AdminManagementTemplate = ({
                   placeholder="nama@example.com"
                 />
               </label>
-              <div className={styles.formRow}>
-                <label>
-                  Role
-                  <select
-                    value={form.role}
-                    onChange={(event: ChangeEvent<HTMLSelectElement>) =>
-                      updateField('role', event.target.value as AdminAccountRole)
-                    }
-                  >
-                    <option>Admin</option>
-                    <option>Super Admin</option>
-                  </select>
-                </label>
-                <label>
-                  Status
-                  <select
-                    value={form.status}
-                    onChange={(event: ChangeEvent<HTMLSelectElement>) =>
-                      updateField('status', event.target.value as AdminAccountStatus)
-                    }
-                  >
-                    <option>Aktif</option>
-                    <option>Nonaktif</option>
-                  </select>
-                </label>
-              </div>
-              <p className={styles.formNote}>Prototipe UI belum mengirim undangan atau mengubah hak akses di server.</p>
+              <label>
+                Role RBAC
+                <select
+                  multiple
+                  required
+                  value={form.roleIds}
+                  onChange={(event: ChangeEvent<HTMLSelectElement>) =>
+                    updateField(
+                      'roleIds',
+                      Array.from(event.target.selectedOptions, (option) => option.value)
+                    )
+                  }
+                >
+                  {roles.map((role) => (
+                    <option key={role.id} value={role.id}>
+                      {role.name}
+                      {role.protected ? ' (system)' : ''}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              {formMode === 'edit' && (
+                <div className={styles.formRow}>
+                  <label>
+                    Status
+                    <select
+                      value={form.status}
+                      onChange={(event: ChangeEvent<HTMLSelectElement>) =>
+                        updateField('status', event.target.value as AdminAccountStatus)
+                      }
+                    >
+                      <option>Aktif</option>
+                      <option>Nonaktif</option>
+                    </select>
+                  </label>
+                </div>
+              )}
+              {formMode === 'create' && (
+                <p className={styles.formNote}>
+                  Undangan akun baru hanya aktif setelah identity provider dikonfigurasi.
+                </p>
+              )}
+              {error && (
+                <p role="alert" className={styles.formNote}>
+                  {error}
+                </p>
+              )}
               <div className={styles.dialogActions}>
                 <button type="button" className={styles.cancelButton} onClick={onCloseForm}>
                   Batal
@@ -326,6 +366,10 @@ export const AdminManagementTemplate = ({
                 <dd>{viewTarget.name}</dd>
               </div>
               <div>
+                <dt>Username</dt>
+                <dd>@{viewTarget.username}</dd>
+              </div>
+              <div>
                 <dt>Email</dt>
                 <dd>{viewTarget.email}</dd>
               </div>
@@ -343,6 +387,11 @@ export const AdminManagementTemplate = ({
               </div>
             </dl>
             <div className={styles.dialogActions}>
+              {error && (
+                <p role="alert" className={styles.formNote}>
+                  {error}
+                </p>
+              )}
               <button className={styles.cancelButton} onClick={() => onView(null)}>
                 Tutup
               </button>
@@ -374,7 +423,7 @@ export const AdminManagementTemplate = ({
                 <p>
                   {deletingLastSuperAdmin
                     ? 'Super Admin terakhir tidak bisa dihapus.'
-                    : 'Admin akan dihapus dari daftar pada sesi ini.'}
+                    : 'Akun admin akan dinonaktifkan dan seluruh assignment role dicabut.'}
                 </p>
               </div>
               <button className={styles.closeButton} aria-label="Tutup" onClick={() => onDeleteSelect(null)}>

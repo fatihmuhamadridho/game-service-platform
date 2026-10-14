@@ -12,6 +12,7 @@ import {
   IconX,
 } from '@tabler/icons-react';
 import styles from './Header.module.css';
+import { FEATURE_SPRINT_2 } from '@configs/base.config';
 
 type Props = {
   variant?: 'storefront' | 'checkout';
@@ -60,30 +61,36 @@ export const Header = ({
           </a>
           <a href="/games">Games</a>
           <a href="/cek-pesanan">Cek Pesanan</a>
-          <a href="/bantuan">Bantuan</a>
+          {FEATURE_SPRINT_2 && <a href="/bantuan">Bantuan</a>}
         </nav>
-        {variant === 'storefront' && (
-          <form
-            className={`${styles.search} ${searchOpen ? styles.searchExpanded : ''}`}
-            onSubmit={(event) => event.preventDefault()}
-          >
-            <IconSearch />
-            <input
-              aria-label="Cari game atau layanan"
-              value={search}
-              onChange={(event) => updateSearch(event.target.value)}
-              placeholder="Cari game atau layanan..."
-            />
-            <kbd>Ctrl K</kbd>
-          </form>
+        {FEATURE_SPRINT_2 ? (
+          variant === 'storefront' && (
+            <form
+              className={`${styles.search} ${searchOpen ? styles.searchExpanded : ''}`}
+              onSubmit={(event) => event.preventDefault()}
+            >
+              <IconSearch />
+              <input
+                aria-label="Cari game atau layanan"
+                value={search}
+                onChange={(event) => updateSearch(event.target.value)}
+                placeholder="Cari game atau layanan..."
+              />
+              <kbd>Ctrl K</kbd>
+            </form>
+          )
+        ) : (
+          <form className="w-full"></form>
         )}
         <div className={styles.actions}>
           {variant === 'storefront' ? (
             <>
-              <button className={styles.cart} aria-label="Keranjang">
-                <IconShoppingCart />
-                <i>2</i>
-              </button>
+              {FEATURE_SPRINT_2 && (
+                <button className={styles.cart} aria-label="Keranjang">
+                  <IconShoppingCart />
+                  <i>2</i>
+                </button>
+              )}
               <a className={styles.login} href="/login">
                 Masuk
               </a>

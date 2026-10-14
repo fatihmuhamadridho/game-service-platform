@@ -1,7 +1,9 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import {
   IconAdjustments,
+  IconBell,
   IconCreditCard,
   IconDeviceGamepad2,
   IconFileText,
@@ -16,9 +18,10 @@ import {
   IconUsers,
   IconWallet,
   IconX,
-  IconBell,
+  IconLogout,
 } from '@tabler/icons-react';
 import styles from './AdminSidebar.module.css';
+import { APP_VERSION } from '@configs/base.config';
 
 type Props = { open: boolean; onClose: () => void; activeItem?: string };
 const groups = [
@@ -28,8 +31,8 @@ const groups = [
     items: [
       ['Pesanan', IconFileText],
       ['Top Up Manual', IconWallet],
-      ['Refund', IconHistory],
-      ['Komplain', IconHelpCircle],
+      // ['Refund', IconHistory],
+      // ['Komplain', IconHelpCircle],
     ],
   },
   {
@@ -38,15 +41,15 @@ const groups = [
       ['Game', IconDeviceGamepad2],
       ['Kategori Layanan', IconListDetails],
       ['Layanan', IconReceipt],
-      ['Voucher', IconTag],
+      // ['Voucher', IconTag],
     ],
   },
   {
     label: 'Keuangan',
     items: [
       ['Transaksi', IconCreditCard],
-      ['Payout', IconWallet],
-      ['Rekening', IconCreditCard],
+      // ['Payout', IconWallet],
+      // ['Rekening', IconCreditCard],
     ],
   },
   {
@@ -57,15 +60,15 @@ const groups = [
       ['Admin', IconShieldCheck],
     ],
   },
-  {
-    label: 'Konten',
-    items: [
-      ['Banner', IconFileText],
-      ['Pengumuman', IconBell],
-      ['Halaman', IconFileText],
-      ['FAQ', IconHelpCircle],
-    ],
-  },
+  // {
+  //   label: 'Konten',
+  //   items: [
+  //     ['Banner', IconFileText],
+  //     ['Pengumuman', IconBell],
+  //     ['Halaman', IconFileText],
+  //     ['FAQ', IconHelpCircle],
+  //   ],
+  // },
   {
     label: 'Pengaturan',
     items: [
@@ -75,86 +78,91 @@ const groups = [
     ],
   },
 ] as const;
-export const AdminSidebar = ({ open, onClose, activeItem = 'Dashboard' }: Props) => (
-  <>
-    <aside className={`${styles.sidebar} ${open ? styles.open : ''}`}>
-      <div className={styles.mobileTop}>
-        <b>Menu Admin</b>
-        <button onClick={onClose} aria-label="Tutup menu">
-          <IconX />
-        </button>
-      </div>
-      <nav aria-label="Navigasi admin">
-        {groups.map((group) => (
-          <section key={group.label || 'dashboard'}>
-            {group.label && <h2>{group.label}</h2>}
-            {group.items.map(([label, Icon]) => (
-              <a
-                key={label}
-                href={
-                  label === 'Dashboard'
-                    ? '/admin'
-                    : label === 'Pesanan'
-                      ? '/admin/orders'
-                      : label === 'Top Up Manual'
-                        ? '/admin/manual-top-ups'
-                        : label === 'Refund'
-                          ? '/admin/refunds'
-                          : label === 'Komplain'
-                            ? '/admin/complaints'
-                            : label === 'Transaksi'
-                              ? '/admin/transactions'
-                              : label === 'Payout'
-                                ? '/admin/payouts'
-                                : label === 'Rekening'
-                                  ? '/admin/bank-accounts'
-                                  : label === 'Game'
-                                    ? '/admin/games'
-                                    : label === 'Kategori Layanan'
-                                      ? '/admin/service-categories'
-                                      : label === 'Layanan'
-                                        ? '/admin/services'
-                                        : label === 'User'
-                                          ? '/admin/users'
-                                          : label === 'Member'
-                                            ? '/admin/members'
-                                            : label === 'Admin'
-                                              ? '/admin/admins'
-                                              : label === 'Banner'
-                                                ? '/admin/banners'
-                                                : label === 'Pengumuman'
-                                                  ? '/admin/announcements'
-                                                  : label === 'Halaman'
-                                                    ? '/admin/pages'
-                                                    : label === 'FAQ'
-                                                      ? '/admin/faqs'
-                                                      : label === 'Pengaturan Umum'
-                                                        ? '/admin/settings'
-                                                        : label === 'Akun & Role'
-                                                          ? '/admin/settings/accounts-roles'
-                                                          : label === 'Log Aktivitas'
-                                                            ? '/admin/activity-logs'
-                                                            : `/admin#${label.toLowerCase().replaceAll(' ', '-')}`
-                }
-                className={label === activeItem ? styles.active : ''}
-                onClick={onClose}
-              >
-                <Icon />
-                <span>{label}</span>
-                {label === 'Pesanan' && <i>24</i>}
-              </a>
-            ))}
-          </section>
-        ))}
-      </nav>
-      <div className={styles.sidebarBrand}>
-        <IconDeviceGamepad2 />
-        <span>
-          <b>JokiHub</b>
-          <small>v1.0.0</small>
-        </span>
-      </div>
-    </aside>
-    {open && <button className={styles.backdrop} onClick={onClose} aria-label="Tutup navigasi" />}
-  </>
-);
+
+const routeFor = (label: string) =>
+  ({
+    Dashboard: '/admin',
+    Pesanan: '/admin/orders',
+    'Top Up Manual': '/admin/manual-top-ups',
+    Refund: '/admin/refunds',
+    Komplain: '/admin/complaints',
+    Transaksi: '/admin/transactions',
+    Payout: '/admin/payouts',
+    Rekening: '/admin/bank-accounts',
+    Game: '/admin/games',
+    'Kategori Layanan': '/admin/service-categories',
+    Layanan: '/admin/services',
+    User: '/admin/users',
+    Member: '/admin/members',
+    Admin: '/admin/admins',
+    Banner: '/admin/banners',
+    Pengumuman: '/admin/announcements',
+    Halaman: '/admin/pages',
+    FAQ: '/admin/faqs',
+    'Pengaturan Umum': '/admin/settings',
+    'Akun & Role': '/admin/settings/accounts-roles',
+    'Log Aktivitas': '/admin/activity-logs',
+  })[label] ?? `/admin#${label.toLowerCase().replaceAll(' ', '-')}`;
+
+export const AdminSidebar = ({ open, onClose, activeItem = 'Dashboard' }: Props) => {
+  const router = useRouter();
+  const logout = async () => {
+    try {
+      const response = await fetch('/api/admin/auth/v1/logout', { method: 'POST' });
+      if (response.ok) {
+        window.sessionStorage.removeItem('jokihub-session-type');
+        router.replace('/login');
+        router.refresh();
+      }
+    } catch {
+      /* Keep session UI available if logout request fails. */
+    }
+  };
+  return (
+    <>
+      <aside className={`${styles.sidebar} ${open ? styles.open : ''}`}>
+        <div className={styles.mobileTop}>
+          <b>Menu Admin</b>
+          <button onClick={onClose} aria-label="Tutup menu">
+            <IconX />
+          </button>
+        </div>
+        <nav aria-label="Navigasi admin">
+          {groups.map((group) => (
+            <section key={group.label || 'dashboard'}>
+              {group.label && <h2>{group.label}</h2>}
+              {group.items.map(([label, Icon]) => (
+                <a
+                  key={label}
+                  href={routeFor(label)}
+                  className={label === activeItem ? styles.active : ''}
+                  onClick={onClose}
+                >
+                  <Icon />
+                  <span>{label}</span>
+                </a>
+              ))}
+            </section>
+          ))}
+        </nav>
+        <div className={styles.sidebarBrand}>
+          <IconDeviceGamepad2 />
+          <span>
+            <b>JokiHub</b>
+            <small>v{APP_VERSION}</small>
+          </span>
+          <button
+            className={styles.logout}
+            type="button"
+            onClick={() => void logout()}
+            aria-label="Keluar dari dashboard admin"
+            title="Keluar"
+          >
+            <IconLogout />
+          </button>
+        </div>
+      </aside>
+      {open && <button className={styles.backdrop} onClick={onClose} aria-label="Tutup navigasi" />}
+    </>
+  );
+};

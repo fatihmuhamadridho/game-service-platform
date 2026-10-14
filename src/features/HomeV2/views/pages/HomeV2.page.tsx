@@ -1,17 +1,9 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { IconBolt, IconCheck, IconDeviceGamepad2, IconDiamond, IconShieldCheck, IconWallet } from '@tabler/icons-react';
 import type { HomeBenefit, HomeCategory, HomeGame } from '../interfaces/homeV2.interface';
 import { HomeV2Template } from '../templates/HomeV2.template';
-
-const games: HomeGame[] = [
-  { name: 'Roblox', service: 'Joki Rank / Star', art: 'roblox', mark: 'R' },
-  { name: 'Mobile Legends', service: 'Joki Rank / Top Up', art: 'ml', mark: '✦' },
-  { name: 'Free Fire', service: 'Top Up Diamond', art: 'ff', mark: '◈' },
-  { name: 'PUBG Mobile', service: 'Joki Rank / Top Up', art: 'pubg', mark: 'P' },
-  { name: 'Valorant', service: 'Top Up Point', art: 'valo', mark: 'V' },
-  { name: 'Genshin Impact', service: 'Top Up Genesis', art: 'genshin', mark: '✧' },
-];
 
 const categories: HomeCategory[] = [
   { title: 'Joki Game', detail: 'Rank, Level, Achievement', icon: <IconDeviceGamepad2 /> },
@@ -30,5 +22,59 @@ const benefits: HomeBenefit[] = [
 ];
 
 export const HomeV2Page = () => {
-  return <HomeV2Template games={games} categories={categories} benefits={benefits} />;
+  const [games, setGames] = useState<HomeGame[]>([]);
+  const [liveCategories, setLiveCategories] = useState<HomeCategory[]>([]);
+  useEffect(() => {
+    let alive = true;
+    fetch('/api/games/v1/popular')
+      .then((response) => response.json())
+      .then(
+        (result: {
+          data?: {
+            games?: Array<{ name: string; slug: string; serviceSummary: string | null; artworkKey: string | null }>;
+          };
+        }) => {
+          if (alive)
+            setGames(
+              (result.data?.games ?? []).map((game) => ({
+                name: game.name,
+                slug: game.slug,
+                service: game.serviceSummary ?? 'Lihat layanan tersedia',
+                art: game.artworkKey ?? game.slug,
+                mark: game.name.slice(0, 1),
+              }))
+            );
+        }
+      )
+      .catch(() => alive && setGames([]));
+    return () => {
+      alive = false;
+    };
+  }, []);
+  useEffect(() => {
+    let alive = true;
+    fetch('/api/service-categories/v1/list')
+      .then(async (response) => {
+        const result = await response.json();
+        if (!response.ok || !result.data) throw new Error('Kategori belum tersedia.');
+        if (alive)
+          setLiveCategories(
+            result.data.categories.map((category: { name: string; description: string | null }, index: number) => ({
+              title: category.name,
+              detail: category.description ?? 'Jelajahi layanan yang tersedia',
+              icon:
+                index % categories.length < categories.length ? (
+                  categories[index % categories.length]!.icon
+                ) : (
+                  <IconWallet />
+                ),
+            }))
+          );
+      })
+      .catch(() => alive && setLiveCategories([]));
+    return () => {
+      alive = false;
+    };
+  }, []);
+  return <HomeV2Template games={games} categories={liveCategories} benefits={benefits} />;
 };

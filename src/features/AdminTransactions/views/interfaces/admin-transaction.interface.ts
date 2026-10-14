@@ -1,8 +1,9 @@
 export type TransactionStatus = 'Berhasil' | 'Menunggu' | 'Gagal' | 'Dikembalikan';
 export type TransactionType = 'Pembayaran Pesanan' | 'Refund';
-export type TransactionMethod = 'QRIS' | 'BCA Virtual Account';
+export type TransactionMethod = 'QRIS' | 'Transfer Bank BCA';
 export type TransactionView = {
   id: string;
+  internalId: string;
   orderId: string;
   customerName: string;
   customerContact: string;

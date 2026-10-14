@@ -107,6 +107,11 @@
 .panel {
   padding: 15px !important;
 }
+.loadError {
+  margin: 0 0 12px;
+  color: #ff9ba6;
+  font-size: 11px;
+}
 .toolbar {
   margin-bottom: 12px;
   display: flex;

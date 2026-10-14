@@ -4,10 +4,9 @@ import { GameTag } from '../atoms/GameTag.atom';
 import { Rating } from '../atoms/Rating.atom';
 import styles from './GameCard.module.css';
 
-const slug = (name: string) => name.toLowerCase().replaceAll(' ', '-');
 export const GameCard = ({ game }: { game: GameCardView }) => (
   <Box className={styles.card} bordered rounded>
-    <a href={`/order/${slug(game.name)}`}>
+    <a href={`/order/${game.slug ?? game.name.toLowerCase().replaceAll(' ', '-')}`}>
       <div className={`${styles.art} ${styles[game.art]}`}>
         <span>{game.name}</span>
         <i />
@@ -21,7 +20,7 @@ export const GameCard = ({ game }: { game: GameCardView }) => (
         </div>
         <div className={styles.meta}>
           <span>{game.count} layanan</span>
-          <Rating rating={game.rating} reviews={game.reviews} />
+          {game.rating && <Rating rating={game.rating} reviews={game.reviews} />}
         </div>
       </div>
     </a>

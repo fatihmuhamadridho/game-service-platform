@@ -1,0 +1,792 @@
+[
+  {
+    "id": "collection.auth_refresh_session.create",
+    "label": "Create collection auth_refresh_session",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "collection auth_refresh_session does not exist",
+        "source": {
+          "kind": "listCollections"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "name",
+          "op": "$eq",
+          "value": "auth_refresh_session"
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create collection auth_refresh_session",
+        "command": {
+          "kind": "createCollection",
+          "collection": "auth_refresh_session",
+          "validator": {
+            "$jsonSchema": {
+              "additionalProperties": false,
+              "bsonType": "object",
+              "properties": {
+                "_id": {
+                  "bsonType": "objectId"
+                },
+                "account_id": {
+                  "bsonType": "objectId"
+                },
+                "account_type": {
+                  "bsonType": "string"
+                },
+                "created_at": {
+                  "bsonType": "date"
+                },
+                "expires_at": {
+                  "bsonType": "date"
+                },
+                "last_used_at": {
+                  "bsonType": ["null", "date"]
+                },
+                "replaced_by_id": {
+                  "bsonType": ["null", "objectId"]
+                },
+                "revoked_at": {
+                  "bsonType": ["null", "date"]
+                },
+                "token_hash": {
+                  "bsonType": "string"
+                }
+              },
+              "required": ["_id", "account_id", "account_type", "created_at", "expires_at", "token_hash"]
+            }
+          },
+          "validationLevel": "strict",
+          "validationAction": "error"
+        }
+      }
+    ],
+    "postcheck": []
+  },
+  {
+    "id": "index.admin_account.create(username:1)",
+    "label": "Create index on admin_account (username:1)",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "index does not already exist on admin_account",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "admin_account"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "username": 1
+          }
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index on admin_account",
+        "command": {
+          "kind": "createIndex",
+          "collection": "admin_account",
+          "keys": [
+            {
+              "direction": 1,
+              "field": "username"
+            }
+          ],
+          "unique": true,
+          "name": "username_1"
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "index exists on admin_account",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "admin_account"
+        },
+        "filter": {
+          "kind": "and",
+          "exprs": [
+            {
+              "kind": "field",
+              "field": "key",
+              "op": "$eq",
+              "value": {
+                "username": 1
+              }
+            },
+            {
+              "kind": "field",
+              "field": "unique",
+              "op": "$eq",
+              "value": true
+            }
+          ]
+        },
+        "expect": "exists"
+      }
+    ]
+  },
+  {
+    "id": "index.auth_refresh_session.create(token_hash:1)",
+    "label": "Create index on auth_refresh_session (token_hash:1)",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "index does not already exist on auth_refresh_session",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "auth_refresh_session"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "token_hash": 1
+          }
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index on auth_refresh_session",
+        "command": {
+          "kind": "createIndex",
+          "collection": "auth_refresh_session",
+          "keys": [
+            {
+              "direction": 1,
+              "field": "token_hash"
+            }
+          ],
+          "unique": true,
+          "name": "token_hash_1"
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "index exists on auth_refresh_session",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "auth_refresh_session"
+        },
+        "filter": {
+          "kind": "and",
+          "exprs": [
+            {
+              "kind": "field",
+              "field": "key",
+              "op": "$eq",
+              "value": {
+                "token_hash": 1
+              }
+            },
+            {
+              "kind": "field",
+              "field": "unique",
+              "op": "$eq",
+              "value": true
+            }
+          ]
+        },
+        "expect": "exists"
+      }
+    ]
+  },
+  {
+    "id": "index.auth_refresh_session.create(account_type:1,account_id:1,revoked_at:1)",
+    "label": "Create index on auth_refresh_session (account_type:1, account_id:1, revoked_at:1)",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "index does not already exist on auth_refresh_session",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "auth_refresh_session"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "account_type": 1,
+            "account_id": 1,
+            "revoked_at": 1
+          }
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index on auth_refresh_session",
+        "command": {
+          "kind": "createIndex",
+          "collection": "auth_refresh_session",
+          "keys": [
+            {
+              "direction": 1,
+              "field": "account_type"
+            },
+            {
+              "direction": 1,
+              "field": "account_id"
+            },
+            {
+              "direction": 1,
+              "field": "revoked_at"
+            }
+          ],
+          "name": "account_type_1_account_id_1_revoked_at_1"
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "index exists on auth_refresh_session",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "auth_refresh_session"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "account_type": 1,
+            "account_id": 1,
+            "revoked_at": 1
+          }
+        },
+        "expect": "exists"
+      }
+    ]
+  },
+  {
+    "id": "index.auth_refresh_session.create(expires_at:1)",
+    "label": "Create index on auth_refresh_session (expires_at:1)",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "index does not already exist on auth_refresh_session",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "auth_refresh_session"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "expires_at": 1
+          }
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index on auth_refresh_session",
+        "command": {
+          "kind": "createIndex",
+          "collection": "auth_refresh_session",
+          "keys": [
+            {
+              "direction": 1,
+              "field": "expires_at"
+            }
+          ],
+          "name": "expires_at_1"
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "index exists on auth_refresh_session",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "auth_refresh_session"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "expires_at": 1
+          }
+        },
+        "expect": "exists"
+      }
+    ]
+  },
+  {
+    "id": "validator.admin_account.update",
+    "label": "Update validator on admin_account (added: password_hash, username)",
+    "operationClass": "widening",
+    "precheck": [
+      {
+        "description": "collection admin_account exists",
+        "source": {
+          "kind": "listCollections"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "name",
+          "op": "$eq",
+          "value": "admin_account"
+        },
+        "expect": "exists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "modify admin_account",
+        "command": {
+          "kind": "collMod",
+          "collection": "admin_account",
+          "validator": {
+            "$jsonSchema": {
+              "additionalProperties": false,
+              "bsonType": "object",
+              "properties": {
+                "_id": {
+                  "bsonType": "objectId"
+                },
+                "created_at": {
+                  "bsonType": "date"
+                },
+                "deleted_at": {
+                  "bsonType": ["null", "date"]
+                },
+                "email": {
+                  "bsonType": "string"
+                },
+                "name": {
+                  "bsonType": "string"
+                },
+                "password_hash": {
+                  "bsonType": "string"
+                },
+                "status": {
+                  "bsonType": "string"
+                },
+                "updated_at": {
+                  "bsonType": "date"
+                },
+                "username": {
+                  "bsonType": "string"
+                }
+              },
+              "required": ["_id", "created_at", "email", "name", "password_hash", "status", "updated_at", "username"]
+            }
+          },
+          "validationLevel": "strict",
+          "validationAction": "error"
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "validator applied on admin_account",
+        "source": {
+          "kind": "listCollections"
+        },
+        "filter": {
+          "kind": "and",
+          "exprs": [
+            {
+              "kind": "field",
+              "field": "name",
+              "op": "$eq",
+              "value": "admin_account"
+            },
+            {
+              "kind": "field",
+              "field": "options.validationLevel",
+              "op": "$eq",
+              "value": "strict"
+            },
+            {
+              "kind": "field",
+              "field": "options.validationAction",
+              "op": "$eq",
+              "value": "error"
+            },
+            {
+              "kind": "field",
+              "field": "options.validator.$jsonSchema",
+              "op": "$eq",
+              "value": {
+                "additionalProperties": false,
+                "bsonType": "object",
+                "properties": {
+                  "_id": {
+                    "bsonType": "objectId"
+                  },
+                  "created_at": {
+                    "bsonType": "date"
+                  },
+                  "deleted_at": {
+                    "bsonType": ["null", "date"]
+                  },
+                  "email": {
+                    "bsonType": "string"
+                  },
+                  "name": {
+                    "bsonType": "string"
+                  },
+                  "password_hash": {
+                    "bsonType": "string"
+                  },
+                  "status": {
+                    "bsonType": "string"
+                  },
+                  "updated_at": {
+                    "bsonType": "date"
+                  },
+                  "username": {
+                    "bsonType": "string"
+                  }
+                },
+                "required": ["_id", "created_at", "email", "name", "password_hash", "status", "updated_at", "username"]
+              }
+            }
+          ]
+        },
+        "expect": "exists"
+      }
+    ]
+  },
+  {
+    "id": "validator.game_catalog.update",
+    "label": "Update validator on game_catalog (added: deleted_at)",
+    "operationClass": "widening",
+    "precheck": [
+      {
+        "description": "collection game_catalog exists",
+        "source": {
+          "kind": "listCollections"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "name",
+          "op": "$eq",
+          "value": "game_catalog"
+        },
+        "expect": "exists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "modify game_catalog",
+        "command": {
+          "kind": "collMod",
+          "collection": "game_catalog",
+          "validator": {
+            "$jsonSchema": {
+              "additionalProperties": false,
+              "bsonType": "object",
+              "properties": {
+                "_id": {
+                  "bsonType": "objectId"
+                },
+                "artwork_key": {
+                  "bsonType": ["null", "string"]
+                },
+                "created_at": {
+                  "bsonType": "date"
+                },
+                "deleted_at": {
+                  "bsonType": ["null", "date"]
+                },
+                "is_active": {
+                  "bsonType": "bool"
+                },
+                "is_popular": {
+                  "bsonType": "bool"
+                },
+                "name": {
+                  "bsonType": "string"
+                },
+                "service_summary": {
+                  "bsonType": ["null", "string"]
+                },
+                "slug": {
+                  "bsonType": "string"
+                },
+                "sort_order": {
+                  "bsonType": "int"
+                },
+                "updated_at": {
+                  "bsonType": "date"
+                }
+              },
+              "required": ["_id", "created_at", "is_active", "is_popular", "name", "slug", "sort_order", "updated_at"]
+            }
+          },
+          "validationLevel": "strict",
+          "validationAction": "error"
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "validator applied on game_catalog",
+        "source": {
+          "kind": "listCollections"
+        },
+        "filter": {
+          "kind": "and",
+          "exprs": [
+            {
+              "kind": "field",
+              "field": "name",
+              "op": "$eq",
+              "value": "game_catalog"
+            },
+            {
+              "kind": "field",
+              "field": "options.validationLevel",
+              "op": "$eq",
+              "value": "strict"
+            },
+            {
+              "kind": "field",
+              "field": "options.validationAction",
+              "op": "$eq",
+              "value": "error"
+            },
+            {
+              "kind": "field",
+              "field": "options.validator.$jsonSchema",
+              "op": "$eq",
+              "value": {
+                "additionalProperties": false,
+                "bsonType": "object",
+                "properties": {
+                  "_id": {
+                    "bsonType": "objectId"
+                  },
+                  "artwork_key": {
+                    "bsonType": ["null", "string"]
+                  },
+                  "created_at": {
+                    "bsonType": "date"
+                  },
+                  "deleted_at": {
+                    "bsonType": ["null", "date"]
+                  },
+                  "is_active": {
+                    "bsonType": "bool"
+                  },
+                  "is_popular": {
+                    "bsonType": "bool"
+                  },
+                  "name": {
+                    "bsonType": "string"
+                  },
+                  "service_summary": {
+                    "bsonType": ["null", "string"]
+                  },
+                  "slug": {
+                    "bsonType": "string"
+                  },
+                  "sort_order": {
+                    "bsonType": "int"
+                  },
+                  "updated_at": {
+                    "bsonType": "date"
+                  }
+                },
+                "required": ["_id", "created_at", "is_active", "is_popular", "name", "slug", "sort_order", "updated_at"]
+              }
+            }
+          ]
+        },
+        "expect": "exists"
+      }
+    ]
+  },
+  {
+    "id": "validator.user_account.update",
+    "label": "Update validator on user_account (added: password_hash)",
+    "operationClass": "widening",
+    "precheck": [
+      {
+        "description": "collection user_account exists",
+        "source": {
+          "kind": "listCollections"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "name",
+          "op": "$eq",
+          "value": "user_account"
+        },
+        "expect": "exists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "modify user_account",
+        "command": {
+          "kind": "collMod",
+          "collection": "user_account",
+          "validator": {
+            "$jsonSchema": {
+              "additionalProperties": false,
+              "bsonType": "object",
+              "properties": {
+                "_id": {
+                  "bsonType": "objectId"
+                },
+                "created_at": {
+                  "bsonType": "date"
+                },
+                "deleted_at": {
+                  "bsonType": ["null", "date"]
+                },
+                "email": {
+                  "bsonType": "string"
+                },
+                "joined_at": {
+                  "bsonType": "date"
+                },
+                "name": {
+                  "bsonType": "string"
+                },
+                "password_hash": {
+                  "bsonType": "string"
+                },
+                "status": {
+                  "bsonType": "string"
+                },
+                "updated_at": {
+                  "bsonType": "date"
+                },
+                "username": {
+                  "bsonType": "string"
+                },
+                "whatsapp": {
+                  "bsonType": ["null", "string"]
+                }
+              },
+              "required": [
+                "_id",
+                "created_at",
+                "email",
+                "joined_at",
+                "name",
+                "password_hash",
+                "status",
+                "updated_at",
+                "username"
+              ]
+            }
+          },
+          "validationLevel": "strict",
+          "validationAction": "error"
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "validator applied on user_account",
+        "source": {
+          "kind": "listCollections"
+        },
+        "filter": {
+          "kind": "and",
+          "exprs": [
+            {
+              "kind": "field",
+              "field": "name",
+              "op": "$eq",
+              "value": "user_account"
+            },
+            {
+              "kind": "field",
+              "field": "options.validationLevel",
+              "op": "$eq",
+              "value": "strict"
+            },
+            {
+              "kind": "field",
+              "field": "options.validationAction",
+              "op": "$eq",
+              "value": "error"
+            },
+            {
+              "kind": "field",
+              "field": "options.validator.$jsonSchema",
+              "op": "$eq",
+              "value": {
+                "additionalProperties": false,
+                "bsonType": "object",
+                "properties": {
+                  "_id": {
+                    "bsonType": "objectId"
+                  },
+                  "created_at": {
+                    "bsonType": "date"
+                  },
+                  "deleted_at": {
+                    "bsonType": ["null", "date"]
+                  },
+                  "email": {
+                    "bsonType": "string"
+                  },
+                  "joined_at": {
+                    "bsonType": "date"
+                  },
+                  "name": {
+                    "bsonType": "string"
+                  },
+                  "password_hash": {
+                    "bsonType": "string"
+                  },
+                  "status": {
+                    "bsonType": "string"
+                  },
+                  "updated_at": {
+                    "bsonType": "date"
+                  },
+                  "username": {
+                    "bsonType": "string"
+                  },
+                  "whatsapp": {
+                    "bsonType": ["null", "string"]
+                  }
+                },
+                "required": [
+                  "_id",
+                  "created_at",
+                  "email",
+                  "joined_at",
+                  "name",
+                  "password_hash",
+                  "status",
+                  "updated_at",
+                  "username"
+                ]
+              }
+            }
+          ]
+        },
+        "expect": "exists"
+      }
+    ]
+  }
+]

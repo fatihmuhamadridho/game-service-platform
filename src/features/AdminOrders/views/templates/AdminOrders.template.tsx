@@ -16,10 +16,13 @@ type Props = {
   statusFilter: AdminOrderStatusFilter;
   onStatusFilterChange: (value: AdminOrderStatusFilter) => void;
   onView: (order: AdminOrderView) => void;
-  onStatusChange: (id: string, status: AdminOrderStatus) => void;
   formatRupiah: (amount: number) => string;
   detailOrder: AdminOrderView | null;
   onCloseDetail: () => void;
+  onReview: (paymentId: string, decision: 'APPROVE' | 'REJECT', note: string) => Promise<void>;
+  onComplete: (orderId: string) => Promise<void>;
+  error?: string;
+  loading?: boolean;
 };
 const statuses: AdminOrderStatusFilter[] = [
   'Semua Status',
@@ -54,12 +57,18 @@ export const AdminOrdersTemplate = ({
   statusFilter,
   onStatusFilterChange,
   onView,
-  onStatusChange,
   formatRupiah,
   detailOrder,
   onCloseDetail,
+  onReview,
+  onComplete,
+  error = '',
+  loading = false,
 }: Props) => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [reviewing, setReviewing] = useState(false);
+  const [reviewNote, setReviewNote] = useState('');
+  const [reviewMessage, setReviewMessage] = useState('');
   const count = (status: AdminOrderStatus) => orders.filter((order) => order.status === status).length;
   return (
     <main className={styles.page}>
@@ -195,9 +204,11 @@ export const AdminOrdersTemplate = ({
               </div>
             )}
           </div>
-          <p className={styles.demoNote}>
-            Data pesanan contoh. Perubahan status hanya tersimpan selama halaman ini terbuka.
-          </p>
+          {(error || loading) && (
+            <p role={error ? 'alert' : 'status'} className={styles.demoNote}>
+              {error || 'Memuat data pesanan…'}
+            </p>
+          )}
         </Box>
       </div>
       {detailOrder && (
@@ -253,24 +264,108 @@ export const AdminOrdersTemplate = ({
                 <b className={styles.detailAmount}>{formatRupiah(detailOrder.amount)}</b>
               </div>
             </div>
-            <label className={styles.statusSelect}>
-              Status Pesanan
-              <select
-                value={detailOrder.status}
-                onChange={(event: ChangeEvent<HTMLSelectElement>) =>
-                  onStatusChange(detailOrder.id, event.target.value as AdminOrderStatus)
-                }
-              >
-                {statuses
-                  .filter((status): status is AdminOrderStatus => status !== 'Semua Status')
-                  .map((status) => (
-                    <option key={status}>{status}</option>
-                  ))}
-              </select>
-            </label>
-            <p className={styles.formNote}>
-              Simulasi UI. Perubahan status belum tersimpan ke backend atau memicu notifikasi.
-            </p>
+            <div className={styles.statusSelect}>
+              Status Pesanan <b>{detailOrder.status}</b>
+            </div>
+            <div className={styles.statusSelect}>
+              Bukti pembayaran
+              {detailOrder.proofs?.length ? (
+                detailOrder.proofs.map((proof) => (
+                  <p key={proof.id}>
+                    {proof.viewUrl ? (
+                      <a href={proof.viewUrl} target="_blank" rel="noreferrer">
+                        Lihat bukti
+                      </a>
+                    ) : (
+                      'File bukti tidak tersedia'
+                    )}
+                    {' · '}
+                    {new Date(proof.uploadedAt).toLocaleString('id-ID')}
+                    {' · '}
+                    {Math.ceil(proof.fileSizeBytes / 1024)} KB
+                  </p>
+                ))
+              ) : (
+                <b>Validasi dilakukan manual; pelanggan tidak mengunggah bukti.</b>
+              )}
+            </div>
+            {detailOrder.paymentStatus === 'Menunggu Validasi' && detailOrder.paymentId && (
+              <div className={styles.statusSelect}>
+                <label htmlFor="payment-review-note">Catatan validasi (opsional)</label>
+                <textarea
+                  id="payment-review-note"
+                  value={reviewNote}
+                  maxLength={500}
+                  onChange={(event) => setReviewNote(event.target.value)}
+                  placeholder="Catatan untuk riwayat pembayaran"
+                />
+                {reviewMessage && <p role="alert">{reviewMessage}</p>}
+                <div className={styles.dialogActions}>
+                  <button
+                    className={styles.detailButton}
+                    disabled={reviewing}
+                    onClick={async () => {
+                      setReviewing(true);
+                      setReviewMessage('');
+                      try {
+                        await onReview(detailOrder.paymentId!, 'REJECT', reviewNote);
+                      } catch (cause) {
+                        setReviewMessage(
+                          cause instanceof Error ? cause.message : 'Penolakan pembayaran gagal disimpan.'
+                        );
+                      } finally {
+                        setReviewing(false);
+                      }
+                    }}
+                  >
+                    {reviewing ? 'Menyimpan…' : 'Tolak Konfirmasi'}
+                  </button>
+                  <button
+                    className={styles.createButton}
+                    disabled={reviewing}
+                    onClick={async () => {
+                      setReviewing(true);
+                      setReviewMessage('');
+                      try {
+                        await onReview(detailOrder.paymentId!, 'APPROVE', reviewNote);
+                      } catch (cause) {
+                        setReviewMessage(
+                          cause instanceof Error ? cause.message : 'Persetujuan pembayaran gagal disimpan.'
+                        );
+                      } finally {
+                        setReviewing(false);
+                      }
+                    }}
+                  >
+                    {reviewing ? 'Menyimpan…' : 'Setujui Pembayaran'}
+                  </button>
+                </div>
+              </div>
+            )}
+            {detailOrder.rawStatus === 'PROCESSING' && (
+              <div className={styles.statusSelect}>
+                <b>Layanan sudah selesai dikerjakan?</b>
+                <p>Tandai selesai setelah pesanan benar-benar selesai diproses.</p>
+                {reviewMessage && <p role="alert">{reviewMessage}</p>}
+                <button
+                  className={styles.createButton}
+                  disabled={reviewing}
+                  onClick={async () => {
+                    setReviewing(true);
+                    setReviewMessage('');
+                    try {
+                      await onComplete(detailOrder.internalId);
+                    } catch (cause) {
+                      setReviewMessage(cause instanceof Error ? cause.message : 'Status pesanan gagal diperbarui.');
+                    } finally {
+                      setReviewing(false);
+                    }
+                  }}
+                >
+                  {reviewing ? 'Menyimpan…' : 'Tandai Selesai'}
+                </button>
+              </div>
+            )}
             <div className={styles.dialogActions}>
               <button className={styles.createButton} onClick={onCloseDetail}>
                 Selesai

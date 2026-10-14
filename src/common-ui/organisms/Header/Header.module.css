@@ -7,6 +7,7 @@
   border-bottom: 1px solid #263549;
   color: #f3f6fb;
 }
+
 .navWrap {
   height: 100%;
   max-width: 1480px;
@@ -16,6 +17,7 @@
   align-items: center;
   gap: 36px;
 }
+
 .logo {
   display: flex;
   align-items: center;
@@ -27,9 +29,11 @@
   letter-spacing: -0.6px;
   white-space: nowrap;
 }
-.logo > span:last-child > span {
+
+.logo>span:last-child>span {
   color: #1681ff;
 }
+
 .logoIcon {
   width: 29px;
   height: 25px;
@@ -40,15 +44,18 @@
   background: linear-gradient(135deg, #176cff, #168cff);
   transform: rotate(-4deg);
 }
+
 .logoIcon svg {
   width: 22px;
 }
+
 .desktopNav {
   display: flex;
   align-items: center;
   gap: 24px;
   white-space: nowrap;
 }
+
 .desktopNav a {
   display: flex;
   align-items: center;
@@ -57,13 +64,16 @@
   color: #d4deeb;
   text-decoration: none;
 }
+
 .desktopNav svg {
   width: 13px;
 }
+
 .desktopNav a:hover,
 .desktopNav .active {
   color: #59aaff;
 }
+
 .search {
   height: 35px;
   max-width: 320px;
@@ -79,9 +89,11 @@
   background: #111b29;
   color: #91a4bd;
 }
-.search > svg {
+
+.search>svg {
   width: 16px;
 }
+
 .search input {
   width: 100%;
   min-width: 0;
@@ -91,9 +103,11 @@
   font-size: 10px;
   color: #f3f6fb;
 }
+
 .search input::placeholder {
   color: #8da0b8;
 }
+
 .search kbd {
   font-size: 9px;
   white-space: nowrap;
@@ -101,11 +115,13 @@
   border-radius: 5px;
   padding: 3px 6px;
 }
+
 .actions {
   display: flex;
   align-items: center;
   gap: 9px;
 }
+
 .cart,
 .searchToggle,
 .avatar,
@@ -121,10 +137,12 @@
   color: #e8f0fa;
   cursor: pointer;
 }
+
 .cart svg,
 .searchToggle svg {
   width: 19px;
 }
+
 .cart i {
   position: absolute;
   right: -3px;
@@ -139,6 +157,7 @@
   font-style: normal;
   font-size: 9px;
 }
+
 .login,
 .register {
   height: 33px;
@@ -151,92 +170,116 @@
   color: #fff;
   text-decoration: none;
 }
+
 .login {
   background: #151f2d;
 }
+
 .register {
   background: #096cf2;
 }
+
 .menuButton,
 .searchToggle {
   display: none;
 }
+
 .avatar {
   margin-left: auto;
   border-radius: 50%;
   background: #086cf0;
 }
+
 .checkout {
   height: 70px;
 }
+
 .checkout .navWrap {
   max-width: 1280px;
   gap: 38px;
 }
+
 .checkout .desktopNav {
   font-size: 13px;
   gap: 25px;
 }
+
 .checkout .avatar {
   margin-left: auto;
 }
+
 .backdrop {
   display: none;
 }
+
 .drawer {
   display: none;
 }
+
 @media (max-width: 1050px) {
   .navWrap {
     gap: 20px;
     padding: 0 18px;
   }
+
   .desktopNav {
     gap: 14px;
   }
+
   .checkout .navWrap {
     gap: 22px;
   }
 }
+
 @media (max-width: 680px) {
   .header {
     height: auto;
   }
+
   .navWrap {
     height: 57px;
   }
+
   .checkout .navWrap {
     height: 58px;
   }
+
   .navWrap,
   .checkout .navWrap {
     padding: 0 12px;
     gap: 10px;
     justify-content: space-between;
   }
+
   .checkout {
     height: 58px;
   }
+
   .menuButton {
     display: grid;
     border: 0;
     background: transparent;
     color: #eff4fb;
   }
+
   .menuButton svg {
     width: 21px;
   }
+
   .logo {
     font-size: 17px;
     gap: 6px;
   }
+
   .logoIcon {
     width: 26px;
     height: 23px;
   }
+
   .logoIcon svg {
     width: 20px;
   }
+
   .desktopNav,
   .search,
   .login,
@@ -244,24 +287,30 @@
   .cart {
     display: none;
   }
+
   .searchToggle {
     display: grid;
     background: #151f2d;
   }
+
   .actions {
     gap: 7px;
   }
+
   .checkout .searchToggle {
     display: none;
   }
+
   .avatar {
     width: 28px;
     height: 28px;
     margin-left: auto;
   }
+
   .checkout .avatar {
     display: grid;
   }
+
   .searchExpanded {
     display: flex;
     position: absolute;
@@ -273,6 +322,7 @@
     border-color: #33465d;
     z-index: 3;
   }
+
   .backdrop {
     display: block;
     position: fixed;
@@ -280,6 +330,7 @@
     inset: 0;
     background: #020711b8;
   }
+
   .drawer {
     height: 100%;
     width: min(300px, 85vw);
@@ -290,7 +341,8 @@
     flex-direction: column;
     gap: 4px;
   }
-  .drawer > div {
+
+  .drawer>div {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -298,7 +350,8 @@
     border-bottom: 1px solid #26374b;
     margin-bottom: 5px;
   }
-  .drawer > div button {
+
+  .drawer>div button {
     display: grid;
     place-items: center;
     padding: 6px;
@@ -306,25 +359,30 @@
     background: transparent;
     color: #d8e4f3;
   }
-  .drawer > a {
+
+  .drawer>a {
     padding: 13px 10px;
     border-radius: 8px;
     color: #d4e0ee;
     font-size: 13px;
     text-decoration: none;
   }
-  .drawer > a:hover {
+
+  .drawer>a:hover {
     background: #14263d;
   }
 }
+
 @media (max-width: 360px) {
   .navWrap {
     padding: 0 9px;
   }
 }
+
 .mobileSearchRow {
   display: none;
 }
+
 @media (max-width: 680px) {
   .mobileSearchRow {
     height: 43px;
@@ -338,9 +396,11 @@
     background: #111b29;
     color: #94a8c0;
   }
-  .mobileSearchRow > svg {
+
+  .mobileSearchRow>svg {
     width: 16px;
   }
+
   .mobileSearchRow input {
     flex: 1;
     min-width: 0;
@@ -350,9 +410,11 @@
     font-size: 11px;
     color: #f3f6fb;
   }
+
   .mobileSearchRow input::placeholder {
     color: #8fa1b6;
   }
+
   .mobileSearchRow button {
     width: 30px;
     height: 30px;
@@ -363,6 +425,7 @@
     background: #1a2738;
     color: #dce6f3;
   }
+
   .mobileSearchRow button svg {
     width: 17px;
   }

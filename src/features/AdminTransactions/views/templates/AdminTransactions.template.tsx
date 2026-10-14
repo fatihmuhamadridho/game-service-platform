@@ -26,9 +26,10 @@ type Props = {
   onView: (transaction: TransactionView) => void;
   onCloseDetail: () => void;
   formatRupiah: (amount: number) => string;
+  error?: string;
 };
 const statuses: TransactionStatusFilter[] = ['Semua Status', 'Berhasil', 'Menunggu', 'Gagal', 'Dikembalikan'];
-const methods: TransactionMethodFilter[] = ['Semua Metode', 'QRIS', 'BCA Virtual Account'];
+const methods: TransactionMethodFilter[] = ['Semua Metode', 'QRIS', 'Transfer Bank BCA'];
 const formatDate = (value: string) =>
   value
     ? new Date(value).toLocaleString('id-ID', {
@@ -61,6 +62,7 @@ export const AdminTransactionsTemplate = ({
   onView,
   onCloseDetail,
   formatRupiah,
+  error = '',
 }: Props) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const successful = transactions.filter((transaction) => transaction.status === 'Berhasil');
@@ -210,9 +212,11 @@ export const AdminTransactionsTemplate = ({
               </div>
             )}
           </div>
-          <p className={styles.demoNote}>
-            Data transaksi contoh untuk UI. Status dan referensi belum diambil dari payment provider.
-          </p>
+          {error && (
+            <p role="alert" className={styles.demoNote}>
+              {error}
+            </p>
+          )}
         </Box>
       </div>
       {detailTarget && (
@@ -272,9 +276,6 @@ export const AdminTransactionsTemplate = ({
               <span>Jumlah Transaksi</span>
               <b>{formatRupiah(detailTarget.amount)}</b>
             </div>
-            <p className={styles.formNote}>
-              Detail simulasi. Jangan gunakan referensi ini untuk pencocokan pembayaran nyata.
-            </p>
             <div className={styles.dialogActions}>
               <button className={styles.createButton} onClick={onCloseDetail}>
                 Tutup

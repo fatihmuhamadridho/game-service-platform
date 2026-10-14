@@ -1,0 +1,187 @@
+[
+  {
+    "id": "collection.checkout_idempotency.create",
+    "label": "Create collection checkout_idempotency",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "collection checkout_idempotency does not exist",
+        "source": {
+          "kind": "listCollections"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "name",
+          "op": "$eq",
+          "value": "checkout_idempotency"
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create collection checkout_idempotency",
+        "command": {
+          "kind": "createCollection",
+          "collection": "checkout_idempotency",
+          "validator": {
+            "$jsonSchema": {
+              "additionalProperties": false,
+              "bsonType": "object",
+              "properties": {
+                "_id": {
+                  "bsonType": "objectId"
+                },
+                "created_at": {
+                  "bsonType": "date"
+                },
+                "expires_at": {
+                  "bsonType": "date"
+                },
+                "key_hash": {
+                  "bsonType": "string"
+                },
+                "request_hash": {
+                  "bsonType": "string"
+                },
+                "response_json": {
+                  "bsonType": ["object", "array", "string", "double", "int", "long", "bool", "null"]
+                }
+              },
+              "required": ["_id", "created_at", "expires_at", "key_hash", "request_hash"]
+            }
+          },
+          "validationLevel": "strict",
+          "validationAction": "error"
+        }
+      }
+    ],
+    "postcheck": []
+  },
+  {
+    "id": "index.checkout_idempotency.create(key_hash:1)",
+    "label": "Create index on checkout_idempotency (key_hash:1)",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "index does not already exist on checkout_idempotency",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "checkout_idempotency"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "key_hash": 1
+          }
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index on checkout_idempotency",
+        "command": {
+          "kind": "createIndex",
+          "collection": "checkout_idempotency",
+          "keys": [
+            {
+              "direction": 1,
+              "field": "key_hash"
+            }
+          ],
+          "unique": true,
+          "name": "key_hash_1"
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "index exists on checkout_idempotency",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "checkout_idempotency"
+        },
+        "filter": {
+          "kind": "and",
+          "exprs": [
+            {
+              "kind": "field",
+              "field": "key",
+              "op": "$eq",
+              "value": {
+                "key_hash": 1
+              }
+            },
+            {
+              "kind": "field",
+              "field": "unique",
+              "op": "$eq",
+              "value": true
+            }
+          ]
+        },
+        "expect": "exists"
+      }
+    ]
+  },
+  {
+    "id": "index.checkout_idempotency.create(expires_at:1)",
+    "label": "Create index on checkout_idempotency (expires_at:1)",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "index does not already exist on checkout_idempotency",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "checkout_idempotency"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "expires_at": 1
+          }
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index on checkout_idempotency",
+        "command": {
+          "kind": "createIndex",
+          "collection": "checkout_idempotency",
+          "keys": [
+            {
+              "direction": 1,
+              "field": "expires_at"
+            }
+          ],
+          "name": "expires_at_1"
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "index exists on checkout_idempotency",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "checkout_idempotency"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "expires_at": 1
+          }
+        },
+        "expect": "exists"
+      }
+    ]
+  }
+]

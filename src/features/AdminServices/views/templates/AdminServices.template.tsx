@@ -16,8 +16,9 @@ import styles from '../pages/AdminServices.module.css';
 type Props = {
   services: AdminServiceView[];
   filteredServices: AdminServiceView[];
-  games: string[];
-  categories: string[];
+  games: Array<{ id: string; name: string }>;
+  categories: Array<{ id: string; name: string }>;
+  error?: string;
   query: string;
   onQueryChange: (value: string) => void;
   statusFilter: AdminServiceStatusFilter;
@@ -45,6 +46,7 @@ export const AdminServicesTemplate = ({
   filteredServices,
   games,
   categories,
+  error = '',
   query,
   onQueryChange,
   statusFilter,
@@ -120,9 +122,11 @@ export const AdminServicesTemplate = ({
               <label className={styles.filter}>
                 <span className={styles.visuallyHidden}>Filter kategori</span>
                 <select value={categoryFilter} onChange={(event) => onCategoryFilterChange(event.target.value)}>
-                  <option>Semua Kategori</option>
+                  <option value="Semua Kategori">Semua Kategori</option>
                   {categories.map((category) => (
-                    <option key={category}>{category}</option>
+                    <option key={category.id} value={category.id}>
+                      {category.name}
+                    </option>
                   ))}
                 </select>
               </label>
@@ -211,7 +215,11 @@ export const AdminServicesTemplate = ({
               </div>
             )}
           </div>
-          <p className={styles.demoNote}>Data contoh. Perubahan hanya tersimpan selama halaman ini terbuka.</p>
+          {error && (
+            <p role="alert" className={styles.demoNote}>
+              {error}
+            </p>
+          )}
         </Box>
       </div>
 
@@ -247,22 +255,30 @@ export const AdminServicesTemplate = ({
                 <label>
                   Game
                   <select
-                    value={form.game}
-                    onChange={(event: ChangeEvent<HTMLSelectElement>) => updateField('game', event.target.value)}
+                    required
+                    value={form.gameId}
+                    onChange={(event: ChangeEvent<HTMLSelectElement>) => updateField('gameId', event.target.value)}
                   >
+                    <option value="">Pilih game</option>
                     {games.map((game) => (
-                      <option key={game}>{game}</option>
+                      <option key={game.id} value={game.id}>
+                        {game.name}
+                      </option>
                     ))}
                   </select>
                 </label>
                 <label>
                   Kategori
                   <select
-                    value={form.category}
-                    onChange={(event: ChangeEvent<HTMLSelectElement>) => updateField('category', event.target.value)}
+                    required
+                    value={form.categoryId}
+                    onChange={(event: ChangeEvent<HTMLSelectElement>) => updateField('categoryId', event.target.value)}
                   >
+                    <option value="">Pilih kategori</option>
                     {categories.map((category) => (
-                      <option key={category}>{category}</option>
+                      <option key={category.id} value={category.id}>
+                        {category.name}
+                      </option>
                     ))}
                   </select>
                 </label>
@@ -310,6 +326,11 @@ export const AdminServicesTemplate = ({
                 />
                 <span>Layanan aktif dan tampil di katalog</span>
               </label>
+              {error && (
+                <p role="alert" className={styles.formNote}>
+                  {error}
+                </p>
+              )}
               <div className={styles.dialogActions}>
                 <button type="button" className={styles.cancelButton} onClick={onCloseForm}>
                   Batal
@@ -339,13 +360,18 @@ export const AdminServicesTemplate = ({
             <div className={styles.dialogHeading}>
               <div>
                 <h2 id="delete-service-title">Hapus layanan {deleteTarget.name}?</h2>
-                <p>Layanan akan dihapus dari daftar pada sesi ini.</p>
+                <p>Layanan akan dihapus dari katalog. Riwayat order tetap dipertahankan.</p>
               </div>
               <button className={styles.closeButton} aria-label="Tutup" onClick={() => onDeleteSelect(null)}>
                 <IconX />
               </button>
             </div>
             <div className={styles.dialogActions}>
+              {error && (
+                <p role="alert" className={styles.formNote}>
+                  {error}
+                </p>
+              )}
               <button className={styles.cancelButton} onClick={() => onDeleteSelect(null)}>
                 Batal
               </button>

@@ -4,6 +4,7 @@ import { Footer } from '@common-ui/organisms/Footer/Footer';
 import { Catalog } from '../organisms/Catalog.organism';
 import styles from './Games.module.css';
 type Props = {
+  loadError: string;
   games: GameCardView[];
   filters: string[];
   counts: Record<string, number>;
@@ -17,6 +18,7 @@ type Props = {
   onPage: (page: number) => void;
 };
 export const GamesTemplate = ({
+  loadError,
   games,
   filters,
   counts,
@@ -31,6 +33,7 @@ export const GamesTemplate = ({
 }: Props) => (
   <main className={styles.page}>
     <Header activePage="games" searchValue={search} onSearchChange={onSearch} />
+    {loadError && <p role="alert">{loadError}</p>}
     <Catalog
       games={games}
       filters={filters}

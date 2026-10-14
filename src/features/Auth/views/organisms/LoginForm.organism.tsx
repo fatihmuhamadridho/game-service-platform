@@ -1,54 +1,61 @@
 'use client';
 
 import { useState, type FormEvent } from 'react';
-import { IconBrandWhatsapp, IconEye, IconEyeOff, IconLock, IconMail } from '@tabler/icons-react';
+import { IconEye, IconEyeOff, IconLock, IconUser } from '@tabler/icons-react';
 import styles from '../templates/Auth.module.css';
 import { AuthSubmit } from '../atoms/AuthSubmit.atom';
+import { useRouter } from 'next/navigation';
 
 export function LoginForm() {
-  const [method, setMethod] = useState<'email' | 'whatsapp'>('email');
+  const [busy, setBusy] = useState(false);
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [notice, setNotice] = useState('');
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setNotice('Fitur masuk akun akan tersedia setelah layanan autentikasi terhubung.');
+    setNotice('');
+    setBusy(true);
+    const form = new FormData(event.currentTarget);
+    const identifier = String(form.get('identifier') ?? '').trim();
+    try {
+      const response = await fetch('/api/auth/v1/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ identifier, password: String(form.get('password') ?? '') }),
+      });
+      const result = await response.json();
+      if (response.status === 429) {
+        const retryAfter = response.headers.get('Retry-After');
+        setNotice(
+          retryAfter
+            ? `Terlalu banyak percobaan. Coba lagi dalam ${retryAfter} detik.`
+            : (result.status?.message ?? 'Terlalu banyak percobaan. Coba lagi setelah jeda.')
+        );
+        return;
+      }
+      if (!response.ok) throw new Error(result.status?.message ?? 'Email/username atau password salah.');
+      const accountType = result.data?.accountType === 'ADMIN' ? 'ADMIN' : 'CUSTOMER';
+      window.sessionStorage.setItem('jokihub-session-type', accountType);
+      window.dispatchEvent(new CustomEvent('jokihub:session-established', { detail: accountType }));
+      router.replace(accountType === 'ADMIN' ? '/admin' : '/');
+    } catch {
+      setNotice('Username/email atau password salah, atau layanan sedang tidak tersedia.');
+    } finally {
+      setBusy(false);
+    }
   }
   return (
     <>
-      <div className={styles.cardHeading}>
-        <h2 id="form-title">Masuk ke Akun</h2>
-        <p>Masukkan informasi akun kamu untuk melanjutkan</p>
-      </div>
       <form onSubmit={handleSubmit}>
-        <div className={styles.methodTabs} role="tablist" aria-label="Metode masuk">
-          <button
-            type="button"
-            role="tab"
-            aria-selected={method === 'email'}
-            className={method === 'email' ? styles.activeTab : ''}
-            onClick={() => setMethod('email')}
-          >
-            <IconMail /> Email
-          </button>
-          <button
-            type="button"
-            role="tab"
-            aria-selected={method === 'whatsapp'}
-            className={method === 'whatsapp' ? styles.activeTab : ''}
-            onClick={() => setMethod('whatsapp')}
-          >
-            <IconBrandWhatsapp /> No. WhatsApp
-          </button>
-        </div>
         <label className={styles.field}>
-          <span>{method === 'whatsapp' ? 'No. WhatsApp' : 'Email'}</span>
+          <span>Username atau email</span>
           <span className={styles.inputWrap}>
-            {method === 'whatsapp' ? <IconBrandWhatsapp aria-hidden="true" /> : <IconMail aria-hidden="true" />}
+            <IconUser aria-hidden="true" />
             <input
-              autoComplete={method === 'whatsapp' ? 'tel' : 'email'}
-              name={method === 'whatsapp' ? 'phone' : 'email'}
-              type={method === 'whatsapp' ? 'tel' : 'email'}
-              placeholder={method === 'whatsapp' ? '81234567890' : 'contoh: kamu@email.com'}
+              autoComplete="username"
+              name="identifier"
+              type="text"
+              placeholder="Username atau kamu@email.com"
               required
             />
           </span>
@@ -74,14 +81,10 @@ export function LoginForm() {
             </button>
           </span>
         </label>
-        <button
-          type="button"
-          className={styles.forgot}
-          onClick={() => setNotice('Pemulihan akun akan tersedia setelah layanan autentikasi terhubung.')}
-        >
+        <button type="button" className={styles.forgot} onClick={() => router.push('/forgot-password')}>
           Lupa password?
         </button>
-        <AuthSubmit>Masuk</AuthSubmit>
+        <AuthSubmit disabled={busy}>{busy ? 'Memeriksa…' : 'Masuk'}</AuthSubmit>
         {notice && (
           <p className={styles.notice} role="status">
             {notice}

@@ -13,9 +13,18 @@ type Props = {
   onSettingsChange: (updater: (current: AdminSettingsForm) => AdminSettingsForm) => void;
   onSave: (event: FormEvent<HTMLFormElement>) => void;
   saved: boolean;
+  error?: string;
+  loading?: boolean;
 };
 
-export const AdminSettingsTemplate = ({ settings, onSettingsChange, onSave, saved }: Props) => {
+export const AdminSettingsTemplate = ({
+  settings,
+  onSettingsChange,
+  onSave,
+  saved,
+  error = '',
+  loading = false,
+}: Props) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const updateField = <K extends keyof AdminSettingsForm>(field: K, value: AdminSettingsForm[K]) =>
     onSettingsChange((current) => ({ ...current, [field]: value }));
@@ -172,7 +181,11 @@ export const AdminSettingsTemplate = ({ settings, onSettingsChange, onSave, save
               <IconDeviceFloppy /> Simpan Pengaturan
             </button>
           </div>
-          <p className={styles.demoNote}>Pengaturan ini masih simulasi dan belum tersimpan ke server.</p>
+          {(error || loading) && (
+            <p role={error ? 'alert' : 'status'} className={styles.demoNote}>
+              {error || 'Memuat pengaturan…'}
+            </p>
+          )}
         </form>
       </div>
     </main>

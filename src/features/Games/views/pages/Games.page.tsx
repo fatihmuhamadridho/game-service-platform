@@ -1,66 +1,87 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { GameCardView } from '../interfaces/game.interface';
 import { GamesTemplate } from '../templates/Games.template';
 
-const games: GameCardView[] = [
-  {
-    name: 'Mobile Legends',
-    art: 'ml',
-    tags: ['Top Up', 'Joki Rank', 'Akun'],
-    count: 124,
-    rating: '4.9',
-    reviews: 1200,
-  },
-  { name: 'Valorant', art: 'valo', tags: ['Top Up', 'Joki Rank'], count: 48, rating: '4.8', reviews: 532 },
-  { name: 'PUBG Mobile', art: 'pubg', tags: ['Top Up', 'Joki Rank', 'Akun'], count: 72, rating: '4.8', reviews: 641 },
-  { name: 'Free Fire', art: 'ff', tags: ['Top Up', 'Joki Rank'], count: 56, rating: '4.7', reviews: 420 },
-  { name: 'Roblox', art: 'roblox', tags: ['Top Up', 'Akun'], count: 36, rating: '4.7', reviews: 310 },
-  { name: 'Genshin Impact', art: 'genshin', tags: ['Top Up', 'Joki Rank'], count: 28, rating: '4.8', reviews: 298 },
-  { name: 'Honkai Star Rail', art: 'hsr', tags: ['Top Up', 'Joki Rank'], count: 20, rating: '4.7', reviews: 210 },
-  { name: 'Call of Duty Mobile', art: 'cod', tags: ['Top Up', 'Joki Rank'], count: 18, rating: '4.6', reviews: 180 },
-  { name: 'EA FC Mobile', art: 'fc', tags: ['Top Up', 'Joki Rank'], count: 16, rating: '4.6', reviews: 95 },
-  { name: 'eFootball', art: 'efootball', tags: ['Top Up', 'Joki Rank'], count: 12, rating: '4.5', reviews: 80 },
-  { name: 'Minecraft', art: 'minecraft', tags: ['Top Up', 'Akun'], count: 10, rating: '4.5', reviews: 76 },
-  { name: 'Ragnarok Origin', art: 'ragnarok', tags: ['Top Up', 'Joki Rank'], count: 8, rating: '4.4', reviews: 60 },
-  { name: 'League of Legends', art: 'lol', tags: ['Top Up', 'Joki Rank'], count: 14, rating: '4.7', reviews: 102 },
-  { name: 'Arena of Valor', art: 'aov', tags: ['Top Up', 'Joki Rank'], count: 9, rating: '4.5', reviews: 64 },
-  { name: 'Steam', art: 'steam', tags: ['Voucher', 'Akun'], count: 21, rating: '4.8', reviews: 190 },
-  { name: 'Clash of Clans', art: 'coc', tags: ['Top Up', 'Joki Rank'], count: 11, rating: '4.6', reviews: 87 },
-];
-const filters = ['Semua', 'Mobile', 'PC', 'Console', 'Top Up', 'Joki Rank', 'Akun', 'Voucher', 'Lainnya'];
-const categoryCounts: Record<string, number> = {
-  Semua: 24,
-  Mobile: 12,
-  PC: 6,
-  Console: 2,
-  'Top Up': 18,
-  'Joki Rank': 15,
-  Akun: 4,
-  Voucher: 3,
-  Lainnya: 2,
-};
-
 export const GamesPage = () => {
   const [activeFilter, setActiveFilter] = useState('Semua');
+  const [activeCategorySlug, setActiveCategorySlug] = useState('');
+  const [serviceCategories, setServiceCategories] = useState<Array<{ name: string; slug: string; count: number }>>([]);
   const [search, setSearch] = useState('');
   const [sort, setSort] = useState('Paling Populer');
   const [page, setPage] = useState(1);
-  const visibleGames = useMemo(() => {
-    const matching = games.filter(
-      (game) =>
-        game.name.toLowerCase().includes(search.toLowerCase()) &&
-        (activeFilter === 'Semua' ||
-          !['Top Up', 'Joki Rank', 'Akun', 'Voucher'].includes(activeFilter) ||
-          game.tags.includes(activeFilter))
-    );
-    if (sort === 'Rating Tertinggi') matching.sort((a, b) => Number(b.rating) - Number(a.rating));
-    if (sort === 'Nama A–Z') matching.sort((a, b) => a.name.localeCompare(b.name));
-    return matching;
-  }, [activeFilter, search, sort]);
+  const [games, setGames] = useState<GameCardView[]>([]);
+  const [total, setTotal] = useState(0);
+  const [loadError, setLoadError] = useState('');
+  useEffect(() => {
+    let alive = true;
+    const query = new URLSearchParams({
+      search,
+      limit: '100',
+      offset: '0',
+      sort: sort === 'Nama A–Z' ? 'NAME_ASC' : 'POPULAR',
+    });
+    if (activeCategorySlug) query.set('category', activeCategorySlug);
+    fetch(`/api/games/v1/list?${query}`)
+      .then(async (response) => {
+        const result = await response.json();
+        if (!response.ok || !result.data) throw new Error(result.status?.message ?? 'Katalog game gagal dimuat.');
+        if (!alive) return;
+        const totalItems: number = result.data.pagination.total;
+        const allGames = [...result.data.games];
+        while (allGames.length < totalItems) {
+          const nextQuery = new URLSearchParams(query);
+          nextQuery.set('offset', String(allGames.length));
+          const nextResponse = await fetch(`/api/games/v1/list?${nextQuery}`);
+          const nextResult = await nextResponse.json();
+          if (!nextResponse.ok || !nextResult.data) {
+            throw new Error(nextResult.status?.message ?? 'Katalog game gagal dimuat.');
+          }
+          if (!nextResult.data.games.length) break;
+          allGames.push(...nextResult.data.games);
+        }
+        if (!alive) return;
+        setTotal(totalItems);
+        setServiceCategories(result.data.filters?.serviceCategories ?? []);
+        setGames(
+          allGames.map(
+            (game: {
+              id: string;
+              slug: string;
+              name: string;
+              artworkKey: string | null;
+              serviceCount: number;
+              categories?: Array<{ name: string }>;
+            }) => ({
+              id: game.id,
+              slug: game.slug,
+              name: game.name,
+              art: game.artworkKey ?? game.slug,
+              tags: game.categories?.map((category) => category.name) ?? [],
+              count: game.serviceCount,
+              rating: '',
+              reviews: 0,
+            })
+          )
+        );
+        setLoadError('');
+      })
+      .catch(
+        (error: unknown) => alive && setLoadError(error instanceof Error ? error.message : 'Katalog game gagal dimuat.')
+      );
+    return () => {
+      alive = false;
+    };
+  }, [search, sort, activeCategorySlug]);
+  const filters = ['Semua', ...serviceCategories.map((category) => category.name)];
+  const categoryCounts: Record<string, number> = {
+    Semua: total,
+    ...Object.fromEntries(serviceCategories.map((category) => [category.name, category.count])),
+  };
   const chooseFilter = (filter: string) => {
     setActiveFilter(filter);
+    setActiveCategorySlug(serviceCategories.find((category) => category.name === filter)?.slug ?? '');
     setPage(1);
   };
   const updateSearch = (value: string) => {
@@ -69,9 +90,10 @@ export const GamesPage = () => {
   };
   return (
     <GamesTemplate
-      games={visibleGames}
+      loadError={loadError}
+      games={games}
       filters={filters}
-      counts={categoryCounts}
+      counts={{ ...categoryCounts, Semua: total }}
       activeFilter={activeFilter}
       search={search}
       sort={sort}

@@ -1,0 +1,485 @@
+// use prisma-8
+
+model GameCatalog {
+  game_id ObjectId @id @map("_id")
+  name             String        @unique
+  slug             String        @unique
+  service_summary  String?
+  artwork_key      String?
+  is_active        Bool
+  is_popular       Bool
+  sort_order       Int32
+  created_at       temporal.createdAt()
+  updated_at       temporal.updatedAt()
+  deleted_at       Date?
+  services         GameService[]
+  order_items      OrderItem[]
+
+  @@index([is_active, is_popular, sort_order])
+  @@map("game_catalog")
+}
+
+model ServiceCategory {
+  category_id ObjectId @id @map("_id")
+  name          String
+  slug          String
+  description   String?
+  is_active     Bool
+  created_at    temporal.createdAt()
+  updated_at    temporal.updatedAt()     
+  deleted_at    Date?
+  services      GameService[]
+  order_items   OrderItem[]
+
+  @@index([is_active, name, category_id])
+  @@map("service_category")
+}
+
+model GameService {
+  service_id ObjectId @id @map("_id")
+  game_id          ObjectId          
+  category_id      ObjectId          
+  name             String
+  price_amount     Decimal128?        
+  is_custom_price  Bool
+  estimate_text    String
+  is_active        Bool
+  created_at       temporal.createdAt()
+  updated_at       temporal.updatedAt()        
+  deleted_at       Date?
+  game             GameCatalog      @relation(fields: [game_id], references: [game_id])
+  category         ServiceCategory  @relation(fields: [category_id], references: [category_id])
+  order_items      OrderItem[]
+
+  @@index([game_id, is_active, name, service_id])
+  @@index([category_id, is_active, name, service_id])
+  @@index([game_id, category_id, name])
+  @@map("game_service")
+}
+
+model UserAccount {
+  user_id ObjectId @id @map("_id")
+  email               String              @unique
+  username            String              @unique
+  name                String
+  password_hash       String
+  whatsapp            String?
+  status              String
+  joined_at           temporal.createdAt()
+  created_at          temporal.createdAt()
+  updated_at          temporal.updatedAt()           
+  deleted_at          Date?
+  member_profile      MemberProfile?
+  user_status_history UserStatusHistory[]
+  orders              CustomerOrder[]
+
+  @@map("user_account")
+}
+
+model MemberProfile {
+  user_id ObjectId @id @map("_id")
+  tier         String
+  created_at   temporal.createdAt()
+  updated_at   temporal.updatedAt()   
+  user         UserAccount @relation(fields: [user_id], references: [user_id])
+  tier_history MemberTierHistory[]
+
+  @@map("member_profile")
+}
+
+model MemberTierHistory {
+  member_tier_history_id ObjectId @id @map("_id")
+  user_id                ObjectId     
+  old_tier               String?
+  new_tier               String
+  changed_by             ObjectId?    
+  reason                 String?
+  changed_at             temporal.createdAt()
+  member                 MemberProfile @relation(fields: [user_id], references: [user_id])
+
+  @@index([user_id, changed_at])
+  @@map("member_tier_history")
+}
+
+model AdminAccount {
+  admin_account_id ObjectId @id @map("_id")
+  username            String                 @unique
+  email               String                 @unique
+  name                String
+  password_hash       String
+  status              String
+  created_at          temporal.createdAt()
+  updated_at          temporal.updatedAt()              
+  deleted_at          Date?
+  roles               AccountRole[]
+  admin_status_history AdminStatusHistory[]
+  activity_logs       ActivityLog[]
+  settings_updates    PlatformSettings[]
+
+  @@map("admin_account")
+}
+
+model AdminRole {
+  role_id ObjectId @id @map("_id")
+  name           String
+  code           String
+  description    String?
+  status         String
+  is_system      Bool
+  created_at     temporal.createdAt()
+  updated_at     temporal.updatedAt()      
+  deleted_at     Date?
+  permissions    RolePermission[]
+  accounts       AccountRole[]
+
+  @@index([status, name])
+  @@map("admin_role")
+}
+
+model Permission {
+  permission_id ObjectId @id @map("_id")
+  code          String           @unique
+  name          String
+  description   String?
+  is_sensitive  Bool
+  is_active     Bool
+  created_at    temporal.createdAt()
+  updated_at    temporal.updatedAt()        
+  roles         RolePermission[]
+
+  @@map("permission")
+}
+
+model RolePermission {
+  role_permission_id ObjectId @id @map("_id")
+  role_id             ObjectId     
+  permission_id       ObjectId     
+  granted_by          ObjectId?    
+  created_at          temporal.createdAt()
+  role                AdminRole  @relation(fields: [role_id], references: [role_id])
+  permission          Permission @relation(fields: [permission_id], references: [permission_id])
+
+  @@unique([role_id, permission_id])
+  @@map("role_permission")
+}
+
+model AccountRole {
+  account_role_id ObjectId @id @map("_id")
+  admin_account_id ObjectId      
+  role_id          ObjectId      
+  assigned_by      ObjectId?     
+  assigned_at      temporal.createdAt()
+  revoked_at       Date?
+  admin            AdminAccount @relation(fields: [admin_account_id], references: [admin_account_id])
+  role             AdminRole    @relation(fields: [role_id], references: [role_id])
+
+  @@unique([admin_account_id, role_id])
+  @@map("account_role")
+}
+
+model UserStatusHistory {
+  user_status_history_id ObjectId @id @map("_id")
+  user_id                ObjectId     
+  old_status             String?
+  new_status             String
+  changed_by             ObjectId?    
+  reason                 String?
+  changed_at             temporal.createdAt()
+  user                   UserAccount @relation(fields: [user_id], references: [user_id])
+
+  @@index([user_id, changed_at])
+  @@map("user_status_history")
+}
+
+model AdminStatusHistory {
+  admin_status_history_id ObjectId @id @map("_id")
+  admin_account_id        ObjectId      
+  old_status              String?
+  new_status              String
+  changed_by              ObjectId?     
+  reason                  String?
+  changed_at              temporal.createdAt()
+  admin                   AdminAccount @relation(fields: [admin_account_id], references: [admin_account_id])
+
+  @@index([admin_account_id, changed_at])
+  @@map("admin_status_history")
+}
+
+model CustomerOrder {
+  order_id ObjectId @id @map("_id")
+  order_number      String                @unique
+  user_id           ObjectId?              
+  customer_name     String
+  customer_whatsapp String
+  order_status      String
+  payment_status    String
+  subtotal_amount   Decimal128              
+  discount_amount   Decimal128
+  total_amount      Decimal128              
+  currency          String
+  expires_at        Date?
+  created_at        temporal.createdAt()
+  updated_at        temporal.updatedAt()             
+  user              UserAccount?          @relation(fields: [user_id], references: [user_id])
+  items             OrderItem[]
+  payments          OrderPayment[]
+  status_history    OrderStatusHistory[]
+  transactions      FinancialTransaction[]
+
+  @@index([created_at, order_id])
+  @@index([order_status, created_at])
+  @@index([payment_status, created_at])
+  @@map("customer_order")
+}
+
+model OrderItem {
+  order_item_id ObjectId @id @map("_id")
+  order_id            ObjectId         
+  game_id             ObjectId?        
+  category_id         ObjectId?        
+  service_id          ObjectId?        
+  game_name_snapshot  String
+  service_name_snapshot String
+  category_name_snapshot String?
+  game_account        String
+  game_server         String?
+  customer_notes      String?
+  quantity            Int32
+  unit_price          Decimal128?       
+  line_total          Decimal128?       
+  estimate_snapshot   String
+  order               CustomerOrder  @relation(fields: [order_id], references: [order_id])
+  game                GameCatalog?   @relation(fields: [game_id], references: [game_id])
+  category            ServiceCategory? @relation(fields: [category_id], references: [category_id])
+  service             GameService?   @relation(fields: [service_id], references: [service_id])
+
+  @@index([order_id])
+  @@map("order_item")
+}
+
+model OrderPayment {
+  payment_id ObjectId @id @map("_id")
+  order_id         ObjectId                
+  method           String
+  status           String
+  amount           Decimal128               
+  reference_note   String?
+  submitted_at    Date?
+  reviewed_by     ObjectId?                
+  reviewed_at     Date?
+  review_note     String?
+  created_at      temporal.createdAt()
+  updated_at      temporal.updatedAt()              
+  order           CustomerOrder           @relation(fields: [order_id], references: [order_id])
+  proofs          PaymentProof[]
+  status_history  PaymentStatusHistory[]
+  transactions    FinancialTransaction[]
+
+  @@index([order_id, created_at])
+  @@index([status, created_at])
+  @@map("order_payment")
+}
+
+model PaymentProof {
+  proof_id ObjectId @id @map("_id")
+  payment_id       ObjectId      
+  object_key       String       @unique
+  mime_type        String
+  file_size_bytes  Int32
+  uploaded_at      temporal.createdAt()
+  uploaded_by      ObjectId?     
+  payment          OrderPayment @relation(fields: [payment_id], references: [payment_id])
+
+  @@index([payment_id, uploaded_at])
+  @@map("payment_proof")
+}
+
+model OrderStatusHistory {
+  order_status_history_id ObjectId @id @map("_id")
+  order_id                ObjectId       
+  old_status              String?
+  new_status              String
+  changed_by              ObjectId?      
+  reason                  String?
+  changed_at              temporal.createdAt()
+  order                   CustomerOrder @relation(fields: [order_id], references: [order_id])
+
+  @@index([order_id, changed_at])
+  @@map("order_status_history")
+}
+
+model PaymentStatusHistory {
+  payment_status_history_id ObjectId @id @map("_id")
+  payment_id                ObjectId     
+  old_status                String?
+  new_status                String
+  changed_by                ObjectId?    
+  reason                    String?
+  changed_at                temporal.createdAt()
+  payment                   OrderPayment @relation(fields: [payment_id], references: [payment_id])
+
+  @@index([payment_id, changed_at])
+  @@map("payment_status_history")
+}
+
+model FinancialTransaction {
+  transaction_id ObjectId @id @map("_id")
+  transaction_number      String                  @unique
+  order_id                ObjectId                 
+  order_payment_id        ObjectId?                
+  refund_request_id       ObjectId?                
+  type                    String
+  method                  String
+  amount                  Decimal128                
+  currency                String
+  status                  String
+  provider_reference      String?
+  customer_name_snapshot  String?
+  customer_contact_snapshot String?
+  created_at              temporal.createdAt()
+  updated_at              temporal.updatedAt()               
+  settled_at              Date?
+  order                   CustomerOrder           @relation(fields: [order_id], references: [order_id])
+  payment                 OrderPayment?           @relation(fields: [order_payment_id], references: [payment_id])
+  status_history          TransactionStatusHistory[]
+
+  @@index([order_payment_id])
+  @@index([status, created_at])
+  @@index([type, created_at])
+  @@map("financial_transaction")
+}
+
+model TransactionStatusHistory {
+  transaction_status_history_id ObjectId @id @map("_id")
+  transaction_id                ObjectId             
+  old_status                    String?
+  new_status                    String
+  changed_by                    ObjectId?            
+  reason                        String?
+  changed_at                    temporal.createdAt()
+  transaction                   FinancialTransaction @relation(fields: [transaction_id], references: [transaction_id])
+
+  @@index([transaction_id, changed_at])
+  @@map("transaction_status_history")
+}
+
+model PlatformSettings {
+  settings_id ObjectId @id @map("_id")
+  singleton_key      String       @unique
+  site_name          String
+  site_description   String?
+  contact_email      String
+  contact_whatsapp   String
+  instagram_url      String?
+  maintenance_mode   Bool
+  allow_registration Bool
+  default_currency   String
+  timezone           String
+  version            Int32
+  updated_by         ObjectId?     
+  created_at         temporal.createdAt()
+  updated_at         temporal.updatedAt()    
+  admin              AdminAccount? @relation(fields: [updated_by], references: [admin_account_id])
+
+  @@map("platform_settings")
+}
+
+model ActivityLog {
+  activity_log_id ObjectId @id @map("_id")
+  actor_admin_id      ObjectId?      
+  actor_name_snapshot String?
+  actor_email_snapshot String?
+  action_code         String
+  action_label        String
+  category            String
+  target_type         String
+  target_id           ObjectId?      
+  target_reference    String?
+  result              String
+  failure_code        String?
+  reason              String?
+  changed_fields      Json?
+  request_id          String?
+  source_ip           String?
+  user_agent          String?
+  occurred_at         temporal.createdAt()
+  actor               AdminAccount? @relation(fields: [actor_admin_id], references: [admin_account_id])
+
+  @@index([occurred_at, activity_log_id])
+  @@index([category, occurred_at])
+  @@index([result, occurred_at])
+  @@index([actor_admin_id, occurred_at])
+  @@index([target_type, target_id, occurred_at])
+  @@index([action_code, occurred_at])
+  @@index([request_id])
+  @@map("activity_log")
+}
+
+model AuthRefreshSession {
+  refresh_session_id ObjectId @id @map("_id")
+  token_hash          String   @unique
+  account_type        String
+  account_id          ObjectId
+  family_id           ObjectId
+  expires_at          Date
+  created_at          temporal.createdAt()
+  is_revoked          Bool
+  last_used_at        Date?
+  revoked_at          Date?
+  replaced_by_id      ObjectId?
+
+  @@index([account_type, account_id, revoked_at])
+  @@index([account_type, account_id, is_revoked])
+  @@index([account_type, account_id, family_id])
+  @@index([expires_at])
+  @@map("auth_refresh_session")
+}
+
+model AuthRateLimitBucket {
+  bucket_id    ObjectId @id @map("_id")
+  bucket_key   String   @unique
+  request_count Int32
+  expires_at   Date
+  created_at   Date
+
+  @@map("auth_rate_limit_bucket")
+}
+
+model AuthActionToken {
+  action_token_id ObjectId @id @map("_id")
+  token_hash      String   @unique
+  token_type      String
+  account_id      ObjectId
+  expires_at      Date
+  created_at      Date
+  used_at         Date?
+
+  @@index([account_id, token_type, used_at])
+  @@index([expires_at])
+  @@map("auth_action_token")
+}
+
+model CheckoutIdempotency {
+  checkout_idempotency_id ObjectId @id @map("_id")
+  key_hash                String   @unique
+  request_hash            String
+  response_json           Json?
+  created_at              Date
+  expires_at              Date
+
+  @@index([expires_at])
+  @@map("checkout_idempotency")
+}
+
+model OrderTrackingToken {
+  tracking_token_id ObjectId @id @map("_id")
+  token_hash        String   @unique
+  order_id          ObjectId
+  expires_at        Date
+  revoked_at        Date?
+  created_at        Date
+
+  @@index([order_id, expires_at])
+  @@index([expires_at])
+  @@map("order_tracking_token")
+}

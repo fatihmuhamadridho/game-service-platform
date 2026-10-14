@@ -19,6 +19,7 @@ erDiagram
         integer sort_order
         datetime created_at
         datetime updated_at
+        datetime deleted_at
     }
 ```
 
@@ -38,6 +39,7 @@ Current scope needs one entity only. Admin identity belongs to the authenticatio
 | `sort_order`      | Integer                  | No   | Default `0`; check `>= 0`                      | Display order; lower value appears first.                                            |
 | `created_at`      | Timestamp with time zone | No   | Default current UTC timestamp                  | Record creation time. Immutable after insert.                                        |
 | `updated_at`      | Timestamp with time zone | No   | Default current UTC timestamp                  | Time of most recent record update.                                                   |
+| `deleted_at`      | Timestamp with time zone | Yes  | Null means available                           | Soft-delete marker; deletion preserves service and order references.                 |
 
 ## Indexes
 
@@ -62,14 +64,14 @@ Current scope needs one entity only. Admin identity belongs to the authenticatio
 4. `is_popular=true` requires `is_active=true`.
 5. `sort_order` cannot be negative.
 6. `created_at` is immutable; service updates `updated_at` on every successful change.
-7. Deletion strategy is not defined by current solutioning. Do not add cascading deletes until relationships and retention policy are approved.
+7. Delete is soft: set `deleted_at`, deactivate game, and clear popular flag. Never cascade into services or order history.
 8. Updating a game changes only supplied mutable attributes; `game_id` and `created_at` remain immutable.
 
 ## Assumptions / Decisions Needed
 
 - Table and column names, data types, identifier generation, defaults, uniqueness, and indexes are proposed; database engine and naming convention are TBD.
 - `service_summary` and `artwork_key` come from existing storefront-card needs. `mark` is excluded because there is no confirmed product requirement.
-- Confirm whether game name must be unique, whether inactive games remain stored, and whether a soft-delete field is required.
+- Confirm whether game name uniqueness should be enforced case-insensitively at database level; current service checks normalized names before write.
 - Create Game solutioning proposes defaults `is_active=false`, `is_popular=false`, and `sort_order=0`; confirm before schema implementation.
 - Audit actor/history model is outside this ERD and remains TBD.
 

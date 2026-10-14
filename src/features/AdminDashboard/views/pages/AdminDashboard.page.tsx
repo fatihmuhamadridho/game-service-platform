@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Box } from 'rangkaui';
 import {
   IconActivity,
@@ -21,101 +21,173 @@ import { AdminHeader } from '@common-ui/organisms/AdminDashboard/AdminHeader';
 import { AdminSidebar } from '@common-ui/organisms/AdminDashboard/AdminSidebar';
 import styles from './AdminDashboard.module.css';
 
-const metrics = [
-  { label: 'Total Pesanan', value: '1.248', change: '12%', icon: <IconReceipt />, tone: 'blue' },
-  { label: 'Total Pendapatan', value: 'Rp 45.230.000', change: '18%', icon: <IconWallet />, tone: 'violet' },
-  { label: 'Total User', value: '3.420', change: '9%', icon: <IconUsers />, tone: 'cyan' },
-  { label: 'Total Layanan', value: '128', change: '18%', icon: <IconDeviceGamepad2 />, tone: 'blue' },
-];
-const orders = [
-  {
-    id: '#JH12648',
-    date: '7 Okt 2026 14:32',
-    user: 'budi123',
-    game: 'Mobile Legends',
-    service: 'Joki Rank Mythic',
-    total: 'Rp 85.000',
-    status: 'Diproses',
-    tone: 'orange',
-  },
-  {
-    id: '#JH12647',
-    date: '7 Okt 2026 13:10',
-    user: 'santoso98',
-    game: 'Free Fire',
-    service: 'Top Up Diamond 100',
-    total: 'Rp 25.000',
-    status: 'Selesai',
-    tone: 'green',
-  },
-  {
-    id: '#JH12646',
-    date: '7 Okt 2026 12:45',
-    user: 'indahputri',
-    game: 'Roblox',
-    service: 'Top Up Robux 400',
-    total: 'Rp 120.000',
-    status: 'Selesai',
-    tone: 'green',
-  },
-  {
-    id: '#JH12645',
-    date: '7 Okt 2026 11:20',
-    user: 'rakaaa',
-    game: 'Valorant',
-    service: 'Joki Rank Silver → Gold',
-    total: 'Rp 70.000',
-    status: 'Menunggu',
-    tone: 'slate',
-  },
-  {
-    id: '#JH12644',
-    date: '7 Okt 2026 10:08',
-    user: 'dimasaja',
-    game: 'Genshin Impact',
-    service: 'Top Up Genesis',
-    total: 'Rp 150.000',
-    status: 'Diproses',
-    tone: 'orange',
-  },
-];
-const popular = [
-  { name: 'Mobile Legends', count: 428, percent: 34, tone: 'ml' },
-  { name: 'Free Fire', count: 312, percent: 25, tone: 'ff' },
-  { name: 'Roblox', count: 184, percent: 15, tone: 'roblox' },
-  { name: 'Valorant', count: 162, percent: 13, tone: 'valo' },
-  { name: 'Genshin Impact', count: 128, percent: 10, tone: 'genshin' },
-];
-const incomes = [
-  ['Mobile Legends', 'Rp 18.420.000', '41%', 'ml'],
-  ['Free Fire', 'Rp 9.850.000', '22%', 'ff'],
-  ['Roblox', 'Rp 7.320.000', '16%', 'roblox'],
-  ['Valorant', 'Rp 5.640.000', '12%', 'valo'],
-  ['Genshin Impact', 'Rp 4.000.000', '9%', 'genshin'],
-] as const;
-const payments = [
-  ['Transfer Bank', '520', 'Rp 22.400.000'],
-  ['E-Wallet (DANA)', '368', 'Rp 12.850.000'],
-  ['E-Wallet (OVO)', '184', 'Rp 6.900.000'],
-  ['E-Wallet (GoPay)', '142', 'Rp 5.120.000'],
-  ['QRIS', '96', 'Rp 3.960.000'],
-] as const;
-const activities = [
-  ['Pesanan #JH12648 dibuat', 'oleh budi123', '2 menit yang lalu', 'green'],
-  ['Pembayaran diterima', 'untuk pesanan #JH12647', '1 jam yang lalu', 'cyan'],
-  ['User baru mendaftar', 'santoso98', '2 jam yang lalu', 'blue'],
-  ['Layanan baru ditambahkan', 'Top Up Diamond 500 (Free Fire)', '4 jam yang lalu', 'purple'],
-  ['Banner homepage diperbarui', 'oleh admin', '6 jam yang lalu', 'orange'],
-] as const;
-const chartPoints =
-  'M42 139 C82 129 97 100 140 107 S202 123 244 96 S308 69 350 78 S420 66 458 51 S505 61 540 34 S590 52 620 24 S680 10 720 28';
+type Overview = {
+  metrics: {
+    orderCount: number;
+    orderChangePercent: number;
+    revenue: number;
+    revenueChangePercent: number;
+    userCount: number;
+    serviceCount: number;
+  };
+  series: Array<{ label: string; orders: number; revenue: number }>;
+  statusDistribution: Array<{ status: string; count: number; percent: number }>;
+  popularGames: Array<{ name: string; count: number; percent: number }>;
+  gameRevenue: Array<{ name: string; amount: number; percent: number }>;
+  paymentMethods: Array<{ method: string; count: number; amount: number }>;
+  recentOrders: Array<{
+    id: string;
+    date: string;
+    user: string;
+    game: string;
+    service: string;
+    total: number;
+    status: string;
+  }>;
+  recentActivity: Array<{ id: string; title: string; detail: string; occurredAt: string; category: string }>;
+};
+const formatRupiah = (amount: number) =>
+  new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(amount);
+const gameTone = (name: string) =>
+  name.toLowerCase().includes('mobile legends')
+    ? 'ml'
+    : name.toLowerCase().includes('free fire')
+      ? 'ff'
+      : name.toLowerCase().includes('roblox')
+        ? 'roblox'
+        : name.toLowerCase().includes('valorant')
+          ? 'valo'
+          : name.toLowerCase().includes('genshin')
+            ? 'genshin'
+            : 'ml';
+const statusTone = (status: string) =>
+  status === 'Selesai' ? 'green' : status === 'Dibatalkan' ? 'slate' : status === 'Diproses' ? 'orange' : 'slate';
+const relativeTime = (value: string) => {
+  const minutes = Math.max(0, Math.floor((Date.now() - new Date(value).getTime()) / 60000));
+  return minutes < 60
+    ? `${minutes} menit lalu`
+    : minutes < 1440
+      ? `${Math.floor(minutes / 60)} jam lalu`
+      : `${Math.floor(minutes / 1440)} hari lalu`;
+};
 const gameSlug = (value: string) => value.toLowerCase().replaceAll(' ', '-');
 
 export const AdminDashboardPage = () => {
   const [query, setQuery] = useState('');
   const [menuOpen, setMenuOpen] = useState(false);
   const [period, setPeriod] = useState('Harian');
-  const [dateRange, setDateRange] = useState('1 Okt 2026 – 7 Okt 2026');
+  const [dateRange, setDateRange] = useState('7');
+  const [overview, setOverview] = useState<Overview | null>(null);
+  const [error, setError] = useState('');
+  const [chartType, setChartType] = useState<'Pendapatan' | 'Pesanan'>('Pendapatan');
+  const load = useCallback(async () => {
+    const to = new Date();
+    const from = new Date(to);
+    from.setUTCDate(from.getUTCDate() - Number(dateRange) + 1);
+    const granularity = period === 'Mingguan' ? 'weekly' : period === 'Bulanan' ? 'monthly' : 'daily';
+    const params = new URLSearchParams({
+      from: from.toISOString().slice(0, 10),
+      to: to.toISOString().slice(0, 10),
+      granularity,
+    });
+    try {
+      const response = await fetch(`/api/admin/dashboard/v1/overview?${params}`, { cache: 'no-store' });
+      const payload = await response.json();
+      if (!response.ok) throw new Error(payload.status?.message ?? 'Gagal memuat dashboard.');
+      setOverview(payload.data.overview as Overview);
+      setError('');
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : 'Gagal memuat dashboard.');
+    }
+  }, [dateRange, period]);
+  useEffect(() => {
+    void Promise.resolve().then(load);
+  }, [load]);
+  const data = overview;
+  const metrics = [
+    {
+      label: 'Total Pesanan',
+      value: String(data?.metrics.orderCount ?? 0),
+      change: `${data?.metrics.orderChangePercent ?? 0}%`,
+      icon: <IconReceipt />,
+      tone: 'blue',
+    },
+    {
+      label: 'Total Pendapatan',
+      value: formatRupiah(data?.metrics.revenue ?? 0),
+      change: `${data?.metrics.revenueChangePercent ?? 0}%`,
+      icon: <IconWallet />,
+      tone: 'violet',
+    },
+    {
+      label: 'Total User',
+      value: String(data?.metrics.userCount ?? 0),
+      change: '—',
+      icon: <IconUsers />,
+      tone: 'cyan',
+    },
+    {
+      label: 'Total Layanan',
+      value: String(data?.metrics.serviceCount ?? 0),
+      change: '—',
+      icon: <IconDeviceGamepad2 />,
+      tone: 'blue',
+    },
+  ];
+  const orders = useMemo(
+    () =>
+      data?.recentOrders.map((order) => ({
+        ...order,
+        date: new Date(order.date).toLocaleString('id-ID'),
+        total: formatRupiah(order.total),
+        tone: statusTone(order.status),
+      })) ?? [],
+    [data]
+  );
+  const popular = data?.popularGames.map((game) => ({ ...game, tone: gameTone(game.name) })) ?? [];
+  const incomes =
+    data?.gameRevenue.map(
+      (game) => [game.name, formatRupiah(game.amount), `${game.percent}%`, gameTone(game.name)] as const
+    ) ?? [];
+  const payments =
+    data?.paymentMethods.map((row) => [row.method, String(row.count), formatRupiah(row.amount)] as const) ?? [];
+  const activities =
+    data?.recentActivity.map(
+      (item) => [item.id, item.title, item.detail, relativeTime(item.occurredAt), gameTone(item.category)] as const
+    ) ?? [];
+  const statusTotals = data?.statusDistribution ?? [];
+  const orderTotal = data?.metrics.orderCount ?? 0;
+  const donutColors = ['#168aff', '#ffc857', '#8a98a8', '#ef566a', '#8b86ff'];
+  const donutStops = statusTotals
+    .reduce<{ value: number; stops: string[] }>(
+      (acc, item, index) => {
+        const start = acc.value;
+        acc.value += item.percent;
+        acc.stops.push(`${donutColors[index % donutColors.length]} ${start}% ${acc.value}%`);
+        return acc;
+      },
+      { value: 0, stops: [] }
+    )
+    .stops.join(', ');
+  const chartValues = data?.series.map((item) => (chartType === 'Pendapatan' ? item.revenue : item.orders)) ?? [];
+  const chartMax = Math.max(1, ...chartValues);
+  const chartPoints =
+    chartValues.length < 2
+      ? 'M42 150 L720 150'
+      : chartValues
+          .map((value, index) => {
+            const x = 42 + index * (678 / (chartValues.length - 1));
+            const y = 150 - (value / chartMax) * 125;
+            return `${index ? 'L' : 'M'}${x.toFixed(1)} ${y.toFixed(1)}`;
+          })
+          .join(' ');
+  const xLabels =
+    data?.series.map((item) =>
+      new Date(`${item.label}T00:00:00Z`).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })
+    ) ?? [];
+  const yLabels = [1, 0.75, 0.5, 0.25, 0].map((part) =>
+    chartType === 'Pendapatan' ? formatRupiah(chartMax * part) : Math.round(chartMax * part).toLocaleString('id-ID')
+  );
   const filteredOrders = useMemo(
     () =>
       orders.filter((order) =>
@@ -123,7 +195,7 @@ export const AdminDashboardPage = () => {
           .toLowerCase()
           .includes(query.toLowerCase())
       ),
-    [query]
+    [query, orders]
   );
   return (
     <main className={styles.page}>
@@ -138,9 +210,8 @@ export const AdminDashboardPage = () => {
           <label className={styles.dateSelect}>
             <IconCalendar />
             <select value={dateRange} onChange={(event) => setDateRange(event.target.value)}>
-              <option>1 Okt 2026 – 7 Okt 2026</option>
-              <option>24 Sep 2026 – 30 Sep 2026</option>
-              <option>30 hari terakhir</option>
+              <option value="7">7 hari terakhir</option>
+              <option value="30">30 hari terakhir</option>
             </select>
             <IconChevronDown />
           </label>
@@ -168,7 +239,11 @@ export const AdminDashboardPage = () => {
                 <small>Performa pendapatan berdasarkan periode</small>
               </div>
               <div className={styles.chartTools}>
-                <select aria-label="Jenis grafik">
+                <select
+                  aria-label="Jenis grafik"
+                  value={chartType}
+                  onChange={(event) => setChartType(event.target.value as 'Pendapatan' | 'Pesanan')}
+                >
                   <option>Pendapatan</option>
                   <option>Pesanan</option>
                 </select>
@@ -187,13 +262,11 @@ export const AdminDashboardPage = () => {
             </div>
             <div className={styles.chart}>
               <div className={styles.yAxis}>
-                <span>Rp 10.000.000</span>
-                <span>Rp 7.500.000</span>
-                <span>Rp 5.000.000</span>
-                <span>Rp 2.500.000</span>
-                <span>Rp 0</span>
+                {yLabels.map((value, index) => (
+                  <span key={index}>{value}</span>
+                ))}
               </div>
-              <svg viewBox="0 0 760 180" preserveAspectRatio="none" aria-label="Grafik pendapatan harian">
+              <svg viewBox="0 0 760 180" preserveAspectRatio="none" aria-label={`Grafik ${chartType.toLowerCase()}`}>
                 <defs>
                   <linearGradient id="incomeFill" x1="0" x2="0" y1="0" y2="1">
                     <stop offset="0%" stopColor="#087cff" stopOpacity=".35" />
@@ -202,12 +275,12 @@ export const AdminDashboardPage = () => {
                 </defs>
                 <path d={`${chartPoints} L720 160 L42 160 Z`} fill="url(#incomeFill)" />
                 <path d={chartPoints} fill="none" stroke="#0782ff" strokeWidth="3" />
-                {[42, 140, 244, 350, 458, 540, 620, 720].map((x, index) => (
+                {chartValues.map((value, index) => (
                   <circle
-                    key={x}
-                    cx={x}
-                    cy={[139, 107, 96, 78, 51, 34, 24, 28][index]}
-                    r={index === 4 ? 6 : 4}
+                    key={index}
+                    cx={chartValues.length < 2 ? 42 : 42 + index * (678 / (chartValues.length - 1))}
+                    cy={150 - (value / chartMax) * 125}
+                    r="4"
                     fill="#168aff"
                     stroke="#05264a"
                     strokeWidth="2"
@@ -215,13 +288,9 @@ export const AdminDashboardPage = () => {
                 ))}
               </svg>
               <div className={styles.xAxis}>
-                <span>1 Okt</span>
-                <span>2 Okt</span>
-                <span>3 Okt</span>
-                <span>4 Okt</span>
-                <span>5 Okt</span>
-                <span>6 Okt</span>
-                <span>7 Okt</span>
+                {xLabels.map((label, index) => (
+                  <span key={`${label}-${index}`}>{label}</span>
+                ))}
               </div>
             </div>
           </Box>
@@ -235,33 +304,24 @@ export const AdminDashboardPage = () => {
               </select>
             </div>
             <div className={styles.donutWrap}>
-              <div className={styles.donut}>
+              <div
+                className={styles.donut}
+                style={donutStops ? { background: `conic-gradient(${donutStops})` } : undefined}
+              >
                 <div>
-                  <b>1.248</b>
+                  <b>{orderTotal.toLocaleString('id-ID')}</b>
                   <small>Pesanan</small>
                 </div>
               </div>
               <ul>
-                <li>
-                  <i className={styles.blueDot} />
-                  Selesai <b>892</b>
-                  <small>72%</small>
-                </li>
-                <li>
-                  <i className={styles.yellowDot} />
-                  Diproses <b>184</b>
-                  <small>15%</small>
-                </li>
-                <li>
-                  <i className={styles.grayDot} />
-                  Menunggu <b>96</b>
-                  <small>8%</small>
-                </li>
-                <li>
-                  <i className={styles.redDot} />
-                  Dibatalkan <b>48</b>
-                  <small>4%</small>
-                </li>
+                {statusTotals.map((item, index) => (
+                  <li key={item.status}>
+                    <i className={[styles.blueDot, styles.yellowDot, styles.grayDot, styles.redDot][index % 4]} />
+                    {item.status}
+                    <b>{item.count}</b>
+                    <small>{item.percent}%</small>
+                  </li>
+                ))}
               </ul>
             </div>
           </Box>
@@ -401,8 +461,8 @@ export const AdminDashboardPage = () => {
               </a>
             </div>
             <div className={styles.activityList}>
-              {activities.map(([title, detail, time, tone]) => (
-                <div className={styles.activity} key={title}>
+              {activities.map(([id, title, detail, time, tone]) => (
+                <div className={styles.activity} key={id}>
                   <span className={`${styles.activityIcon} ${styles[tone]}`}>
                     <IconActivity />
                   </span>
@@ -416,7 +476,11 @@ export const AdminDashboardPage = () => {
             </div>
           </Box>
         </div>
-        <p className={styles.demoNote}>Data contoh untuk prototipe dashboard admin.</p>
+        {error && (
+          <p role="alert" className={styles.demoNote}>
+            {error}
+          </p>
+        )}
       </div>
       <nav className={styles.mobileNav}>
         <a className={styles.mobileCurrent} href="/admin">

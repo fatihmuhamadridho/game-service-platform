@@ -15,6 +15,7 @@ import styles from '../pages/AdminServiceCategories.module.css';
 
 type Props = {
   categories: AdminServiceCategoryView[];
+  error?: string;
   filteredCategories: AdminServiceCategoryView[];
   query: string;
   onQueryChange: (value: string) => void;
@@ -35,6 +36,7 @@ type Props = {
 
 export const AdminServiceCategoriesTemplate = ({
   categories,
+  error = '',
   filteredCategories,
   query,
   onQueryChange,
@@ -205,7 +207,11 @@ export const AdminServiceCategoriesTemplate = ({
               </div>
             )}
           </div>
-          <p className={styles.demoNote}>Data contoh. Perubahan hanya tersimpan selama halaman ini terbuka.</p>
+          {error && (
+            <p role="alert" className={styles.demoNote}>
+              {error}
+            </p>
+          )}
         </Box>
       </div>
 
@@ -271,6 +277,11 @@ export const AdminServiceCategoriesTemplate = ({
                 />
                 <span>Kategori aktif dan tampil di katalog</span>
               </label>
+              {error && (
+                <p role="alert" className={styles.formNote}>
+                  {error}
+                </p>
+              )}
               <div className={styles.dialogActions}>
                 <button type="button" className={styles.cancelButton} onClick={onCloseForm}>
                   Batal
@@ -300,13 +311,18 @@ export const AdminServiceCategoriesTemplate = ({
             <div className={styles.dialogHeading}>
               <div>
                 <h2 id="delete-category-title">Hapus kategori {deleteTarget.name}?</h2>
-                <p>Kategori akan dihapus dari daftar pada sesi ini.</p>
+                <p>Kategori dihapus bila belum digunakan layanan.</p>
               </div>
               <button className={styles.closeButton} aria-label="Tutup" onClick={() => onDeleteSelect(null)}>
                 <IconX />
               </button>
             </div>
             <div className={styles.dialogActions}>
+              {error && (
+                <p role="alert" className={styles.formNote}>
+                  {error}
+                </p>
+              )}
               <button className={styles.cancelButton} onClick={() => onDeleteSelect(null)}>
                 Batal
               </button>

@@ -2,6 +2,9 @@
 
 # dependencies
 /node_modules
+/.env
+/.env.local
+/.env.*.local
 /.pnp
 .pnp.*
 .yarn/*
@@ -42,3 +45,6 @@ next-env.d.ts
 pnpm-lock.yaml
 
 !.env.example
+node_modules/
+dist/
+.env

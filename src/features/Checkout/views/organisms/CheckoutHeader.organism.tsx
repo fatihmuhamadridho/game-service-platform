@@ -1,4 +1,3 @@
-import { IconChevronRight } from '@tabler/icons-react';
 import { Breadcrumb } from '../atoms/Breadcrumb.atom';
 import { StepIndicator } from '../atoms/StepIndicator.atom';
 import { Header } from '@common-ui/organisms/Header/Header';

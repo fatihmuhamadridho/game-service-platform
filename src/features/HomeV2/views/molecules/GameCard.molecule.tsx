@@ -4,7 +4,7 @@ import styles from './GameCard.module.css';
 
 export const GameCard = ({ game }: { game: HomeGame }) => (
   <Box className={styles.card} bordered rounded>
-    <a href={`/order/${game.name.toLowerCase().replaceAll(' ', '-')}`}>
+    <a href={`/order/${encodeURIComponent(game.slug)}`}>
       <div className={`${styles.art} ${styles[game.art]}`}>
         <span>{game.mark}</span>
         <i />

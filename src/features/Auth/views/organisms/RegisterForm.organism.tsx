@@ -4,12 +4,15 @@ import { useState, type FormEvent } from 'react';
 import { IconEye, IconEyeOff, IconLock, IconMail, IconUser } from '@tabler/icons-react';
 import styles from '../templates/Auth.module.css';
 import { AuthSubmit } from '../atoms/AuthSubmit.atom';
+import { useRouter } from 'next/navigation';
 
 export function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [notice, setNotice] = useState('');
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  const [busy, setBusy] = useState(false);
+  const router = useRouter();
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget;
     const password = form.elements.namedItem('password') as HTMLInputElement;
@@ -20,20 +23,56 @@ export function RegisterForm() {
       return;
     }
     confirmation.setCustomValidity('');
-    setNotice('Pendaftaran siap diproses setelah layanan akun JokiHub tersedia.');
+    const formData = new FormData(form);
+    setBusy(true);
+    try {
+      const response = await fetch('/api/auth/v1/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.get('name'),
+          username: formData.get('username'),
+          email: formData.get('email'),
+          password: formData.get('password'),
+          termsAccepted:
+            form.querySelector('input[type="checkbox"]') instanceof HTMLInputElement &&
+            (form.querySelector('input[type="checkbox"]') as HTMLInputElement).checked,
+        }),
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.status?.message ?? 'Pendaftaran gagal.');
+      window.sessionStorage.setItem('jokihub-session-type', 'CUSTOMER');
+      window.dispatchEvent(new CustomEvent('jokihub:session-established', { detail: 'CUSTOMER' }));
+      router.replace('/');
+    } catch (cause) {
+      setNotice(cause instanceof Error ? cause.message : 'Layanan pendaftaran sedang tidak tersedia.');
+    } finally {
+      setBusy(false);
+    }
   }
   return (
     <>
-      <div className={styles.cardHeading}>
-        <h2 id="form-title">Buat Akun Baru</h2>
-        <p>Lengkapi data berikut untuk membuat akun JokiHub</p>
-      </div>
       <form onSubmit={handleSubmit}>
         <label className={styles.field}>
           <span>Nama Lengkap</span>
           <span className={styles.inputWrap}>
             <IconUser aria-hidden="true" />
             <input autoComplete="name" name="name" placeholder="Contoh: Budi Santoso" required />
+          </span>
+        </label>
+        <label className={styles.field}>
+          <span>Username</span>
+          <span className={styles.inputWrap}>
+            <IconUser aria-hidden="true" />
+            <input
+              autoComplete="username"
+              name="username"
+              placeholder="contoh: budi.santoso"
+              minLength={3}
+              maxLength={30}
+              pattern="[a-zA-Z0-9._-]+"
+              required
+            />
           </span>
         </label>
         <label className={styles.field}>
@@ -44,17 +83,6 @@ export function RegisterForm() {
           </span>
         </label>
         <label className={styles.field}>
-          <span>No. WhatsApp</span>
-          <span className={`${styles.inputWrap} ${styles.phoneWrap}`}>
-            <select aria-label="Kode negara" defaultValue="+62">
-              <option value="+62">+62</option>
-              <option value="+60">+60</option>
-              <option value="+65">+65</option>
-            </select>
-            <input autoComplete="tel-national" name="phone" type="tel" placeholder="81234567890" required />
-          </span>
-        </label>
-        <label className={styles.field}>
           <span>Password</span>
           <span className={styles.inputWrap}>
             <IconLock aria-hidden="true" />
@@ -62,8 +90,8 @@ export function RegisterForm() {
               autoComplete="new-password"
               name="password"
               type={showPassword ? 'text' : 'password'}
-              placeholder="Buat password (minimal 6 karakter)"
-              minLength={6}
+              placeholder="Buat password (minimal 8 karakter)"
+              minLength={8}
               required
             />
             <button
@@ -85,7 +113,7 @@ export function RegisterForm() {
               name="password-confirmation"
               type={showConfirmation ? 'text' : 'password'}
               placeholder="Ulangi password"
-              minLength={6}
+              minLength={8}
               required
             />
             <button
@@ -105,7 +133,7 @@ export function RegisterForm() {
             <a href="/bantuan#privasi">Kebijakan Privasi</a> JokiHub
           </span>
         </label>
-        <AuthSubmit>Daftar Sekarang</AuthSubmit>
+        <AuthSubmit disabled={busy}>{busy ? 'Membuat akun…' : 'Daftar Sekarang'}</AuthSubmit>
         {notice && (
           <p className={styles.notice} role="status">
             {notice}

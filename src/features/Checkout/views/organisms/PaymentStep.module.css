@@ -1,10 +1,10 @@
 .layout {
-  max-width: 1280px;
+  max-width: 1120px;
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 4px 24px 32px;
   display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(300px, 0.92fr);
-  gap: 16px;
+  grid-template-columns: minmax(0, 1.45fr) minmax(300px, 0.8fr);
+  gap: 20px;
   align-items: start;
 }
 .mainColumn,
@@ -16,14 +16,20 @@
 }
 .sideColumn {
   position: sticky;
-  top: 84px;
+  top: 88px;
 }
 .panel {
   border: 1px solid #26374b !important;
-  border-radius: 11px !important;
-  background: linear-gradient(150deg, #101e2e, #0c1724) !important;
-  padding: 15px !important;
+  border-radius: 14px !important;
+  background: linear-gradient(150deg, #111f30, #0c1724) !important;
+  padding: 20px !important;
   color: #f3f6fb;
+}
+.summaryTitle {
+  margin: 0 0 14px;
+  color: #f3f6fb;
+  font-size: 16px;
+  font-weight: 700;
 }
 .methods {
   min-width: 0;
@@ -235,11 +241,126 @@
   line-height: 1.45;
 }
 .paymentInstructions {
-  margin: 8px 0;
-  padding: 10px;
+  margin: 16px 0 12px;
+  padding: 18px;
+  min-height: 300px;
+  display: grid;
+  place-items: center;
   border: 1px solid #263e58;
-  border-radius: 8px;
+  border-radius: 12px;
+  background: radial-gradient(ellipse at center, #14263a, #0b1928 72%);
+}
+.qrFrame {
+  width: min(100%, 300px);
+  padding: 10px;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 12px 32px #0005;
+}
+.qrFrame img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 4px;
+}
+.orderFacts {
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0;
+  list-style: none;
+}
+.orderFacts > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 11px 0;
+  border-bottom: 1px solid #26384c;
+}
+.orderFacts dt {
+  color: #aebcd0;
+  font-size: 12px;
+}
+.orderFacts dd {
+  max-width: 65%;
+  margin: 0;
+  color: #ecf2fa;
+  font-size: 12px;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+.expiry {
+  margin: 13px 0 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  color: #f4c56d;
+  font-size: 11px;
+  line-height: 1.5;
+}
+.expiry svg {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
+}
+.manualReview {
+  margin: 0;
+  padding: 12px;
+  border: 1px solid #27405a;
+  border-radius: 9px;
+  color: #b7c8da;
   background: #0b1928;
+  font-size: 11px;
+  line-height: 1.5;
+}
+.reportedState {
+  min-height: 420px;
+  padding: 36px 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.reportedIcon {
+  width: 64px;
+  height: 64px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #256c54;
+  border-radius: 50%;
+  color: #63e6a6;
+  background: #123629;
+}
+.reportedIcon svg {
+  width: 34px;
+  height: 34px;
+}
+.reportedEyebrow {
+  margin: 20px 0 8px;
+  color: #69dca5;
+  font-size: 12px;
+  font-weight: 700;
+}
+.reportedState h2 {
+  margin: 0;
+  color: #f4f7fc;
+  font-size: 25px;
+}
+.reportedState > p:not(.reportedEyebrow) {
+  max-width: 430px;
+  margin: 12px 0 20px;
+  color: #afbed0;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.reportedState > strong {
+  padding: 10px 14px;
+  border: 1px solid #35516d;
+  border-radius: 999px;
+  color: #a8d5ff;
+  background: #10243a;
+  font-size: 12px;
 }
 .paymentInstructions > p {
   margin: 8px 0 0;
@@ -461,19 +582,29 @@
   text-align: right;
 }
 .total {
-  padding: 9px 2px 11px;
+  padding: 18px 0;
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 7px;
 }
 .total span {
   color: #e0e7f1;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 650;
 }
 .total strong {
   color: #078cff;
-  font-size: 23px;
+  font-size: 28px;
+}
+.manualReview {
+  margin: 0;
+  padding: 12px;
+  border: 1px solid #27405a;
+  border-radius: 9px;
+  color: #b7c8da;
+  background: #0b1928;
+  font-size: 11px;
+  line-height: 1.5;
 }
 .total small {
   color: #91a5bc;
@@ -592,6 +723,13 @@
   }
   .panel {
     padding: 12px !important;
+  }
+  .reportedState {
+    min-height: 300px;
+    padding: 24px 12px;
+  }
+  .reportedState h2 {
+    font-size: 21px;
   }
   .groupTitle small {
     font-size: 8px;

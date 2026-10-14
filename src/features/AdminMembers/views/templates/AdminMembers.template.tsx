@@ -27,6 +27,8 @@ type Props = {
   onCloseDetail: () => void;
   onStatusChange: (id: string, status: MemberStatus) => void;
   formatRupiah: (amount: number) => string;
+  loading: boolean;
+  error: string;
 };
 const tiers: MemberTierFilter[] = ['Semua Tier', 'Bronze', 'Silver', 'Gold', 'Platinum'];
 const statuses: MemberStatusFilter[] = ['Semua Status', 'Aktif', 'Diblokir'];
@@ -53,6 +55,8 @@ export const AdminMembersTemplate = ({
   onCloseDetail,
   onStatusChange,
   formatRupiah,
+  loading,
+  error,
 }: Props) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const activeCount = members.filter((member) => member.status === 'Aktif').length;
@@ -116,6 +120,16 @@ export const AdminMembersTemplate = ({
               />
             </label>
           </div>
+          {error && (
+            <p role="alert" className={styles.demoNote}>
+              {error}
+            </p>
+          )}
+          {loading && (
+            <p role="status" className={styles.demoNote}>
+              Memuat data member…
+            </p>
+          )}
           <div className={styles.filters}>
             <label className={styles.filter}>
               <span>Tier Member</span>
@@ -200,7 +214,7 @@ export const AdminMembersTemplate = ({
                 ))}
               </tbody>
             </table>
-            {!filteredMembers.length && (
+            {!loading && !filteredMembers.length && (
               <div className={styles.empty}>
                 <IconHeart />
                 <b>Member tidak ditemukan</b>
@@ -208,7 +222,9 @@ export const AdminMembersTemplate = ({
               </div>
             )}
           </div>
-          <p className={styles.demoNote}>Data contoh. Tier dan aktivitas belum dihitung dari transaksi aktual.</p>
+          <p className={styles.demoNote}>
+            Ringkasan belanja menjumlahkan nilai pesanan berstatus lunas sesuai mata uang tersimpan.
+          </p>
         </Box>
       </div>
       {detailTarget && (
@@ -272,7 +288,7 @@ export const AdminMembersTemplate = ({
                 <option>Diblokir</option>
               </select>
             </label>
-            <p className={styles.formNote}>Perubahan status hanya simulasi lokal.</p>
+            <p className={styles.formNote}>Perubahan status member tersimpan di server dan masuk riwayat status.</p>
             <div className={styles.dialogActions}>
               <button className={styles.createButton} onClick={onCloseDetail}>
                 Tutup

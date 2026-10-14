@@ -1,103 +1,81 @@
 'use client';
 
-import { useMemo, useState } from 'react';
-import type { AdminOrderStatus, AdminOrderStatusFilter, AdminOrderView } from '../interfaces/admin-order.interface';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import type { AdminOrderStatusFilter, AdminOrderView } from '../interfaces/admin-order.interface';
 import { AdminOrdersTemplate } from '../templates/AdminOrders.template';
 
-const seedOrders: AdminOrderView[] = [
-  {
-    id: 'JH-2026-001248',
-    customerName: 'Budi Santoso',
-    whatsapp: '+6281234567890',
-    game: 'Mobile Legends',
-    service: 'Top Up 86 Diamonds',
-    gameAccount: 'Player12345',
-    server: '1234',
-    amount: 25000,
-    status: 'Menunggu Validasi',
-    paymentMethod: 'QRIS',
-    paymentStatus: 'Menunggu Validasi',
-    createdAt: '2026-10-11T09:42:00',
-  },
-  {
-    id: 'JH-2026-001247',
-    customerName: 'Santos98',
-    whatsapp: '+6282234567890',
-    game: 'Free Fire',
-    service: 'Top Up 140 Diamonds',
-    gameAccount: 'FFPlayer98',
-    server: 'Global',
-    amount: 20000,
-    status: 'Diproses',
-    paymentMethod: 'BCA Virtual Account',
-    paymentStatus: 'Dibayar',
-    createdAt: '2026-10-11T08:10:00',
-  },
-  {
-    id: 'JH-2026-001246',
-    customerName: 'Indah Putri',
-    whatsapp: '+6281334567890',
-    game: 'Roblox',
-    service: 'Joki Rank Bronze → Silver',
-    gameAccount: 'indah_play',
-    server: 'Global',
-    amount: 75000,
-    status: 'Selesai',
-    paymentMethod: 'QRIS',
-    paymentStatus: 'Dibayar',
-    createdAt: '2026-10-10T18:25:00',
-  },
-  {
-    id: 'JH-2026-001245',
-    customerName: 'Rakassa',
-    whatsapp: '+6285234567890',
-    game: 'Valorant',
-    service: 'Top Up 475 VP',
-    gameAccount: 'rakassa#ID1',
-    server: 'Asia Pacific',
-    amount: 52000,
-    status: 'Menunggu Pembayaran',
-    paymentMethod: 'QRIS',
-    paymentStatus: 'Belum Dibayar',
-    createdAt: '2026-10-10T17:40:00',
-  },
-  {
-    id: 'JH-2026-001244',
-    customerName: 'Dimas Aja',
-    whatsapp: '+6287734567890',
-    game: 'Genshin Impact',
-    service: 'Blessing of the Welkin Moon',
-    gameAccount: 'dimasaja',
-    server: 'Asia',
-    amount: 79000,
-    status: 'Dibatalkan',
-    paymentMethod: 'BCA Virtual Account',
-    paymentStatus: 'Gagal',
-    createdAt: '2026-10-10T15:10:00',
-  },
-];
+type ApiOrder = AdminOrderView;
 const formatRupiah = (amount: number) =>
   new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(amount);
 
 export const AdminOrdersPage = () => {
-  const [orders, setOrders] = useState(seedOrders);
+  const [orders, setOrders] = useState<ApiOrder[]>([]);
   const [query, setQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<AdminOrderStatusFilter>('Semua Status');
   const [detailOrder, setDetailOrder] = useState<AdminOrderView | null>(null);
-  const filteredOrders = useMemo(
-    () =>
-      orders.filter(
-        (order) =>
-          `${order.id} ${order.customerName} ${order.whatsapp} ${order.game} ${order.service}`
-            .toLowerCase()
-            .includes(query.toLowerCase()) &&
-          (statusFilter === 'Semua Status' || order.status === statusFilter)
-      ),
-    [orders, query, statusFilter]
-  );
-  const updateStatus = (orderId: string, status: AdminOrderStatus) => {
-    setOrders((current) => current.map((order) => (order.id === orderId ? { ...order, status } : order)));
-    setDetailOrder((current) => (current?.id === orderId ? { ...current, status } : current));
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(true);
+  const load = useCallback(async () => {
+    setLoading(true);
+    try {
+      const params = new URLSearchParams({
+        page: '1',
+        pageSize: '100',
+        ...(query ? { search: query } : {}),
+        ...(statusFilter !== 'Semua Status' ? { status: statusFilter } : {}),
+      });
+      const response = await fetch(`/api/admin/orders/v1/list?${params}`, { cache: 'no-store' });
+      const payload = await response.json();
+      if (!response.ok) throw new Error(payload.status?.message ?? 'Gagal memuat pesanan.');
+      setOrders(payload.data.orders as ApiOrder[]);
+      setError('');
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : 'Gagal memuat pesanan.');
+    } finally {
+      setLoading(false);
+    }
+  }, [query, statusFilter]);
+  useEffect(() => {
+    void Promise.resolve().then(load);
+  }, [load]);
+  const filteredOrders = useMemo(() => orders, [orders]);
+  const viewOrder = async (order: AdminOrderView) => {
+    try {
+      const response = await fetch(`/api/admin/orders/v1/detail/${order.internalId}`, { cache: 'no-store' });
+      const payload = await response.json();
+      if (!response.ok) throw new Error(payload.status?.message ?? 'Gagal memuat detail pesanan.');
+      const detail = payload.data.order;
+      const first = detail.items?.[0];
+      setDetailOrder({
+        ...order,
+        gameAccount: first?.gameAccount ?? '',
+        server: first?.gameServer ?? '',
+        proofs: detail.proofs ?? [],
+        paymentId: detail.payments?.[0]?.id,
+      });
+      setError('');
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : 'Gagal memuat detail pesanan.');
+    }
+  };
+  const reviewPayment = async (paymentId: string, decision: 'APPROVE' | 'REJECT', note: string) => {
+    if (!detailOrder) return;
+    const response = await fetch('/api/admin/orders/v1/payment-review', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ orderId: detailOrder.internalId, paymentId, decision, note }),
+    });
+    const payload = await response.json();
+    if (!response.ok) throw new Error(payload.status?.message ?? 'Pemeriksaan pembayaran gagal disimpan.');
+    setDetailOrder(null);
+    await load();
+  };
+  const completeOrder = async (orderId: string) => {
+    const response = await fetch(`/api/admin/orders/v1/complete/${encodeURIComponent(orderId)}`, { method: 'POST' });
+    const payload = await response.json();
+    if (!response.ok) throw new Error(payload.status?.message ?? 'Status pesanan gagal diperbarui.');
+    setDetailOrder(null);
+    await load();
   };
   return (
     <AdminOrdersTemplate
@@ -107,11 +85,14 @@ export const AdminOrdersPage = () => {
       onQueryChange={setQuery}
       statusFilter={statusFilter}
       onStatusFilterChange={setStatusFilter}
-      onView={setDetailOrder}
-      onStatusChange={updateStatus}
+      onView={viewOrder}
       formatRupiah={formatRupiah}
       detailOrder={detailOrder}
       onCloseDetail={() => setDetailOrder(null)}
+      onReview={reviewPayment}
+      onComplete={completeOrder}
+      error={error}
+      loading={loading}
     />
   );
 };

@@ -19,6 +19,7 @@ type Props = {
   onDateFromChange: (value: string) => void;
   dateTo: string;
   onDateToChange: (value: string) => void;
+  error?: string;
 };
 const categories: ActivityCategory[] = ['Semua Kategori', 'Pesanan', 'Produk', 'Pengguna', 'Konten', 'Pengaturan'];
 const formatDate = (value: string) =>
@@ -41,6 +42,7 @@ export const AdminActivityLogsTemplate = ({
   onDateFromChange,
   dateTo,
   onDateToChange,
+  error = '',
 }: Props) => {
   const [menuOpen, setMenuOpen] = useState(false);
   return (
@@ -188,9 +190,11 @@ export const AdminActivityLogsTemplate = ({
               </div>
             )}
           </div>
-          <p className={styles.demoNote}>
-            Log contoh untuk pratinjau UI. IP menggunakan alamat dokumentasi dan tidak merepresentasikan admin asli.
-          </p>
+          {error && (
+            <p role="alert" className={styles.demoNote}>
+              {error}
+            </p>
+          )}
         </Box>
       </div>
     </main>

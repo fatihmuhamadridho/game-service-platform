@@ -8,7 +8,6 @@ import { AdminSidebar } from '@common-ui/organisms/AdminDashboard/AdminSidebar';
 import type {
   AdminUserForm,
   AdminUserFormMode,
-  AdminUserRole,
   AdminUserRoleFilter,
   AdminUserStatus,
   AdminUserStatusFilter,
@@ -39,6 +38,8 @@ type Props = {
   onDeleteConfirm: () => void;
   viewTarget: AdminUserView | null;
   onView: (user: AdminUserView | null) => void;
+  onViewDetail: (user: AdminUserView) => void;
+  error?: string;
 };
 
 export const AdminUsersTemplate = ({
@@ -64,6 +65,8 @@ export const AdminUsersTemplate = ({
   onDeleteConfirm,
   viewTarget,
   onView,
+  onViewDetail,
+  error = '',
 }: Props) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const updateField = <K extends keyof AdminUserForm>(field: K, value: AdminUserForm[K]) =>
@@ -86,7 +89,7 @@ export const AdminUsersTemplate = ({
               Dashboard <span>/</span> Pengguna <span>/</span> <b>User</b>
             </p>
             <h1>User Management</h1>
-            <p>Kelola akun pengguna, role, dan status akses.</p>
+            <p>Kelola akun member, detail, dan status akses.</p>
           </div>
           <button className={styles.createButton} onClick={onCreate}>
             <IconPlus /> Tambah User
@@ -103,7 +106,7 @@ export const AdminUsersTemplate = ({
             <b className={styles.activeValue}>{activeCount}</b>
           </Box>
           <Box className={styles.metric} bordered rounded>
-            <span>Admin</span>
+            <span>User Diblokir</span>
             <b className={styles.adminValue}>{adminCount}</b>
           </Box>
         </section>
@@ -132,8 +135,6 @@ export const AdminUsersTemplate = ({
                 >
                   <option>Semua Role</option>
                   <option>Member</option>
-                  <option>Admin</option>
-                  <option>Super Admin</option>
                 </select>
               </label>
               <label className={styles.filter}>
@@ -192,7 +193,7 @@ export const AdminUsersTemplate = ({
                     <td>{user.joinedAt}</td>
                     <td>
                       <div className={styles.rowActions}>
-                        <button aria-label={`Lihat ${user.name}`} onClick={() => onView(user)}>
+                        <button aria-label={`Lihat ${user.name}`} onClick={() => onViewDetail(user)}>
                           <IconEye /> Detail
                         </button>
                         <button aria-label={`Edit ${user.name}`} onClick={() => onEdit(user)}>
@@ -219,7 +220,11 @@ export const AdminUsersTemplate = ({
               </div>
             )}
           </div>
-          <p className={styles.demoNote}>Data contoh. Perubahan hanya tersimpan selama halaman ini terbuka.</p>
+          {error && (
+            <p role="alert" className={styles.demoNote}>
+              {error}
+            </p>
+          )}
         </Box>
       </div>
 
@@ -234,7 +239,7 @@ export const AdminUsersTemplate = ({
             <div className={styles.dialogHeading}>
               <div>
                 <h2 id="user-dialog-title">{formMode === 'create' ? 'Tambah User' : 'Edit User'}</h2>
-                <p>Atur informasi akun dan akses pengguna.</p>
+                <p>Kelola informasi akun member. Pembuatan akun memerlukan layanan undangan aktif.</p>
               </div>
               <button className={styles.closeButton} aria-label="Tutup" onClick={onCloseForm}>
                 <IconX />
@@ -272,33 +277,27 @@ export const AdminUsersTemplate = ({
                   placeholder="nama@email.com"
                 />
               </label>
-              <div className={styles.formRow}>
-                <label>
-                  Role
-                  <select
-                    value={form.role}
-                    onChange={(event: ChangeEvent<HTMLSelectElement>) =>
-                      updateField('role', event.target.value as AdminUserRole)
-                    }
-                  >
-                    <option>Member</option>
-                    <option>Admin</option>
-                    <option>Super Admin</option>
-                  </select>
-                </label>
-                <label>
-                  Status
-                  <select
-                    value={form.status}
-                    onChange={(event: ChangeEvent<HTMLSelectElement>) =>
-                      updateField('status', event.target.value as AdminUserStatus)
-                    }
-                  >
-                    <option>Aktif</option>
-                    <option>Diblokir</option>
-                  </select>
-                </label>
-              </div>
+              {formMode === 'edit' && (
+                <div className={styles.formRow}>
+                  <label>
+                    Status
+                    <select
+                      value={form.status}
+                      onChange={(event: ChangeEvent<HTMLSelectElement>) =>
+                        updateField('status', event.target.value as AdminUserStatus)
+                      }
+                    >
+                      <option>Aktif</option>
+                      <option>Diblokir</option>
+                    </select>
+                  </label>
+                </div>
+              )}
+              {error && (
+                <p role="alert" className={styles.formNote}>
+                  {error}
+                </p>
+              )}
               <div className={styles.dialogActions}>
                 <button type="button" className={styles.cancelButton} onClick={onCloseForm}>
                   Batal
@@ -343,6 +342,36 @@ export const AdminUsersTemplate = ({
                 <dt>Email</dt>
                 <dd>{viewTarget.email}</dd>
               </div>
+              {viewTarget.whatsapp && (
+                <div>
+                  <dt>WhatsApp</dt>
+                  <dd>{viewTarget.whatsapp}</dd>
+                </div>
+              )}
+              {viewTarget.tier && (
+                <div>
+                  <dt>Tier Member</dt>
+                  <dd>{viewTarget.tier}</dd>
+                </div>
+              )}
+              {viewTarget.orderCount !== undefined && (
+                <div>
+                  <dt>Total Pesanan</dt>
+                  <dd>{viewTarget.orderCount}</dd>
+                </div>
+              )}
+              {viewTarget.totalSpend !== undefined && (
+                <div>
+                  <dt>Total Belanja</dt>
+                  <dd>
+                    {new Intl.NumberFormat('id-ID', {
+                      style: 'currency',
+                      currency: 'IDR',
+                      maximumFractionDigits: 0,
+                    }).format(viewTarget.totalSpend)}
+                  </dd>
+                </div>
+              )}
               <div>
                 <dt>Role</dt>
                 <dd>{viewTarget.role}</dd>
@@ -357,6 +386,11 @@ export const AdminUsersTemplate = ({
               </div>
             </dl>
             <div className={styles.dialogActions}>
+              {error && (
+                <p role="alert" className={styles.formNote}>
+                  {error}
+                </p>
+              )}
               <button className={styles.cancelButton} onClick={() => onView(null)}>
                 Tutup
               </button>
@@ -385,7 +419,7 @@ export const AdminUsersTemplate = ({
             <div className={styles.dialogHeading}>
               <div>
                 <h2 id="delete-user-title">Hapus user {deleteTarget.username}?</h2>
-                <p>User akan dihapus dari daftar pada sesi ini.</p>
+                <p>Akun akan dinonaktifkan dan dihapus dari daftar aktif.</p>
               </div>
               <button className={styles.closeButton} aria-label="Tutup" onClick={() => onDeleteSelect(null)}>
                 <IconX />

@@ -10,7 +10,7 @@ import {
   IconTrash,
   IconUsers,
   IconX,
-  IconDeviceFloppy,
+  IconRefresh,
 } from '@tabler/icons-react';
 import { AdminHeader } from '@common-ui/organisms/AdminDashboard/AdminHeader';
 import { AdminSidebar } from '@common-ui/organisms/AdminDashboard/AdminSidebar';
@@ -25,6 +25,7 @@ import styles from '../pages/AdminAccountsRoles.module.css';
 
 type Props = {
   roles: RoleView[];
+  error?: string;
   filteredRoles: RoleView[];
   permissions: Permission[];
   query: string;
@@ -46,6 +47,7 @@ type Props = {
 
 export const AdminAccountsRolesTemplate = ({
   roles,
+  error = '',
   filteredRoles,
   permissions,
   query,
@@ -126,7 +128,11 @@ export const AdminAccountsRolesTemplate = ({
                     {role.protected && <i>System</i>}
                   </span>
                   <span className={styles.roleActions}>
-                    <button aria-label={`Edit role ${role.name}`} onClick={() => onEdit(role)}>
+                    <button
+                      aria-label={`Edit role ${role.name}`}
+                      disabled={role.protected}
+                      onClick={() => onEdit(role)}
+                    >
                       <IconEdit />
                     </button>
                     <button
@@ -150,7 +156,7 @@ export const AdminAccountsRolesTemplate = ({
                     <span key={key}>{permissions.find((permission) => permission.key === key)?.label}</span>
                   ))}
                 </div>
-                <button className={styles.permissionButton} onClick={() => onEdit(role)}>
+                <button className={styles.permissionButton} disabled={role.protected} onClick={() => onEdit(role)}>
                   Atur izin akses <span>→</span>
                 </button>
               </article>
@@ -163,9 +169,12 @@ export const AdminAccountsRolesTemplate = ({
               <span>Coba kata kunci lain.</span>
             </div>
           )}
-          <p className={styles.demoNote}>
-            Role dan izin masih simulasi. Perubahan belum diterapkan pada autentikasi server.
-          </p>
+          {error && (
+            <p role="alert" className={styles.demoNote}>
+              {error}
+            </p>
+          )}
+          <p className={styles.demoNote}>Role dan izin akses tersimpan pada server.</p>
         </Box>
         <Box className={styles.panel} bordered rounded>
           <div className={styles.permissionHeader}>
@@ -174,7 +183,7 @@ export const AdminAccountsRolesTemplate = ({
               <p>Ringkasan area dashboard yang bisa diakses tiap role.</p>
             </div>
             <button className={styles.saveButton} onClick={onSaveChanges}>
-              <IconDeviceFloppy /> Simpan Perubahan
+              <IconRefresh /> Segarkan Matriks
             </button>
           </div>
           <div className={styles.matrixWrap}>
@@ -210,9 +219,7 @@ export const AdminAccountsRolesTemplate = ({
             </table>
           </div>
           <p className={styles.saveMessage}>
-            {saved
-              ? 'Perubahan role tersimpan untuk sesi ini.'
-              : 'Matriks mengikuti izin yang tercatat pada tiap role.'}
+            {saved ? 'Matriks role disegarkan dari server.' : 'Matriks mengikuti izin yang tercatat pada tiap role.'}
           </p>
         </Box>
       </div>
@@ -270,9 +277,12 @@ export const AdminAccountsRolesTemplate = ({
                   </label>
                 ))}
               </fieldset>
-              <p className={styles.formNote}>
-                Perubahan belum memengaruhi akses akun admin sampai sistem role terhubung ke backend.
-              </p>
+              {error && (
+                <p role="alert" className={styles.formNote}>
+                  {error}
+                </p>
+              )}
+              <p className={styles.formNote}>Izin akan digunakan oleh pemeriksaan akses endpoint admin.</p>
               <div className={styles.dialogActions}>
                 <button type="button" className={styles.cancelButton} onClick={onCloseForm}>
                   Batal
@@ -296,13 +306,18 @@ export const AdminAccountsRolesTemplate = ({
             <div className={styles.dialogHeading}>
               <div>
                 <h2 id="delete-role-title">Hapus role {deleteTarget.name}?</h2>
-                <p>Role ini akan dihapus dari daftar prototipe.</p>
+                <p>Role akan dihapus bila belum dipakai akun admin.</p>
               </div>
               <button className={styles.closeButton} aria-label="Tutup" onClick={() => onDeleteSelect(null)}>
                 <IconX />
               </button>
             </div>
             <div className={styles.dialogActions}>
+              {error && (
+                <p role="alert" className={styles.formNote}>
+                  {error}
+                </p>
+              )}
               <button className={styles.cancelButton} onClick={() => onDeleteSelect(null)}>
                 Batal
               </button>

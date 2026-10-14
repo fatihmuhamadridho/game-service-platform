@@ -21,14 +21,33 @@ export const OrderTrackingPage = () => {
   const [orderId, setOrderId] = useState('');
   const [phone, setPhone] = useState('');
   const [errors, setErrors] = useState<string[]>([]);
+  const [submitting, setSubmitting] = useState(false);
+  const [apiError, setApiError] = useState('');
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const missing = [!orderId.trim() ? 'orderId' : '', !phone.trim() ? 'phone' : ''].filter(Boolean);
     setErrors(missing);
     if (missing.length) return;
-    window.sessionStorage.setItem('jokihub-tracking-phone', phone.trim());
-    router.push(`/cek-pesanan/${encodeURIComponent(orderId.trim())}`);
+    setSubmitting(true);
+    setApiError('');
+    try {
+      const normalizedOrder = orderId.trim().toUpperCase();
+      const response = await fetch('/api/orders/v1/tracking/lookup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderNumber: normalizedOrder, whatsapp: phone.trim() }),
+      });
+      const result = await response.json();
+      if (!response.ok || !result.data) throw new Error(result.status?.message ?? 'Pesanan tidak dapat diverifikasi.');
+      if (typeof result.data.trackingToken !== 'string') throw new Error('Token pelacakan tidak tersedia. Coba lagi.');
+      sessionStorage.setItem(`jokihub-tracking:${normalizedOrder}`, result.data.trackingToken);
+      router.push(`/cek-pesanan/${encodeURIComponent(normalizedOrder)}`);
+    } catch (error) {
+      setApiError(error instanceof Error ? error.message : 'Pelacakan pesanan tidak tersedia.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -59,6 +78,7 @@ export const OrderTrackingPage = () => {
               </div>
             </div>
             <form onSubmit={handleSubmit} noValidate>
+              {apiError && <p role="alert">{apiError}</p>}
               <label className={errors.includes('orderId') ? styles.invalid : ''}>
                 Nomor Pesanan
                 <input
@@ -67,7 +87,7 @@ export const OrderTrackingPage = () => {
                     setOrderId(event.target.value);
                     setErrors((current) => current.filter((error) => error !== 'orderId'));
                   }}
-                  placeholder="Contoh: JH-2026-000123"
+                  placeholder="Contoh: JH-20261013-ABC123"
                   aria-invalid={errors.includes('orderId')}
                 />
                 {errors.includes('orderId') && <small>Nomor pesanan wajib diisi.</small>}
@@ -86,8 +106,8 @@ export const OrderTrackingPage = () => {
                 />
                 {errors.includes('phone') && <small>Nomor WhatsApp wajib diisi.</small>}
               </label>
-              <Button type="submit" className={styles.submit}>
-                Cek Status Pesanan <IconArrowRight />
+              <Button type="submit" className={styles.submit} disabled={submitting}>
+                {submitting ? 'Memeriksa…' : 'Cek Status Pesanan'} <IconArrowRight />
               </Button>
             </form>
             <p className={styles.privacy}>

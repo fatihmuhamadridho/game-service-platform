@@ -10,7 +10,6 @@ import type {
   AdminGameFormMode,
   AdminGameStatusFilter,
   AdminGameView,
-  GamePlatform,
 } from '../interfaces/admin-game.interface';
 import styles from '../pages/AdminGames.module.css';
 
@@ -32,6 +31,9 @@ type Props = {
   deleteTarget: AdminGameView | null;
   onDeleteSelect: (game: AdminGameView | null) => void;
   onDeleteConfirm: () => void;
+  loadError?: string;
+  actionError: string;
+  saving: boolean;
 };
 
 export const AdminGamesTemplate = ({
@@ -52,6 +54,9 @@ export const AdminGamesTemplate = ({
   deleteTarget,
   onDeleteSelect,
   onDeleteConfirm,
+  loadError,
+  actionError,
+  saving,
 }: Props) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const updateField = <K extends keyof AdminGameForm>(field: K, value: AdminGameForm[K]) =>
@@ -109,6 +114,16 @@ export const AdminGamesTemplate = ({
         </section>
 
         <Box className={styles.panel} bordered rounded>
+          {loadError && (
+            <p className={styles.loadError} role="alert">
+              {loadError}
+            </p>
+          )}
+          {actionError && (
+            <p className={styles.loadError} role="alert">
+              {actionError}
+            </p>
+          )}
           <div className={styles.toolbar}>
             <div>
               <h2>Daftar Game</h2>
@@ -143,7 +158,6 @@ export const AdminGamesTemplate = ({
                 <tr>
                   <th>Game</th>
                   <th>Slug</th>
-                  <th>Platform</th>
                   <th>Layanan</th>
                   <th>Status</th>
                   <th>Terakhir Diubah</th>
@@ -166,7 +180,6 @@ export const AdminGamesTemplate = ({
                     <td>
                       <code>{game.slug}</code>
                     </td>
-                    <td>{game.platform}</td>
                     <td>{game.serviceCount} layanan</td>
                     <td>
                       <span className={`${styles.status} ${game.active ? styles.statusActive : styles.statusInactive}`}>
@@ -196,12 +209,13 @@ export const AdminGamesTemplate = ({
             {!filteredGames.length && (
               <div className={styles.empty}>
                 <IconDeviceGamepad2 />
-                <b>Game tidak ditemukan</b>
-                <span>Coba kata kunci atau filter status lain.</span>
+                <b>{games.length ? 'Game tidak ditemukan' : 'Belum ada game'}</b>
+                <span>
+                  {games.length ? 'Coba kata kunci atau filter status lain.' : 'Belum ada data game di katalog.'}
+                </span>
               </div>
             )}
           </div>
-          <p className={styles.demoNote}>Data contoh. Perubahan hanya tersimpan selama halaman ini terbuka.</p>
         </Box>
       </div>
 
@@ -250,47 +264,65 @@ export const AdminGamesTemplate = ({
                   placeholder="mobile-legends"
                 />
               </label>
-              <div className={styles.formRow}>
-                <label>
-                  Platform
-                  <select
-                    value={form.platform}
-                    onChange={(event: ChangeEvent<HTMLSelectElement>) =>
-                      updateField('platform', event.target.value as GamePlatform)
-                    }
-                  >
-                    <option>Mobile</option>
-                    <option>PC</option>
-                    <option>Console</option>
-                  </select>
-                </label>
-                <label>
-                  Jumlah Layanan
-                  <input
-                    type="number"
-                    min="0"
-                    step="1"
-                    value={form.serviceCount}
-                    onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                      updateField('serviceCount', Number(event.target.value))
-                    }
-                  />
-                </label>
-              </div>
+              <label>
+                Ringkasan layanan
+                <input
+                  maxLength={160}
+                  value={form.serviceSummary ?? ''}
+                  onChange={(event: ChangeEvent<HTMLInputElement>) => updateField('serviceSummary', event.target.value)}
+                  placeholder="Joki Rank / Top Up"
+                />
+              </label>
+              <label>
+                Artwork key
+                <input
+                  maxLength={160}
+                  value={form.artworkKey ?? ''}
+                  onChange={(event: ChangeEvent<HTMLInputElement>) => updateField('artworkKey', event.target.value)}
+                  placeholder="mobile-legends"
+                />
+              </label>
+              <label>
+                Urutan tampil
+                <input
+                  type="number"
+                  min={0}
+                  step={1}
+                  value={form.sortOrder}
+                  onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                    updateField('sortOrder', Number(event.target.value))
+                  }
+                />
+              </label>
               <label className={styles.toggle}>
                 <input
                   type="checkbox"
                   checked={form.active}
-                  onChange={(event: ChangeEvent<HTMLInputElement>) => updateField('active', event.target.checked)}
+                  onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                    onFormChange((current) => ({
+                      ...current,
+                      active: event.target.checked,
+                      popular: event.target.checked ? current.popular : false,
+                    }))
+                  }
                 />
                 <span>Game aktif dan tampil di katalog</span>
+              </label>
+              <label className={styles.toggle}>
+                <input
+                  type="checkbox"
+                  checked={form.popular}
+                  disabled={!form.active}
+                  onChange={(event: ChangeEvent<HTMLInputElement>) => updateField('popular', event.target.checked)}
+                />
+                <span>Tampilkan di daftar game populer</span>
               </label>
               <div className={styles.dialogActions}>
                 <button type="button" className={styles.cancelButton} onClick={onCloseForm}>
                   Batal
                 </button>
-                <button type="submit" className={styles.createButton}>
-                  {formMode === 'create' ? 'Simpan Game' : 'Simpan Perubahan'}
+                <button type="submit" className={styles.createButton} disabled={saving}>
+                  {saving ? 'Menyimpan…' : formMode === 'create' ? 'Simpan Game' : 'Simpan Perubahan'}
                 </button>
               </div>
             </form>
@@ -309,7 +341,7 @@ export const AdminGamesTemplate = ({
             <div className={styles.dialogHeading}>
               <div>
                 <h2 id="delete-title">Hapus {deleteTarget.name}?</h2>
-                <p>Game akan dihapus dari daftar pada sesi ini.</p>
+                <p>Game akan ditandai tidak aktif setelah izin administrator diverifikasi.</p>
               </div>
               <button className={styles.closeButton} aria-label="Tutup" onClick={() => onDeleteSelect(null)}>
                 <IconX />

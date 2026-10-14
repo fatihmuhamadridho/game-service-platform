@@ -1,51 +1,12 @@
 'use client';
 
-import { useMemo, useState, type FormEvent } from 'react';
+import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import type {
   AdminServiceCategoryForm,
   AdminServiceCategoryStatusFilter,
   AdminServiceCategoryView,
 } from '../interfaces/admin-service-category.interface';
 import { AdminServiceCategoriesTemplate } from '../templates/AdminServiceCategories.template';
-
-const seedCategories: AdminServiceCategoryView[] = [
-  {
-    id: 'category-1',
-    name: 'Top Up',
-    slug: 'top-up',
-    description: 'Pembelian mata uang dan item dalam game.',
-    serviceCount: 24,
-    active: true,
-    updatedAt: '11 Okt 2026',
-  },
-  {
-    id: 'category-2',
-    name: 'Joki Rank',
-    slug: 'joki-rank',
-    description: 'Layanan peningkatan rank dan progres akun.',
-    serviceCount: 16,
-    active: true,
-    updatedAt: '10 Okt 2026',
-  },
-  {
-    id: 'category-3',
-    name: 'Akun Game',
-    slug: 'akun-game',
-    description: 'Jual beli akun game.',
-    serviceCount: 8,
-    active: true,
-    updatedAt: '9 Okt 2026',
-  },
-  {
-    id: 'category-4',
-    name: 'Voucher',
-    slug: 'voucher',
-    description: 'Voucher dan saldo untuk layanan digital.',
-    serviceCount: 5,
-    active: false,
-    updatedAt: '6 Okt 2026',
-  },
-];
 
 const emptyForm: AdminServiceCategoryForm = { name: '', slug: '', description: '', active: true };
 const slugify = (value: string) =>
@@ -57,7 +18,22 @@ const slugify = (value: string) =>
 
 export const AdminServiceCategoriesPage = () => {
   const [query, setQuery] = useState('');
-  const [categories, setCategories] = useState(seedCategories);
+  const [categories, setCategories] = useState<AdminServiceCategoryView[]>([]);
+  const [error, setError] = useState('');
+  const load = async () => {
+    try {
+      const response = await fetch('/api/admin/service-categories/v1/list', { cache: 'no-store' });
+      const payload = await response.json();
+      if (!response.ok) throw new Error(payload.status?.message ?? 'Gagal memuat kategori.');
+      setCategories(payload.data.categories);
+      setError('');
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : 'Gagal memuat kategori.');
+    }
+  };
+  useEffect(() => {
+    void Promise.resolve().then(load);
+  }, []);
   const [statusFilter, setStatusFilter] = useState<AdminServiceCategoryStatusFilter>('Semua');
   const [formMode, setFormMode] = useState<'create' | 'edit' | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -89,33 +65,52 @@ export const AdminServiceCategoriesPage = () => {
     setFormMode('edit');
   };
 
-  const handleSave = (event: FormEvent<HTMLFormElement>) => {
+  const handleSave = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const nextCategory = {
-      ...form,
-      name: form.name.trim(),
-      slug: slugify(form.slug || form.name),
-      updatedAt: 'Baru saja',
-    };
-    if (formMode === 'edit' && editingId) {
-      setCategories((current) =>
-        current.map((category) => (category.id === editingId ? { ...category, ...nextCategory } : category))
+    setError('');
+    try {
+      const response = await fetch(
+        formMode === 'edit' && editingId
+          ? `/api/admin/service-categories/v1/update/${editingId}`
+          : '/api/admin/service-categories/v1/create',
+        {
+          method: formMode === 'edit' ? 'PUT' : 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({
+            name: form.name.trim(),
+            slug: slugify(form.slug || form.name),
+            description: form.description.trim() || null,
+            isActive: form.active,
+          }),
+        }
       );
-    } else {
-      setCategories((current) => [{ id: `category-${Date.now()}`, ...nextCategory, serviceCount: 0 }, ...current]);
+      const payload = await response.json();
+      if (!response.ok) throw new Error(payload.status?.message ?? 'Gagal menyimpan kategori.');
+      setFormMode(null);
+      await load();
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : 'Gagal menyimpan kategori.');
     }
-    setFormMode(null);
   };
 
-  const confirmDelete = () => {
+  const confirmDelete = async () => {
     if (!deleteTarget) return;
-    setCategories((current) => current.filter((category) => category.id !== deleteTarget.id));
-    setDeleteTarget(null);
+    setError('');
+    try {
+      const response = await fetch(`/api/admin/service-categories/v1/delete/${deleteTarget.id}`, { method: 'DELETE' });
+      const payload = await response.json();
+      if (!response.ok) throw new Error(payload.status?.message ?? 'Gagal menghapus kategori.');
+      setDeleteTarget(null);
+      await load();
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : 'Gagal menghapus kategori.');
+    }
   };
 
   return (
     <AdminServiceCategoriesTemplate
       categories={categories}
+      error={error}
       filteredCategories={filteredCategories}
       query={query}
       onQueryChange={setQuery}

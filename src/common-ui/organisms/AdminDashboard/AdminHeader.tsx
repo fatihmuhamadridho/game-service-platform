@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { IconBell, IconChevronDown, IconDeviceGamepad2, IconLogout, IconMenu2, IconSearch } from '@tabler/icons-react';
 import styles from './AdminHeader.module.css';
+import { FEATURE_SPRINT_2 } from '@configs/base.config';
 
 type Props = {
   query: string;
@@ -45,20 +46,24 @@ export const AdminHeader = ({ query, onQueryChange, onMenuOpen }: Props) => {
         </a>
         <small>Admin</small>
       </div>
-      <label className={styles.search}>
-        <IconSearch />
-        <input
-          value={query}
-          onChange={(event) => onQueryChange(event.target.value)}
-          placeholder="Cari pesanan, user, game, atau layanan..."
-        />
-        <kbd>Ctrl K</kbd>
-      </label>
+      {FEATURE_SPRINT_2 && (
+        <label className={styles.search}>
+          <IconSearch />
+          <input
+            value={query}
+            onChange={(event) => onQueryChange(event.target.value)}
+            placeholder="Cari pesanan, user, game, atau layanan..."
+          />
+          <kbd>Ctrl K</kbd>
+        </label>
+      )}
       <div className={styles.actions} ref={actionsRef}>
-        <button className={styles.bell} aria-label="Notifikasi">
-          <IconBell />
-          <i />
-        </button>
+        {FEATURE_SPRINT_2 && (
+          <button className={styles.bell} aria-label="Notifikasi">
+            <IconBell />
+            <i />
+          </button>
+        )}
         <button
           className={styles.profile}
           aria-haspopup="menu"

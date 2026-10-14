@@ -1,0 +1,4348 @@
+[
+  {
+    "id": "collection.account_role.create",
+    "label": "Create collection account_role",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "collection account_role does not exist",
+        "source": {
+          "kind": "listCollections"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "name",
+          "op": "$eq",
+          "value": "account_role"
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create collection account_role",
+        "command": {
+          "kind": "createCollection",
+          "collection": "account_role",
+          "validator": {
+            "$jsonSchema": {
+              "additionalProperties": false,
+              "bsonType": "object",
+              "properties": {
+                "_id": {
+                  "bsonType": "objectId"
+                },
+                "admin_account_id": {
+                  "bsonType": "objectId"
+                },
+                "assigned_at": {
+                  "bsonType": "date"
+                },
+                "assigned_by": {
+                  "bsonType": ["null", "objectId"]
+                },
+                "revoked_at": {
+                  "bsonType": ["null", "date"]
+                },
+                "role_id": {
+                  "bsonType": "objectId"
+                }
+              },
+              "required": ["_id", "admin_account_id", "assigned_at", "role_id"]
+            }
+          },
+          "validationLevel": "strict",
+          "validationAction": "error"
+        }
+      }
+    ],
+    "postcheck": []
+  },
+  {
+    "id": "collection.activity_log.create",
+    "label": "Create collection activity_log",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "collection activity_log does not exist",
+        "source": {
+          "kind": "listCollections"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "name",
+          "op": "$eq",
+          "value": "activity_log"
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create collection activity_log",
+        "command": {
+          "kind": "createCollection",
+          "collection": "activity_log",
+          "validator": {
+            "$jsonSchema": {
+              "additionalProperties": false,
+              "bsonType": "object",
+              "properties": {
+                "_id": {
+                  "bsonType": "objectId"
+                },
+                "action_code": {
+                  "bsonType": "string"
+                },
+                "action_label": {
+                  "bsonType": "string"
+                },
+                "actor_admin_id": {
+                  "bsonType": ["null", "objectId"]
+                },
+                "actor_email_snapshot": {
+                  "bsonType": ["null", "string"]
+                },
+                "actor_name_snapshot": {
+                  "bsonType": ["null", "string"]
+                },
+                "category": {
+                  "bsonType": "string"
+                },
+                "changed_fields": {
+                  "bsonType": ["object", "array", "string", "double", "int", "long", "bool", "null"]
+                },
+                "failure_code": {
+                  "bsonType": ["null", "string"]
+                },
+                "occurred_at": {
+                  "bsonType": "date"
+                },
+                "reason": {
+                  "bsonType": ["null", "string"]
+                },
+                "request_id": {
+                  "bsonType": ["null", "string"]
+                },
+                "result": {
+                  "bsonType": "string"
+                },
+                "source_ip": {
+                  "bsonType": ["null", "string"]
+                },
+                "target_id": {
+                  "bsonType": ["null", "objectId"]
+                },
+                "target_reference": {
+                  "bsonType": ["null", "string"]
+                },
+                "target_type": {
+                  "bsonType": "string"
+                },
+                "user_agent": {
+                  "bsonType": ["null", "string"]
+                }
+              },
+              "required": ["_id", "action_code", "action_label", "category", "occurred_at", "result", "target_type"]
+            }
+          },
+          "validationLevel": "strict",
+          "validationAction": "error"
+        }
+      }
+    ],
+    "postcheck": []
+  },
+  {
+    "id": "collection.admin_account.create",
+    "label": "Create collection admin_account",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "collection admin_account does not exist",
+        "source": {
+          "kind": "listCollections"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "name",
+          "op": "$eq",
+          "value": "admin_account"
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create collection admin_account",
+        "command": {
+          "kind": "createCollection",
+          "collection": "admin_account",
+          "validator": {
+            "$jsonSchema": {
+              "additionalProperties": false,
+              "bsonType": "object",
+              "properties": {
+                "_id": {
+                  "bsonType": "objectId"
+                },
+                "created_at": {
+                  "bsonType": "date"
+                },
+                "deleted_at": {
+                  "bsonType": ["null", "date"]
+                },
+                "email": {
+                  "bsonType": "string"
+                },
+                "name": {
+                  "bsonType": "string"
+                },
+                "status": {
+                  "bsonType": "string"
+                },
+                "updated_at": {
+                  "bsonType": "date"
+                }
+              },
+              "required": ["_id", "created_at", "email", "name", "status", "updated_at"]
+            }
+          },
+          "validationLevel": "strict",
+          "validationAction": "error"
+        }
+      }
+    ],
+    "postcheck": []
+  },
+  {
+    "id": "collection.admin_role.create",
+    "label": "Create collection admin_role",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "collection admin_role does not exist",
+        "source": {
+          "kind": "listCollections"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "name",
+          "op": "$eq",
+          "value": "admin_role"
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create collection admin_role",
+        "command": {
+          "kind": "createCollection",
+          "collection": "admin_role",
+          "validator": {
+            "$jsonSchema": {
+              "additionalProperties": false,
+              "bsonType": "object",
+              "properties": {
+                "_id": {
+                  "bsonType": "objectId"
+                },
+                "code": {
+                  "bsonType": "string"
+                },
+                "created_at": {
+                  "bsonType": "date"
+                },
+                "deleted_at": {
+                  "bsonType": ["null", "date"]
+                },
+                "description": {
+                  "bsonType": ["null", "string"]
+                },
+                "is_system": {
+                  "bsonType": "bool"
+                },
+                "name": {
+                  "bsonType": "string"
+                },
+                "status": {
+                  "bsonType": "string"
+                },
+                "updated_at": {
+                  "bsonType": "date"
+                }
+              },
+              "required": ["_id", "code", "created_at", "is_system", "name", "status", "updated_at"]
+            }
+          },
+          "validationLevel": "strict",
+          "validationAction": "error"
+        }
+      }
+    ],
+    "postcheck": []
+  },
+  {
+    "id": "collection.admin_status_history.create",
+    "label": "Create collection admin_status_history",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "collection admin_status_history does not exist",
+        "source": {
+          "kind": "listCollections"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "name",
+          "op": "$eq",
+          "value": "admin_status_history"
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create collection admin_status_history",
+        "command": {
+          "kind": "createCollection",
+          "collection": "admin_status_history",
+          "validator": {
+            "$jsonSchema": {
+              "additionalProperties": false,
+              "bsonType": "object",
+              "properties": {
+                "_id": {
+                  "bsonType": "objectId"
+                },
+                "admin_account_id": {
+                  "bsonType": "objectId"
+                },
+                "changed_at": {
+                  "bsonType": "date"
+                },
+                "changed_by": {
+                  "bsonType": ["null", "objectId"]
+                },
+                "new_status": {
+                  "bsonType": "string"
+                },
+                "old_status": {
+                  "bsonType": ["null", "string"]
+                },
+                "reason": {
+                  "bsonType": ["null", "string"]
+                }
+              },
+              "required": ["_id", "admin_account_id", "changed_at", "new_status"]
+            }
+          },
+          "validationLevel": "strict",
+          "validationAction": "error"
+        }
+      }
+    ],
+    "postcheck": []
+  },
+  {
+    "id": "collection.customer_order.create",
+    "label": "Create collection customer_order",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "collection customer_order does not exist",
+        "source": {
+          "kind": "listCollections"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "name",
+          "op": "$eq",
+          "value": "customer_order"
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create collection customer_order",
+        "command": {
+          "kind": "createCollection",
+          "collection": "customer_order",
+          "validator": {
+            "$jsonSchema": {
+              "additionalProperties": false,
+              "bsonType": "object",
+              "properties": {
+                "_id": {
+                  "bsonType": "objectId"
+                },
+                "created_at": {
+                  "bsonType": "date"
+                },
+                "currency": {
+                  "bsonType": "string"
+                },
+                "customer_name": {
+                  "bsonType": "string"
+                },
+                "customer_whatsapp": {
+                  "bsonType": "string"
+                },
+                "discount_amount": {
+                  "bsonType": "decimal"
+                },
+                "expires_at": {
+                  "bsonType": ["null", "date"]
+                },
+                "order_number": {
+                  "bsonType": "string"
+                },
+                "order_status": {
+                  "bsonType": "string"
+                },
+                "payment_status": {
+                  "bsonType": "string"
+                },
+                "subtotal_amount": {
+                  "bsonType": "decimal"
+                },
+                "total_amount": {
+                  "bsonType": "decimal"
+                },
+                "updated_at": {
+                  "bsonType": "date"
+                },
+                "user_id": {
+                  "bsonType": ["null", "objectId"]
+                }
+              },
+              "required": [
+                "_id",
+                "created_at",
+                "currency",
+                "customer_name",
+                "customer_whatsapp",
+                "discount_amount",
+                "order_number",
+                "order_status",
+                "payment_status",
+                "subtotal_amount",
+                "total_amount",
+                "updated_at"
+              ]
+            }
+          },
+          "validationLevel": "strict",
+          "validationAction": "error"
+        }
+      }
+    ],
+    "postcheck": []
+  },
+  {
+    "id": "collection.financial_transaction.create",
+    "label": "Create collection financial_transaction",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "collection financial_transaction does not exist",
+        "source": {
+          "kind": "listCollections"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "name",
+          "op": "$eq",
+          "value": "financial_transaction"
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create collection financial_transaction",
+        "command": {
+          "kind": "createCollection",
+          "collection": "financial_transaction",
+          "validator": {
+            "$jsonSchema": {
+              "additionalProperties": false,
+              "bsonType": "object",
+              "properties": {
+                "_id": {
+                  "bsonType": "objectId"
+                },
+                "amount": {
+                  "bsonType": "decimal"
+                },
+                "created_at": {
+                  "bsonType": "date"
+                },
+                "currency": {
+                  "bsonType": "string"
+                },
+                "customer_contact_snapshot": {
+                  "bsonType": ["null", "string"]
+                },
+                "customer_name_snapshot": {
+                  "bsonType": ["null", "string"]
+                },
+                "method": {
+                  "bsonType": "string"
+                },
+                "order_id": {
+                  "bsonType": "objectId"
+                },
+                "order_payment_id": {
+                  "bsonType": ["null", "objectId"]
+                },
+                "provider_reference": {
+                  "bsonType": ["null", "string"]
+                },
+                "refund_request_id": {
+                  "bsonType": ["null", "objectId"]
+                },
+                "settled_at": {
+                  "bsonType": ["null", "date"]
+                },
+                "status": {
+                  "bsonType": "string"
+                },
+                "transaction_number": {
+                  "bsonType": "string"
+                },
+                "type": {
+                  "bsonType": "string"
+                },
+                "updated_at": {
+                  "bsonType": "date"
+                }
+              },
+              "required": [
+                "_id",
+                "amount",
+                "created_at",
+                "currency",
+                "method",
+                "order_id",
+                "status",
+                "transaction_number",
+                "type",
+                "updated_at"
+              ]
+            }
+          },
+          "validationLevel": "strict",
+          "validationAction": "error"
+        }
+      }
+    ],
+    "postcheck": []
+  },
+  {
+    "id": "collection.game_catalog.create",
+    "label": "Create collection game_catalog",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "collection game_catalog does not exist",
+        "source": {
+          "kind": "listCollections"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "name",
+          "op": "$eq",
+          "value": "game_catalog"
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create collection game_catalog",
+        "command": {
+          "kind": "createCollection",
+          "collection": "game_catalog",
+          "validator": {
+            "$jsonSchema": {
+              "additionalProperties": false,
+              "bsonType": "object",
+              "properties": {
+                "_id": {
+                  "bsonType": "objectId"
+                },
+                "artwork_key": {
+                  "bsonType": ["null", "string"]
+                },
+                "created_at": {
+                  "bsonType": "date"
+                },
+                "is_active": {
+                  "bsonType": "bool"
+                },
+                "is_popular": {
+                  "bsonType": "bool"
+                },
+                "name": {
+                  "bsonType": "string"
+                },
+                "service_summary": {
+                  "bsonType": ["null", "string"]
+                },
+                "slug": {
+                  "bsonType": "string"
+                },
+                "sort_order": {
+                  "bsonType": "int"
+                },
+                "updated_at": {
+                  "bsonType": "date"
+                }
+              },
+              "required": ["_id", "created_at", "is_active", "is_popular", "name", "slug", "sort_order", "updated_at"]
+            }
+          },
+          "validationLevel": "strict",
+          "validationAction": "error"
+        }
+      }
+    ],
+    "postcheck": []
+  },
+  {
+    "id": "collection.game_service.create",
+    "label": "Create collection game_service",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "collection game_service does not exist",
+        "source": {
+          "kind": "listCollections"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "name",
+          "op": "$eq",
+          "value": "game_service"
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create collection game_service",
+        "command": {
+          "kind": "createCollection",
+          "collection": "game_service",
+          "validator": {
+            "$jsonSchema": {
+              "additionalProperties": false,
+              "bsonType": "object",
+              "properties": {
+                "_id": {
+                  "bsonType": "objectId"
+                },
+                "category_id": {
+                  "bsonType": "objectId"
+                },
+                "created_at": {
+                  "bsonType": "date"
+                },
+                "deleted_at": {
+                  "bsonType": ["null", "date"]
+                },
+                "estimate_text": {
+                  "bsonType": "string"
+                },
+                "game_id": {
+                  "bsonType": "objectId"
+                },
+                "is_active": {
+                  "bsonType": "bool"
+                },
+                "is_custom_price": {
+                  "bsonType": "bool"
+                },
+                "name": {
+                  "bsonType": "string"
+                },
+                "price_amount": {
+                  "bsonType": ["null", "decimal"]
+                },
+                "updated_at": {
+                  "bsonType": "date"
+                }
+              },
+              "required": [
+                "_id",
+                "category_id",
+                "created_at",
+                "estimate_text",
+                "game_id",
+                "is_active",
+                "is_custom_price",
+                "name",
+                "updated_at"
+              ]
+            }
+          },
+          "validationLevel": "strict",
+          "validationAction": "error"
+        }
+      }
+    ],
+    "postcheck": []
+  },
+  {
+    "id": "collection.member_profile.create",
+    "label": "Create collection member_profile",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "collection member_profile does not exist",
+        "source": {
+          "kind": "listCollections"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "name",
+          "op": "$eq",
+          "value": "member_profile"
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create collection member_profile",
+        "command": {
+          "kind": "createCollection",
+          "collection": "member_profile",
+          "validator": {
+            "$jsonSchema": {
+              "additionalProperties": false,
+              "bsonType": "object",
+              "properties": {
+                "_id": {
+                  "bsonType": "objectId"
+                },
+                "created_at": {
+                  "bsonType": "date"
+                },
+                "tier": {
+                  "bsonType": "string"
+                },
+                "updated_at": {
+                  "bsonType": "date"
+                }
+              },
+              "required": ["_id", "created_at", "tier", "updated_at"]
+            }
+          },
+          "validationLevel": "strict",
+          "validationAction": "error"
+        }
+      }
+    ],
+    "postcheck": []
+  },
+  {
+    "id": "collection.member_tier_history.create",
+    "label": "Create collection member_tier_history",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "collection member_tier_history does not exist",
+        "source": {
+          "kind": "listCollections"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "name",
+          "op": "$eq",
+          "value": "member_tier_history"
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create collection member_tier_history",
+        "command": {
+          "kind": "createCollection",
+          "collection": "member_tier_history",
+          "validator": {
+            "$jsonSchema": {
+              "additionalProperties": false,
+              "bsonType": "object",
+              "properties": {
+                "_id": {
+                  "bsonType": "objectId"
+                },
+                "changed_at": {
+                  "bsonType": "date"
+                },
+                "changed_by": {
+                  "bsonType": ["null", "objectId"]
+                },
+                "new_tier": {
+                  "bsonType": "string"
+                },
+                "old_tier": {
+                  "bsonType": ["null", "string"]
+                },
+                "reason": {
+                  "bsonType": ["null", "string"]
+                },
+                "user_id": {
+                  "bsonType": "objectId"
+                }
+              },
+              "required": ["_id", "changed_at", "new_tier", "user_id"]
+            }
+          },
+          "validationLevel": "strict",
+          "validationAction": "error"
+        }
+      }
+    ],
+    "postcheck": []
+  },
+  {
+    "id": "collection.order_item.create",
+    "label": "Create collection order_item",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "collection order_item does not exist",
+        "source": {
+          "kind": "listCollections"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "name",
+          "op": "$eq",
+          "value": "order_item"
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create collection order_item",
+        "command": {
+          "kind": "createCollection",
+          "collection": "order_item",
+          "validator": {
+            "$jsonSchema": {
+              "additionalProperties": false,
+              "bsonType": "object",
+              "properties": {
+                "_id": {
+                  "bsonType": "objectId"
+                },
+                "category_id": {
+                  "bsonType": ["null", "objectId"]
+                },
+                "category_name_snapshot": {
+                  "bsonType": ["null", "string"]
+                },
+                "customer_notes": {
+                  "bsonType": ["null", "string"]
+                },
+                "estimate_snapshot": {
+                  "bsonType": "string"
+                },
+                "game_account": {
+                  "bsonType": "string"
+                },
+                "game_id": {
+                  "bsonType": ["null", "objectId"]
+                },
+                "game_name_snapshot": {
+                  "bsonType": "string"
+                },
+                "game_server": {
+                  "bsonType": ["null", "string"]
+                },
+                "line_total": {
+                  "bsonType": ["null", "decimal"]
+                },
+                "order_id": {
+                  "bsonType": "objectId"
+                },
+                "quantity": {
+                  "bsonType": "int"
+                },
+                "service_id": {
+                  "bsonType": ["null", "objectId"]
+                },
+                "service_name_snapshot": {
+                  "bsonType": "string"
+                },
+                "unit_price": {
+                  "bsonType": ["null", "decimal"]
+                }
+              },
+              "required": [
+                "_id",
+                "estimate_snapshot",
+                "game_account",
+                "game_name_snapshot",
+                "order_id",
+                "quantity",
+                "service_name_snapshot"
+              ]
+            }
+          },
+          "validationLevel": "strict",
+          "validationAction": "error"
+        }
+      }
+    ],
+    "postcheck": []
+  },
+  {
+    "id": "collection.order_payment.create",
+    "label": "Create collection order_payment",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "collection order_payment does not exist",
+        "source": {
+          "kind": "listCollections"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "name",
+          "op": "$eq",
+          "value": "order_payment"
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create collection order_payment",
+        "command": {
+          "kind": "createCollection",
+          "collection": "order_payment",
+          "validator": {
+            "$jsonSchema": {
+              "additionalProperties": false,
+              "bsonType": "object",
+              "properties": {
+                "_id": {
+                  "bsonType": "objectId"
+                },
+                "amount": {
+                  "bsonType": "decimal"
+                },
+                "created_at": {
+                  "bsonType": "date"
+                },
+                "method": {
+                  "bsonType": "string"
+                },
+                "order_id": {
+                  "bsonType": "objectId"
+                },
+                "reference_note": {
+                  "bsonType": ["null", "string"]
+                },
+                "review_note": {
+                  "bsonType": ["null", "string"]
+                },
+                "reviewed_at": {
+                  "bsonType": ["null", "date"]
+                },
+                "reviewed_by": {
+                  "bsonType": ["null", "objectId"]
+                },
+                "status": {
+                  "bsonType": "string"
+                },
+                "submitted_at": {
+                  "bsonType": ["null", "date"]
+                },
+                "updated_at": {
+                  "bsonType": "date"
+                }
+              },
+              "required": ["_id", "amount", "created_at", "method", "order_id", "status", "updated_at"]
+            }
+          },
+          "validationLevel": "strict",
+          "validationAction": "error"
+        }
+      }
+    ],
+    "postcheck": []
+  },
+  {
+    "id": "collection.order_status_history.create",
+    "label": "Create collection order_status_history",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "collection order_status_history does not exist",
+        "source": {
+          "kind": "listCollections"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "name",
+          "op": "$eq",
+          "value": "order_status_history"
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create collection order_status_history",
+        "command": {
+          "kind": "createCollection",
+          "collection": "order_status_history",
+          "validator": {
+            "$jsonSchema": {
+              "additionalProperties": false,
+              "bsonType": "object",
+              "properties": {
+                "_id": {
+                  "bsonType": "objectId"
+                },
+                "changed_at": {
+                  "bsonType": "date"
+                },
+                "changed_by": {
+                  "bsonType": ["null", "objectId"]
+                },
+                "new_status": {
+                  "bsonType": "string"
+                },
+                "old_status": {
+                  "bsonType": ["null", "string"]
+                },
+                "order_id": {
+                  "bsonType": "objectId"
+                },
+                "reason": {
+                  "bsonType": ["null", "string"]
+                }
+              },
+              "required": ["_id", "changed_at", "new_status", "order_id"]
+            }
+          },
+          "validationLevel": "strict",
+          "validationAction": "error"
+        }
+      }
+    ],
+    "postcheck": []
+  },
+  {
+    "id": "collection.payment_proof.create",
+    "label": "Create collection payment_proof",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "collection payment_proof does not exist",
+        "source": {
+          "kind": "listCollections"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "name",
+          "op": "$eq",
+          "value": "payment_proof"
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create collection payment_proof",
+        "command": {
+          "kind": "createCollection",
+          "collection": "payment_proof",
+          "validator": {
+            "$jsonSchema": {
+              "additionalProperties": false,
+              "bsonType": "object",
+              "properties": {
+                "_id": {
+                  "bsonType": "objectId"
+                },
+                "file_size_bytes": {
+                  "bsonType": "int"
+                },
+                "mime_type": {
+                  "bsonType": "string"
+                },
+                "object_key": {
+                  "bsonType": "string"
+                },
+                "payment_id": {
+                  "bsonType": "objectId"
+                },
+                "uploaded_at": {
+                  "bsonType": "date"
+                },
+                "uploaded_by": {
+                  "bsonType": ["null", "objectId"]
+                }
+              },
+              "required": ["_id", "file_size_bytes", "mime_type", "object_key", "payment_id", "uploaded_at"]
+            }
+          },
+          "validationLevel": "strict",
+          "validationAction": "error"
+        }
+      }
+    ],
+    "postcheck": []
+  },
+  {
+    "id": "collection.payment_status_history.create",
+    "label": "Create collection payment_status_history",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "collection payment_status_history does not exist",
+        "source": {
+          "kind": "listCollections"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "name",
+          "op": "$eq",
+          "value": "payment_status_history"
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create collection payment_status_history",
+        "command": {
+          "kind": "createCollection",
+          "collection": "payment_status_history",
+          "validator": {
+            "$jsonSchema": {
+              "additionalProperties": false,
+              "bsonType": "object",
+              "properties": {
+                "_id": {
+                  "bsonType": "objectId"
+                },
+                "changed_at": {
+                  "bsonType": "date"
+                },
+                "changed_by": {
+                  "bsonType": ["null", "objectId"]
+                },
+                "new_status": {
+                  "bsonType": "string"
+                },
+                "old_status": {
+                  "bsonType": ["null", "string"]
+                },
+                "payment_id": {
+                  "bsonType": "objectId"
+                },
+                "reason": {
+                  "bsonType": ["null", "string"]
+                }
+              },
+              "required": ["_id", "changed_at", "new_status", "payment_id"]
+            }
+          },
+          "validationLevel": "strict",
+          "validationAction": "error"
+        }
+      }
+    ],
+    "postcheck": []
+  },
+  {
+    "id": "collection.permission.create",
+    "label": "Create collection permission",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "collection permission does not exist",
+        "source": {
+          "kind": "listCollections"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "name",
+          "op": "$eq",
+          "value": "permission"
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create collection permission",
+        "command": {
+          "kind": "createCollection",
+          "collection": "permission",
+          "validator": {
+            "$jsonSchema": {
+              "additionalProperties": false,
+              "bsonType": "object",
+              "properties": {
+                "_id": {
+                  "bsonType": "objectId"
+                },
+                "code": {
+                  "bsonType": "string"
+                },
+                "created_at": {
+                  "bsonType": "date"
+                },
+                "description": {
+                  "bsonType": ["null", "string"]
+                },
+                "is_active": {
+                  "bsonType": "bool"
+                },
+                "is_sensitive": {
+                  "bsonType": "bool"
+                },
+                "name": {
+                  "bsonType": "string"
+                },
+                "updated_at": {
+                  "bsonType": "date"
+                }
+              },
+              "required": ["_id", "code", "created_at", "is_active", "is_sensitive", "name", "updated_at"]
+            }
+          },
+          "validationLevel": "strict",
+          "validationAction": "error"
+        }
+      }
+    ],
+    "postcheck": []
+  },
+  {
+    "id": "collection.platform_settings.create",
+    "label": "Create collection platform_settings",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "collection platform_settings does not exist",
+        "source": {
+          "kind": "listCollections"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "name",
+          "op": "$eq",
+          "value": "platform_settings"
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create collection platform_settings",
+        "command": {
+          "kind": "createCollection",
+          "collection": "platform_settings",
+          "validator": {
+            "$jsonSchema": {
+              "additionalProperties": false,
+              "bsonType": "object",
+              "properties": {
+                "_id": {
+                  "bsonType": "objectId"
+                },
+                "allow_registration": {
+                  "bsonType": "bool"
+                },
+                "contact_email": {
+                  "bsonType": "string"
+                },
+                "contact_whatsapp": {
+                  "bsonType": "string"
+                },
+                "created_at": {
+                  "bsonType": "date"
+                },
+                "default_currency": {
+                  "bsonType": "string"
+                },
+                "instagram_url": {
+                  "bsonType": ["null", "string"]
+                },
+                "maintenance_mode": {
+                  "bsonType": "bool"
+                },
+                "singleton_key": {
+                  "bsonType": "string"
+                },
+                "site_description": {
+                  "bsonType": ["null", "string"]
+                },
+                "site_name": {
+                  "bsonType": "string"
+                },
+                "timezone": {
+                  "bsonType": "string"
+                },
+                "updated_at": {
+                  "bsonType": "date"
+                },
+                "updated_by": {
+                  "bsonType": ["null", "objectId"]
+                },
+                "version": {
+                  "bsonType": "int"
+                }
+              },
+              "required": [
+                "_id",
+                "allow_registration",
+                "contact_email",
+                "contact_whatsapp",
+                "created_at",
+                "default_currency",
+                "maintenance_mode",
+                "singleton_key",
+                "site_name",
+                "timezone",
+                "updated_at",
+                "version"
+              ]
+            }
+          },
+          "validationLevel": "strict",
+          "validationAction": "error"
+        }
+      }
+    ],
+    "postcheck": []
+  },
+  {
+    "id": "collection.role_permission.create",
+    "label": "Create collection role_permission",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "collection role_permission does not exist",
+        "source": {
+          "kind": "listCollections"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "name",
+          "op": "$eq",
+          "value": "role_permission"
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create collection role_permission",
+        "command": {
+          "kind": "createCollection",
+          "collection": "role_permission",
+          "validator": {
+            "$jsonSchema": {
+              "additionalProperties": false,
+              "bsonType": "object",
+              "properties": {
+                "_id": {
+                  "bsonType": "objectId"
+                },
+                "created_at": {
+                  "bsonType": "date"
+                },
+                "granted_by": {
+                  "bsonType": ["null", "objectId"]
+                },
+                "permission_id": {
+                  "bsonType": "objectId"
+                },
+                "role_id": {
+                  "bsonType": "objectId"
+                }
+              },
+              "required": ["_id", "created_at", "permission_id", "role_id"]
+            }
+          },
+          "validationLevel": "strict",
+          "validationAction": "error"
+        }
+      }
+    ],
+    "postcheck": []
+  },
+  {
+    "id": "collection.service_category.create",
+    "label": "Create collection service_category",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "collection service_category does not exist",
+        "source": {
+          "kind": "listCollections"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "name",
+          "op": "$eq",
+          "value": "service_category"
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create collection service_category",
+        "command": {
+          "kind": "createCollection",
+          "collection": "service_category",
+          "validator": {
+            "$jsonSchema": {
+              "additionalProperties": false,
+              "bsonType": "object",
+              "properties": {
+                "_id": {
+                  "bsonType": "objectId"
+                },
+                "created_at": {
+                  "bsonType": "date"
+                },
+                "deleted_at": {
+                  "bsonType": ["null", "date"]
+                },
+                "description": {
+                  "bsonType": ["null", "string"]
+                },
+                "is_active": {
+                  "bsonType": "bool"
+                },
+                "name": {
+                  "bsonType": "string"
+                },
+                "slug": {
+                  "bsonType": "string"
+                },
+                "updated_at": {
+                  "bsonType": "date"
+                }
+              },
+              "required": ["_id", "created_at", "is_active", "name", "slug", "updated_at"]
+            }
+          },
+          "validationLevel": "strict",
+          "validationAction": "error"
+        }
+      }
+    ],
+    "postcheck": []
+  },
+  {
+    "id": "collection.transaction_status_history.create",
+    "label": "Create collection transaction_status_history",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "collection transaction_status_history does not exist",
+        "source": {
+          "kind": "listCollections"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "name",
+          "op": "$eq",
+          "value": "transaction_status_history"
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create collection transaction_status_history",
+        "command": {
+          "kind": "createCollection",
+          "collection": "transaction_status_history",
+          "validator": {
+            "$jsonSchema": {
+              "additionalProperties": false,
+              "bsonType": "object",
+              "properties": {
+                "_id": {
+                  "bsonType": "objectId"
+                },
+                "changed_at": {
+                  "bsonType": "date"
+                },
+                "changed_by": {
+                  "bsonType": ["null", "objectId"]
+                },
+                "new_status": {
+                  "bsonType": "string"
+                },
+                "old_status": {
+                  "bsonType": ["null", "string"]
+                },
+                "reason": {
+                  "bsonType": ["null", "string"]
+                },
+                "transaction_id": {
+                  "bsonType": "objectId"
+                }
+              },
+              "required": ["_id", "changed_at", "new_status", "transaction_id"]
+            }
+          },
+          "validationLevel": "strict",
+          "validationAction": "error"
+        }
+      }
+    ],
+    "postcheck": []
+  },
+  {
+    "id": "collection.user_account.create",
+    "label": "Create collection user_account",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "collection user_account does not exist",
+        "source": {
+          "kind": "listCollections"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "name",
+          "op": "$eq",
+          "value": "user_account"
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create collection user_account",
+        "command": {
+          "kind": "createCollection",
+          "collection": "user_account",
+          "validator": {
+            "$jsonSchema": {
+              "additionalProperties": false,
+              "bsonType": "object",
+              "properties": {
+                "_id": {
+                  "bsonType": "objectId"
+                },
+                "created_at": {
+                  "bsonType": "date"
+                },
+                "deleted_at": {
+                  "bsonType": ["null", "date"]
+                },
+                "email": {
+                  "bsonType": "string"
+                },
+                "joined_at": {
+                  "bsonType": "date"
+                },
+                "name": {
+                  "bsonType": "string"
+                },
+                "status": {
+                  "bsonType": "string"
+                },
+                "updated_at": {
+                  "bsonType": "date"
+                },
+                "username": {
+                  "bsonType": "string"
+                },
+                "whatsapp": {
+                  "bsonType": ["null", "string"]
+                }
+              },
+              "required": ["_id", "created_at", "email", "joined_at", "name", "status", "updated_at", "username"]
+            }
+          },
+          "validationLevel": "strict",
+          "validationAction": "error"
+        }
+      }
+    ],
+    "postcheck": []
+  },
+  {
+    "id": "collection.user_status_history.create",
+    "label": "Create collection user_status_history",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "collection user_status_history does not exist",
+        "source": {
+          "kind": "listCollections"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "name",
+          "op": "$eq",
+          "value": "user_status_history"
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create collection user_status_history",
+        "command": {
+          "kind": "createCollection",
+          "collection": "user_status_history",
+          "validator": {
+            "$jsonSchema": {
+              "additionalProperties": false,
+              "bsonType": "object",
+              "properties": {
+                "_id": {
+                  "bsonType": "objectId"
+                },
+                "changed_at": {
+                  "bsonType": "date"
+                },
+                "changed_by": {
+                  "bsonType": ["null", "objectId"]
+                },
+                "new_status": {
+                  "bsonType": "string"
+                },
+                "old_status": {
+                  "bsonType": ["null", "string"]
+                },
+                "reason": {
+                  "bsonType": ["null", "string"]
+                },
+                "user_id": {
+                  "bsonType": "objectId"
+                }
+              },
+              "required": ["_id", "changed_at", "new_status", "user_id"]
+            }
+          },
+          "validationLevel": "strict",
+          "validationAction": "error"
+        }
+      }
+    ],
+    "postcheck": []
+  },
+  {
+    "id": "index.account_role.create(admin_account_id:1,role_id:1)",
+    "label": "Create index on account_role (admin_account_id:1, role_id:1)",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "index does not already exist on account_role",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "account_role"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "admin_account_id": 1,
+            "role_id": 1
+          }
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index on account_role",
+        "command": {
+          "kind": "createIndex",
+          "collection": "account_role",
+          "keys": [
+            {
+              "direction": 1,
+              "field": "admin_account_id"
+            },
+            {
+              "direction": 1,
+              "field": "role_id"
+            }
+          ],
+          "unique": true,
+          "name": "admin_account_id_1_role_id_1"
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "index exists on account_role",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "account_role"
+        },
+        "filter": {
+          "kind": "and",
+          "exprs": [
+            {
+              "kind": "field",
+              "field": "key",
+              "op": "$eq",
+              "value": {
+                "admin_account_id": 1,
+                "role_id": 1
+              }
+            },
+            {
+              "kind": "field",
+              "field": "unique",
+              "op": "$eq",
+              "value": true
+            }
+          ]
+        },
+        "expect": "exists"
+      }
+    ]
+  },
+  {
+    "id": "index.activity_log.create(occurred_at:1,_id:1)",
+    "label": "Create index on activity_log (occurred_at:1, _id:1)",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "index does not already exist on activity_log",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "activity_log"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "occurred_at": 1,
+            "_id": 1
+          }
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index on activity_log",
+        "command": {
+          "kind": "createIndex",
+          "collection": "activity_log",
+          "keys": [
+            {
+              "direction": 1,
+              "field": "occurred_at"
+            },
+            {
+              "direction": 1,
+              "field": "_id"
+            }
+          ],
+          "name": "occurred_at_1__id_1"
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "index exists on activity_log",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "activity_log"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "occurred_at": 1,
+            "_id": 1
+          }
+        },
+        "expect": "exists"
+      }
+    ]
+  },
+  {
+    "id": "index.activity_log.create(category:1,occurred_at:1)",
+    "label": "Create index on activity_log (category:1, occurred_at:1)",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "index does not already exist on activity_log",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "activity_log"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "category": 1,
+            "occurred_at": 1
+          }
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index on activity_log",
+        "command": {
+          "kind": "createIndex",
+          "collection": "activity_log",
+          "keys": [
+            {
+              "direction": 1,
+              "field": "category"
+            },
+            {
+              "direction": 1,
+              "field": "occurred_at"
+            }
+          ],
+          "name": "category_1_occurred_at_1"
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "index exists on activity_log",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "activity_log"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "category": 1,
+            "occurred_at": 1
+          }
+        },
+        "expect": "exists"
+      }
+    ]
+  },
+  {
+    "id": "index.activity_log.create(result:1,occurred_at:1)",
+    "label": "Create index on activity_log (result:1, occurred_at:1)",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "index does not already exist on activity_log",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "activity_log"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "result": 1,
+            "occurred_at": 1
+          }
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index on activity_log",
+        "command": {
+          "kind": "createIndex",
+          "collection": "activity_log",
+          "keys": [
+            {
+              "direction": 1,
+              "field": "result"
+            },
+            {
+              "direction": 1,
+              "field": "occurred_at"
+            }
+          ],
+          "name": "result_1_occurred_at_1"
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "index exists on activity_log",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "activity_log"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "result": 1,
+            "occurred_at": 1
+          }
+        },
+        "expect": "exists"
+      }
+    ]
+  },
+  {
+    "id": "index.activity_log.create(actor_admin_id:1,occurred_at:1)",
+    "label": "Create index on activity_log (actor_admin_id:1, occurred_at:1)",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "index does not already exist on activity_log",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "activity_log"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "actor_admin_id": 1,
+            "occurred_at": 1
+          }
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index on activity_log",
+        "command": {
+          "kind": "createIndex",
+          "collection": "activity_log",
+          "keys": [
+            {
+              "direction": 1,
+              "field": "actor_admin_id"
+            },
+            {
+              "direction": 1,
+              "field": "occurred_at"
+            }
+          ],
+          "name": "actor_admin_id_1_occurred_at_1"
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "index exists on activity_log",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "activity_log"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "actor_admin_id": 1,
+            "occurred_at": 1
+          }
+        },
+        "expect": "exists"
+      }
+    ]
+  },
+  {
+    "id": "index.activity_log.create(target_type:1,target_id:1,occurred_at:1)",
+    "label": "Create index on activity_log (target_type:1, target_id:1, occurred_at:1)",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "index does not already exist on activity_log",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "activity_log"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "target_type": 1,
+            "target_id": 1,
+            "occurred_at": 1
+          }
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index on activity_log",
+        "command": {
+          "kind": "createIndex",
+          "collection": "activity_log",
+          "keys": [
+            {
+              "direction": 1,
+              "field": "target_type"
+            },
+            {
+              "direction": 1,
+              "field": "target_id"
+            },
+            {
+              "direction": 1,
+              "field": "occurred_at"
+            }
+          ],
+          "name": "target_type_1_target_id_1_occurred_at_1"
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "index exists on activity_log",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "activity_log"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "target_type": 1,
+            "target_id": 1,
+            "occurred_at": 1
+          }
+        },
+        "expect": "exists"
+      }
+    ]
+  },
+  {
+    "id": "index.activity_log.create(action_code:1,occurred_at:1)",
+    "label": "Create index on activity_log (action_code:1, occurred_at:1)",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "index does not already exist on activity_log",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "activity_log"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "action_code": 1,
+            "occurred_at": 1
+          }
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index on activity_log",
+        "command": {
+          "kind": "createIndex",
+          "collection": "activity_log",
+          "keys": [
+            {
+              "direction": 1,
+              "field": "action_code"
+            },
+            {
+              "direction": 1,
+              "field": "occurred_at"
+            }
+          ],
+          "name": "action_code_1_occurred_at_1"
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "index exists on activity_log",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "activity_log"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "action_code": 1,
+            "occurred_at": 1
+          }
+        },
+        "expect": "exists"
+      }
+    ]
+  },
+  {
+    "id": "index.activity_log.create(request_id:1)",
+    "label": "Create index on activity_log (request_id:1)",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "index does not already exist on activity_log",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "activity_log"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "request_id": 1
+          }
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index on activity_log",
+        "command": {
+          "kind": "createIndex",
+          "collection": "activity_log",
+          "keys": [
+            {
+              "direction": 1,
+              "field": "request_id"
+            }
+          ],
+          "name": "request_id_1"
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "index exists on activity_log",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "activity_log"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "request_id": 1
+          }
+        },
+        "expect": "exists"
+      }
+    ]
+  },
+  {
+    "id": "index.admin_account.create(email:1)",
+    "label": "Create index on admin_account (email:1)",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "index does not already exist on admin_account",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "admin_account"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "email": 1
+          }
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index on admin_account",
+        "command": {
+          "kind": "createIndex",
+          "collection": "admin_account",
+          "keys": [
+            {
+              "direction": 1,
+              "field": "email"
+            }
+          ],
+          "unique": true,
+          "name": "email_1"
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "index exists on admin_account",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "admin_account"
+        },
+        "filter": {
+          "kind": "and",
+          "exprs": [
+            {
+              "kind": "field",
+              "field": "key",
+              "op": "$eq",
+              "value": {
+                "email": 1
+              }
+            },
+            {
+              "kind": "field",
+              "field": "unique",
+              "op": "$eq",
+              "value": true
+            }
+          ]
+        },
+        "expect": "exists"
+      }
+    ]
+  },
+  {
+    "id": "index.admin_role.create(status:1,name:1)",
+    "label": "Create index on admin_role (status:1, name:1)",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "index does not already exist on admin_role",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "admin_role"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "status": 1,
+            "name": 1
+          }
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index on admin_role",
+        "command": {
+          "kind": "createIndex",
+          "collection": "admin_role",
+          "keys": [
+            {
+              "direction": 1,
+              "field": "status"
+            },
+            {
+              "direction": 1,
+              "field": "name"
+            }
+          ],
+          "name": "status_1_name_1"
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "index exists on admin_role",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "admin_role"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "status": 1,
+            "name": 1
+          }
+        },
+        "expect": "exists"
+      }
+    ]
+  },
+  {
+    "id": "index.admin_status_history.create(admin_account_id:1,changed_at:1)",
+    "label": "Create index on admin_status_history (admin_account_id:1, changed_at:1)",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "index does not already exist on admin_status_history",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "admin_status_history"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "admin_account_id": 1,
+            "changed_at": 1
+          }
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index on admin_status_history",
+        "command": {
+          "kind": "createIndex",
+          "collection": "admin_status_history",
+          "keys": [
+            {
+              "direction": 1,
+              "field": "admin_account_id"
+            },
+            {
+              "direction": 1,
+              "field": "changed_at"
+            }
+          ],
+          "name": "admin_account_id_1_changed_at_1"
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "index exists on admin_status_history",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "admin_status_history"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "admin_account_id": 1,
+            "changed_at": 1
+          }
+        },
+        "expect": "exists"
+      }
+    ]
+  },
+  {
+    "id": "index.customer_order.create(order_number:1)",
+    "label": "Create index on customer_order (order_number:1)",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "index does not already exist on customer_order",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "customer_order"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "order_number": 1
+          }
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index on customer_order",
+        "command": {
+          "kind": "createIndex",
+          "collection": "customer_order",
+          "keys": [
+            {
+              "direction": 1,
+              "field": "order_number"
+            }
+          ],
+          "unique": true,
+          "name": "order_number_1"
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "index exists on customer_order",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "customer_order"
+        },
+        "filter": {
+          "kind": "and",
+          "exprs": [
+            {
+              "kind": "field",
+              "field": "key",
+              "op": "$eq",
+              "value": {
+                "order_number": 1
+              }
+            },
+            {
+              "kind": "field",
+              "field": "unique",
+              "op": "$eq",
+              "value": true
+            }
+          ]
+        },
+        "expect": "exists"
+      }
+    ]
+  },
+  {
+    "id": "index.customer_order.create(created_at:1,_id:1)",
+    "label": "Create index on customer_order (created_at:1, _id:1)",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "index does not already exist on customer_order",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "customer_order"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "created_at": 1,
+            "_id": 1
+          }
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index on customer_order",
+        "command": {
+          "kind": "createIndex",
+          "collection": "customer_order",
+          "keys": [
+            {
+              "direction": 1,
+              "field": "created_at"
+            },
+            {
+              "direction": 1,
+              "field": "_id"
+            }
+          ],
+          "name": "created_at_1__id_1"
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "index exists on customer_order",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "customer_order"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "created_at": 1,
+            "_id": 1
+          }
+        },
+        "expect": "exists"
+      }
+    ]
+  },
+  {
+    "id": "index.customer_order.create(order_status:1,created_at:1)",
+    "label": "Create index on customer_order (order_status:1, created_at:1)",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "index does not already exist on customer_order",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "customer_order"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "order_status": 1,
+            "created_at": 1
+          }
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index on customer_order",
+        "command": {
+          "kind": "createIndex",
+          "collection": "customer_order",
+          "keys": [
+            {
+              "direction": 1,
+              "field": "order_status"
+            },
+            {
+              "direction": 1,
+              "field": "created_at"
+            }
+          ],
+          "name": "order_status_1_created_at_1"
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "index exists on customer_order",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "customer_order"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "order_status": 1,
+            "created_at": 1
+          }
+        },
+        "expect": "exists"
+      }
+    ]
+  },
+  {
+    "id": "index.customer_order.create(payment_status:1,created_at:1)",
+    "label": "Create index on customer_order (payment_status:1, created_at:1)",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "index does not already exist on customer_order",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "customer_order"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "payment_status": 1,
+            "created_at": 1
+          }
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index on customer_order",
+        "command": {
+          "kind": "createIndex",
+          "collection": "customer_order",
+          "keys": [
+            {
+              "direction": 1,
+              "field": "payment_status"
+            },
+            {
+              "direction": 1,
+              "field": "created_at"
+            }
+          ],
+          "name": "payment_status_1_created_at_1"
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "index exists on customer_order",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "customer_order"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "payment_status": 1,
+            "created_at": 1
+          }
+        },
+        "expect": "exists"
+      }
+    ]
+  },
+  {
+    "id": "index.financial_transaction.create(transaction_number:1)",
+    "label": "Create index on financial_transaction (transaction_number:1)",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "index does not already exist on financial_transaction",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "financial_transaction"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "transaction_number": 1
+          }
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index on financial_transaction",
+        "command": {
+          "kind": "createIndex",
+          "collection": "financial_transaction",
+          "keys": [
+            {
+              "direction": 1,
+              "field": "transaction_number"
+            }
+          ],
+          "unique": true,
+          "name": "transaction_number_1"
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "index exists on financial_transaction",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "financial_transaction"
+        },
+        "filter": {
+          "kind": "and",
+          "exprs": [
+            {
+              "kind": "field",
+              "field": "key",
+              "op": "$eq",
+              "value": {
+                "transaction_number": 1
+              }
+            },
+            {
+              "kind": "field",
+              "field": "unique",
+              "op": "$eq",
+              "value": true
+            }
+          ]
+        },
+        "expect": "exists"
+      }
+    ]
+  },
+  {
+    "id": "index.financial_transaction.create(order_payment_id:1)",
+    "label": "Create index on financial_transaction (order_payment_id:1)",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "index does not already exist on financial_transaction",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "financial_transaction"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "order_payment_id": 1
+          }
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index on financial_transaction",
+        "command": {
+          "kind": "createIndex",
+          "collection": "financial_transaction",
+          "keys": [
+            {
+              "direction": 1,
+              "field": "order_payment_id"
+            }
+          ],
+          "name": "order_payment_id_1"
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "index exists on financial_transaction",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "financial_transaction"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "order_payment_id": 1
+          }
+        },
+        "expect": "exists"
+      }
+    ]
+  },
+  {
+    "id": "index.financial_transaction.create(status:1,created_at:1)",
+    "label": "Create index on financial_transaction (status:1, created_at:1)",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "index does not already exist on financial_transaction",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "financial_transaction"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "status": 1,
+            "created_at": 1
+          }
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index on financial_transaction",
+        "command": {
+          "kind": "createIndex",
+          "collection": "financial_transaction",
+          "keys": [
+            {
+              "direction": 1,
+              "field": "status"
+            },
+            {
+              "direction": 1,
+              "field": "created_at"
+            }
+          ],
+          "name": "status_1_created_at_1"
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "index exists on financial_transaction",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "financial_transaction"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "status": 1,
+            "created_at": 1
+          }
+        },
+        "expect": "exists"
+      }
+    ]
+  },
+  {
+    "id": "index.financial_transaction.create(type:1,created_at:1)",
+    "label": "Create index on financial_transaction (type:1, created_at:1)",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "index does not already exist on financial_transaction",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "financial_transaction"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "type": 1,
+            "created_at": 1
+          }
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index on financial_transaction",
+        "command": {
+          "kind": "createIndex",
+          "collection": "financial_transaction",
+          "keys": [
+            {
+              "direction": 1,
+              "field": "type"
+            },
+            {
+              "direction": 1,
+              "field": "created_at"
+            }
+          ],
+          "name": "type_1_created_at_1"
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "index exists on financial_transaction",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "financial_transaction"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "type": 1,
+            "created_at": 1
+          }
+        },
+        "expect": "exists"
+      }
+    ]
+  },
+  {
+    "id": "index.game_catalog.create(name:1)",
+    "label": "Create index on game_catalog (name:1)",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "index does not already exist on game_catalog",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "game_catalog"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "name": 1
+          }
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index on game_catalog",
+        "command": {
+          "kind": "createIndex",
+          "collection": "game_catalog",
+          "keys": [
+            {
+              "direction": 1,
+              "field": "name"
+            }
+          ],
+          "unique": true,
+          "name": "name_1"
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "index exists on game_catalog",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "game_catalog"
+        },
+        "filter": {
+          "kind": "and",
+          "exprs": [
+            {
+              "kind": "field",
+              "field": "key",
+              "op": "$eq",
+              "value": {
+                "name": 1
+              }
+            },
+            {
+              "kind": "field",
+              "field": "unique",
+              "op": "$eq",
+              "value": true
+            }
+          ]
+        },
+        "expect": "exists"
+      }
+    ]
+  },
+  {
+    "id": "index.game_catalog.create(slug:1)",
+    "label": "Create index on game_catalog (slug:1)",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "index does not already exist on game_catalog",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "game_catalog"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "slug": 1
+          }
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index on game_catalog",
+        "command": {
+          "kind": "createIndex",
+          "collection": "game_catalog",
+          "keys": [
+            {
+              "direction": 1,
+              "field": "slug"
+            }
+          ],
+          "unique": true,
+          "name": "slug_1"
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "index exists on game_catalog",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "game_catalog"
+        },
+        "filter": {
+          "kind": "and",
+          "exprs": [
+            {
+              "kind": "field",
+              "field": "key",
+              "op": "$eq",
+              "value": {
+                "slug": 1
+              }
+            },
+            {
+              "kind": "field",
+              "field": "unique",
+              "op": "$eq",
+              "value": true
+            }
+          ]
+        },
+        "expect": "exists"
+      }
+    ]
+  },
+  {
+    "id": "index.game_catalog.create(is_active:1,is_popular:1,sort_order:1)",
+    "label": "Create index on game_catalog (is_active:1, is_popular:1, sort_order:1)",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "index does not already exist on game_catalog",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "game_catalog"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "is_active": 1,
+            "is_popular": 1,
+            "sort_order": 1
+          }
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index on game_catalog",
+        "command": {
+          "kind": "createIndex",
+          "collection": "game_catalog",
+          "keys": [
+            {
+              "direction": 1,
+              "field": "is_active"
+            },
+            {
+              "direction": 1,
+              "field": "is_popular"
+            },
+            {
+              "direction": 1,
+              "field": "sort_order"
+            }
+          ],
+          "name": "is_active_1_is_popular_1_sort_order_1"
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "index exists on game_catalog",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "game_catalog"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "is_active": 1,
+            "is_popular": 1,
+            "sort_order": 1
+          }
+        },
+        "expect": "exists"
+      }
+    ]
+  },
+  {
+    "id": "index.game_service.create(game_id:1,is_active:1,name:1,_id:1)",
+    "label": "Create index on game_service (game_id:1, is_active:1, name:1, _id:1)",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "index does not already exist on game_service",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "game_service"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "game_id": 1,
+            "is_active": 1,
+            "name": 1,
+            "_id": 1
+          }
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index on game_service",
+        "command": {
+          "kind": "createIndex",
+          "collection": "game_service",
+          "keys": [
+            {
+              "direction": 1,
+              "field": "game_id"
+            },
+            {
+              "direction": 1,
+              "field": "is_active"
+            },
+            {
+              "direction": 1,
+              "field": "name"
+            },
+            {
+              "direction": 1,
+              "field": "_id"
+            }
+          ],
+          "name": "game_id_1_is_active_1_name_1__id_1"
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "index exists on game_service",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "game_service"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "game_id": 1,
+            "is_active": 1,
+            "name": 1,
+            "_id": 1
+          }
+        },
+        "expect": "exists"
+      }
+    ]
+  },
+  {
+    "id": "index.game_service.create(category_id:1,is_active:1,name:1,_id:1)",
+    "label": "Create index on game_service (category_id:1, is_active:1, name:1, _id:1)",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "index does not already exist on game_service",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "game_service"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "category_id": 1,
+            "is_active": 1,
+            "name": 1,
+            "_id": 1
+          }
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index on game_service",
+        "command": {
+          "kind": "createIndex",
+          "collection": "game_service",
+          "keys": [
+            {
+              "direction": 1,
+              "field": "category_id"
+            },
+            {
+              "direction": 1,
+              "field": "is_active"
+            },
+            {
+              "direction": 1,
+              "field": "name"
+            },
+            {
+              "direction": 1,
+              "field": "_id"
+            }
+          ],
+          "name": "category_id_1_is_active_1_name_1__id_1"
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "index exists on game_service",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "game_service"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "category_id": 1,
+            "is_active": 1,
+            "name": 1,
+            "_id": 1
+          }
+        },
+        "expect": "exists"
+      }
+    ]
+  },
+  {
+    "id": "index.game_service.create(game_id:1,category_id:1,name:1)",
+    "label": "Create index on game_service (game_id:1, category_id:1, name:1)",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "index does not already exist on game_service",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "game_service"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "game_id": 1,
+            "category_id": 1,
+            "name": 1
+          }
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index on game_service",
+        "command": {
+          "kind": "createIndex",
+          "collection": "game_service",
+          "keys": [
+            {
+              "direction": 1,
+              "field": "game_id"
+            },
+            {
+              "direction": 1,
+              "field": "category_id"
+            },
+            {
+              "direction": 1,
+              "field": "name"
+            }
+          ],
+          "name": "game_id_1_category_id_1_name_1"
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "index exists on game_service",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "game_service"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "game_id": 1,
+            "category_id": 1,
+            "name": 1
+          }
+        },
+        "expect": "exists"
+      }
+    ]
+  },
+  {
+    "id": "index.member_tier_history.create(user_id:1,changed_at:1)",
+    "label": "Create index on member_tier_history (user_id:1, changed_at:1)",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "index does not already exist on member_tier_history",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "member_tier_history"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "user_id": 1,
+            "changed_at": 1
+          }
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index on member_tier_history",
+        "command": {
+          "kind": "createIndex",
+          "collection": "member_tier_history",
+          "keys": [
+            {
+              "direction": 1,
+              "field": "user_id"
+            },
+            {
+              "direction": 1,
+              "field": "changed_at"
+            }
+          ],
+          "name": "user_id_1_changed_at_1"
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "index exists on member_tier_history",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "member_tier_history"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "user_id": 1,
+            "changed_at": 1
+          }
+        },
+        "expect": "exists"
+      }
+    ]
+  },
+  {
+    "id": "index.order_item.create(order_id:1)",
+    "label": "Create index on order_item (order_id:1)",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "index does not already exist on order_item",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "order_item"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "order_id": 1
+          }
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index on order_item",
+        "command": {
+          "kind": "createIndex",
+          "collection": "order_item",
+          "keys": [
+            {
+              "direction": 1,
+              "field": "order_id"
+            }
+          ],
+          "name": "order_id_1"
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "index exists on order_item",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "order_item"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "order_id": 1
+          }
+        },
+        "expect": "exists"
+      }
+    ]
+  },
+  {
+    "id": "index.order_payment.create(order_id:1,created_at:1)",
+    "label": "Create index on order_payment (order_id:1, created_at:1)",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "index does not already exist on order_payment",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "order_payment"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "order_id": 1,
+            "created_at": 1
+          }
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index on order_payment",
+        "command": {
+          "kind": "createIndex",
+          "collection": "order_payment",
+          "keys": [
+            {
+              "direction": 1,
+              "field": "order_id"
+            },
+            {
+              "direction": 1,
+              "field": "created_at"
+            }
+          ],
+          "name": "order_id_1_created_at_1"
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "index exists on order_payment",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "order_payment"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "order_id": 1,
+            "created_at": 1
+          }
+        },
+        "expect": "exists"
+      }
+    ]
+  },
+  {
+    "id": "index.order_payment.create(status:1,created_at:1)",
+    "label": "Create index on order_payment (status:1, created_at:1)",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "index does not already exist on order_payment",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "order_payment"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "status": 1,
+            "created_at": 1
+          }
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index on order_payment",
+        "command": {
+          "kind": "createIndex",
+          "collection": "order_payment",
+          "keys": [
+            {
+              "direction": 1,
+              "field": "status"
+            },
+            {
+              "direction": 1,
+              "field": "created_at"
+            }
+          ],
+          "name": "status_1_created_at_1"
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "index exists on order_payment",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "order_payment"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "status": 1,
+            "created_at": 1
+          }
+        },
+        "expect": "exists"
+      }
+    ]
+  },
+  {
+    "id": "index.order_status_history.create(order_id:1,changed_at:1)",
+    "label": "Create index on order_status_history (order_id:1, changed_at:1)",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "index does not already exist on order_status_history",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "order_status_history"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "order_id": 1,
+            "changed_at": 1
+          }
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index on order_status_history",
+        "command": {
+          "kind": "createIndex",
+          "collection": "order_status_history",
+          "keys": [
+            {
+              "direction": 1,
+              "field": "order_id"
+            },
+            {
+              "direction": 1,
+              "field": "changed_at"
+            }
+          ],
+          "name": "order_id_1_changed_at_1"
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "index exists on order_status_history",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "order_status_history"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "order_id": 1,
+            "changed_at": 1
+          }
+        },
+        "expect": "exists"
+      }
+    ]
+  },
+  {
+    "id": "index.payment_proof.create(object_key:1)",
+    "label": "Create index on payment_proof (object_key:1)",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "index does not already exist on payment_proof",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "payment_proof"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "object_key": 1
+          }
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index on payment_proof",
+        "command": {
+          "kind": "createIndex",
+          "collection": "payment_proof",
+          "keys": [
+            {
+              "direction": 1,
+              "field": "object_key"
+            }
+          ],
+          "unique": true,
+          "name": "object_key_1"
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "index exists on payment_proof",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "payment_proof"
+        },
+        "filter": {
+          "kind": "and",
+          "exprs": [
+            {
+              "kind": "field",
+              "field": "key",
+              "op": "$eq",
+              "value": {
+                "object_key": 1
+              }
+            },
+            {
+              "kind": "field",
+              "field": "unique",
+              "op": "$eq",
+              "value": true
+            }
+          ]
+        },
+        "expect": "exists"
+      }
+    ]
+  },
+  {
+    "id": "index.payment_proof.create(payment_id:1,uploaded_at:1)",
+    "label": "Create index on payment_proof (payment_id:1, uploaded_at:1)",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "index does not already exist on payment_proof",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "payment_proof"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "payment_id": 1,
+            "uploaded_at": 1
+          }
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index on payment_proof",
+        "command": {
+          "kind": "createIndex",
+          "collection": "payment_proof",
+          "keys": [
+            {
+              "direction": 1,
+              "field": "payment_id"
+            },
+            {
+              "direction": 1,
+              "field": "uploaded_at"
+            }
+          ],
+          "name": "payment_id_1_uploaded_at_1"
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "index exists on payment_proof",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "payment_proof"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "payment_id": 1,
+            "uploaded_at": 1
+          }
+        },
+        "expect": "exists"
+      }
+    ]
+  },
+  {
+    "id": "index.payment_status_history.create(payment_id:1,changed_at:1)",
+    "label": "Create index on payment_status_history (payment_id:1, changed_at:1)",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "index does not already exist on payment_status_history",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "payment_status_history"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "payment_id": 1,
+            "changed_at": 1
+          }
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index on payment_status_history",
+        "command": {
+          "kind": "createIndex",
+          "collection": "payment_status_history",
+          "keys": [
+            {
+              "direction": 1,
+              "field": "payment_id"
+            },
+            {
+              "direction": 1,
+              "field": "changed_at"
+            }
+          ],
+          "name": "payment_id_1_changed_at_1"
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "index exists on payment_status_history",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "payment_status_history"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "payment_id": 1,
+            "changed_at": 1
+          }
+        },
+        "expect": "exists"
+      }
+    ]
+  },
+  {
+    "id": "index.permission.create(code:1)",
+    "label": "Create index on permission (code:1)",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "index does not already exist on permission",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "permission"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "code": 1
+          }
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index on permission",
+        "command": {
+          "kind": "createIndex",
+          "collection": "permission",
+          "keys": [
+            {
+              "direction": 1,
+              "field": "code"
+            }
+          ],
+          "unique": true,
+          "name": "code_1"
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "index exists on permission",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "permission"
+        },
+        "filter": {
+          "kind": "and",
+          "exprs": [
+            {
+              "kind": "field",
+              "field": "key",
+              "op": "$eq",
+              "value": {
+                "code": 1
+              }
+            },
+            {
+              "kind": "field",
+              "field": "unique",
+              "op": "$eq",
+              "value": true
+            }
+          ]
+        },
+        "expect": "exists"
+      }
+    ]
+  },
+  {
+    "id": "index.platform_settings.create(singleton_key:1)",
+    "label": "Create index on platform_settings (singleton_key:1)",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "index does not already exist on platform_settings",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "platform_settings"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "singleton_key": 1
+          }
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index on platform_settings",
+        "command": {
+          "kind": "createIndex",
+          "collection": "platform_settings",
+          "keys": [
+            {
+              "direction": 1,
+              "field": "singleton_key"
+            }
+          ],
+          "unique": true,
+          "name": "singleton_key_1"
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "index exists on platform_settings",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "platform_settings"
+        },
+        "filter": {
+          "kind": "and",
+          "exprs": [
+            {
+              "kind": "field",
+              "field": "key",
+              "op": "$eq",
+              "value": {
+                "singleton_key": 1
+              }
+            },
+            {
+              "kind": "field",
+              "field": "unique",
+              "op": "$eq",
+              "value": true
+            }
+          ]
+        },
+        "expect": "exists"
+      }
+    ]
+  },
+  {
+    "id": "index.role_permission.create(role_id:1,permission_id:1)",
+    "label": "Create index on role_permission (role_id:1, permission_id:1)",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "index does not already exist on role_permission",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "role_permission"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "role_id": 1,
+            "permission_id": 1
+          }
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index on role_permission",
+        "command": {
+          "kind": "createIndex",
+          "collection": "role_permission",
+          "keys": [
+            {
+              "direction": 1,
+              "field": "role_id"
+            },
+            {
+              "direction": 1,
+              "field": "permission_id"
+            }
+          ],
+          "unique": true,
+          "name": "role_id_1_permission_id_1"
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "index exists on role_permission",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "role_permission"
+        },
+        "filter": {
+          "kind": "and",
+          "exprs": [
+            {
+              "kind": "field",
+              "field": "key",
+              "op": "$eq",
+              "value": {
+                "role_id": 1,
+                "permission_id": 1
+              }
+            },
+            {
+              "kind": "field",
+              "field": "unique",
+              "op": "$eq",
+              "value": true
+            }
+          ]
+        },
+        "expect": "exists"
+      }
+    ]
+  },
+  {
+    "id": "index.service_category.create(is_active:1,name:1,_id:1)",
+    "label": "Create index on service_category (is_active:1, name:1, _id:1)",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "index does not already exist on service_category",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "service_category"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "is_active": 1,
+            "name": 1,
+            "_id": 1
+          }
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index on service_category",
+        "command": {
+          "kind": "createIndex",
+          "collection": "service_category",
+          "keys": [
+            {
+              "direction": 1,
+              "field": "is_active"
+            },
+            {
+              "direction": 1,
+              "field": "name"
+            },
+            {
+              "direction": 1,
+              "field": "_id"
+            }
+          ],
+          "name": "is_active_1_name_1__id_1"
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "index exists on service_category",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "service_category"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "is_active": 1,
+            "name": 1,
+            "_id": 1
+          }
+        },
+        "expect": "exists"
+      }
+    ]
+  },
+  {
+    "id": "index.transaction_status_history.create(transaction_id:1,changed_at:1)",
+    "label": "Create index on transaction_status_history (transaction_id:1, changed_at:1)",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "index does not already exist on transaction_status_history",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "transaction_status_history"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "transaction_id": 1,
+            "changed_at": 1
+          }
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index on transaction_status_history",
+        "command": {
+          "kind": "createIndex",
+          "collection": "transaction_status_history",
+          "keys": [
+            {
+              "direction": 1,
+              "field": "transaction_id"
+            },
+            {
+              "direction": 1,
+              "field": "changed_at"
+            }
+          ],
+          "name": "transaction_id_1_changed_at_1"
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "index exists on transaction_status_history",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "transaction_status_history"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "transaction_id": 1,
+            "changed_at": 1
+          }
+        },
+        "expect": "exists"
+      }
+    ]
+  },
+  {
+    "id": "index.user_account.create(email:1)",
+    "label": "Create index on user_account (email:1)",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "index does not already exist on user_account",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "user_account"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "email": 1
+          }
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index on user_account",
+        "command": {
+          "kind": "createIndex",
+          "collection": "user_account",
+          "keys": [
+            {
+              "direction": 1,
+              "field": "email"
+            }
+          ],
+          "unique": true,
+          "name": "email_1"
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "index exists on user_account",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "user_account"
+        },
+        "filter": {
+          "kind": "and",
+          "exprs": [
+            {
+              "kind": "field",
+              "field": "key",
+              "op": "$eq",
+              "value": {
+                "email": 1
+              }
+            },
+            {
+              "kind": "field",
+              "field": "unique",
+              "op": "$eq",
+              "value": true
+            }
+          ]
+        },
+        "expect": "exists"
+      }
+    ]
+  },
+  {
+    "id": "index.user_account.create(username:1)",
+    "label": "Create index on user_account (username:1)",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "index does not already exist on user_account",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "user_account"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "username": 1
+          }
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index on user_account",
+        "command": {
+          "kind": "createIndex",
+          "collection": "user_account",
+          "keys": [
+            {
+              "direction": 1,
+              "field": "username"
+            }
+          ],
+          "unique": true,
+          "name": "username_1"
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "index exists on user_account",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "user_account"
+        },
+        "filter": {
+          "kind": "and",
+          "exprs": [
+            {
+              "kind": "field",
+              "field": "key",
+              "op": "$eq",
+              "value": {
+                "username": 1
+              }
+            },
+            {
+              "kind": "field",
+              "field": "unique",
+              "op": "$eq",
+              "value": true
+            }
+          ]
+        },
+        "expect": "exists"
+      }
+    ]
+  },
+  {
+    "id": "index.user_status_history.create(user_id:1,changed_at:1)",
+    "label": "Create index on user_status_history (user_id:1, changed_at:1)",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "index does not already exist on user_status_history",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "user_status_history"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "user_id": 1,
+            "changed_at": 1
+          }
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index on user_status_history",
+        "command": {
+          "kind": "createIndex",
+          "collection": "user_status_history",
+          "keys": [
+            {
+              "direction": 1,
+              "field": "user_id"
+            },
+            {
+              "direction": 1,
+              "field": "changed_at"
+            }
+          ],
+          "name": "user_id_1_changed_at_1"
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "index exists on user_status_history",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "user_status_history"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "user_id": 1,
+            "changed_at": 1
+          }
+        },
+        "expect": "exists"
+      }
+    ]
+  }
+]

@@ -48,7 +48,7 @@ export const Catalog = ({
       />
       <GameResults
         games={games}
-        title={activeFilter === 'Semua' && !search ? '24 Game' : `${games.length} Game`}
+        title={`${counts[activeFilter] ?? games.length} Game`}
         sort={sort}
         page={page}
         onSort={onSort}

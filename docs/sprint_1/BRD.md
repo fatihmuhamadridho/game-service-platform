@@ -137,4 +137,3 @@ Dependencies include approved catalog/price data, payment instructions, identity
 - What are the expected traffic, availability, freshness, response-time, and performance targets for public and admin APIs? — Owner: Product/engineering; Needed by: TBD
 - Which API conventions are mandatory: `201` versus `200`, `401/403/404/409/412` mappings, unknown-query handling, pagination style, and service code format? — Owner: API/platform; Needed by: TBD
 - What data-retention, anonymization, and deletion rules apply to customer, order, transaction, admin, audit, and payment-proof records? — Owner: Legal/privacy/security; Needed by: TBD
-

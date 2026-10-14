@@ -1,0 +1,265 @@
+[
+  {
+    "id": "collection.auth_refresh_session.create",
+    "label": "Create collection auth_refresh_session",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "collection auth_refresh_session does not exist",
+        "source": {
+          "kind": "listCollections"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "name",
+          "op": "$eq",
+          "value": "auth_refresh_session"
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create collection auth_refresh_session",
+        "command": {
+          "kind": "createCollection",
+          "collection": "auth_refresh_session",
+          "validator": {
+            "$jsonSchema": {
+              "additionalProperties": false,
+              "bsonType": "object",
+              "properties": {
+                "_id": {
+                  "bsonType": "objectId"
+                },
+                "account_id": {
+                  "bsonType": "objectId"
+                },
+                "account_type": {
+                  "bsonType": "string"
+                },
+                "created_at": {
+                  "bsonType": "date"
+                },
+                "expires_at": {
+                  "bsonType": "date"
+                },
+                "last_used_at": {
+                  "bsonType": ["null", "date"]
+                },
+                "replaced_by_id": {
+                  "bsonType": ["null", "objectId"]
+                },
+                "revoked_at": {
+                  "bsonType": ["null", "date"]
+                },
+                "token_hash": {
+                  "bsonType": "string"
+                }
+              },
+              "required": ["_id", "account_id", "account_type", "created_at", "expires_at", "token_hash"]
+            }
+          },
+          "validationLevel": "strict",
+          "validationAction": "error"
+        }
+      }
+    ],
+    "postcheck": []
+  },
+  {
+    "id": "index.auth_refresh_session.create(token_hash:1)",
+    "label": "Create index on auth_refresh_session (token_hash:1)",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "index does not already exist on auth_refresh_session",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "auth_refresh_session"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "token_hash": 1
+          }
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index on auth_refresh_session",
+        "command": {
+          "kind": "createIndex",
+          "collection": "auth_refresh_session",
+          "keys": [
+            {
+              "direction": 1,
+              "field": "token_hash"
+            }
+          ],
+          "unique": true,
+          "name": "token_hash_1"
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "index exists on auth_refresh_session",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "auth_refresh_session"
+        },
+        "filter": {
+          "kind": "and",
+          "exprs": [
+            {
+              "kind": "field",
+              "field": "key",
+              "op": "$eq",
+              "value": {
+                "token_hash": 1
+              }
+            },
+            {
+              "kind": "field",
+              "field": "unique",
+              "op": "$eq",
+              "value": true
+            }
+          ]
+        },
+        "expect": "exists"
+      }
+    ]
+  },
+  {
+    "id": "index.auth_refresh_session.create(account_type:1,account_id:1,revoked_at:1)",
+    "label": "Create index on auth_refresh_session (account_type:1, account_id:1, revoked_at:1)",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "index does not already exist on auth_refresh_session",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "auth_refresh_session"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "account_type": 1,
+            "account_id": 1,
+            "revoked_at": 1
+          }
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index on auth_refresh_session",
+        "command": {
+          "kind": "createIndex",
+          "collection": "auth_refresh_session",
+          "keys": [
+            {
+              "direction": 1,
+              "field": "account_type"
+            },
+            {
+              "direction": 1,
+              "field": "account_id"
+            },
+            {
+              "direction": 1,
+              "field": "revoked_at"
+            }
+          ],
+          "name": "account_type_1_account_id_1_revoked_at_1"
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "index exists on auth_refresh_session",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "auth_refresh_session"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "account_type": 1,
+            "account_id": 1,
+            "revoked_at": 1
+          }
+        },
+        "expect": "exists"
+      }
+    ]
+  },
+  {
+    "id": "index.auth_refresh_session.create(expires_at:1)",
+    "label": "Create index on auth_refresh_session (expires_at:1)",
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "index does not already exist on auth_refresh_session",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "auth_refresh_session"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "expires_at": 1
+          }
+        },
+        "expect": "notExists"
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index on auth_refresh_session",
+        "command": {
+          "kind": "createIndex",
+          "collection": "auth_refresh_session",
+          "keys": [
+            {
+              "direction": 1,
+              "field": "expires_at"
+            }
+          ],
+          "name": "expires_at_1"
+        }
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "index exists on auth_refresh_session",
+        "source": {
+          "kind": "listIndexes",
+          "collection": "auth_refresh_session"
+        },
+        "filter": {
+          "kind": "field",
+          "field": "key",
+          "op": "$eq",
+          "value": {
+            "expires_at": 1
+          }
+        },
+        "expect": "exists"
+      }
+    ]
+  }
+]

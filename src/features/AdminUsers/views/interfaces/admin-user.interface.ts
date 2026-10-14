@@ -1,4 +1,4 @@
-export type AdminUserRole = 'Member' | 'Admin' | 'Super Admin';
+export type AdminUserRole = 'Member';
 export type AdminUserStatus = 'Aktif' | 'Diblokir';
 
 export type AdminUserView = {
@@ -9,6 +9,10 @@ export type AdminUserView = {
   role: AdminUserRole;
   status: AdminUserStatus;
   joinedAt: string;
+  whatsapp?: string | null;
+  tier?: string;
+  orderCount?: number;
+  totalSpend?: number;
 };
 
 export type AdminUserForm = Omit<AdminUserView, 'id' | 'joinedAt'>;

@@ -386,7 +386,8 @@
   font-size: 10px;
   font-weight: 600;
 }
-.statusSelect select {
+.statusSelect select,
+.statusSelect textarea {
   min-height: 38px;
   padding: 8px;
   border: 1px solid #2a4058;
@@ -395,6 +396,10 @@
   color: #eef5fc;
   font: inherit;
   font-size: 10px;
+}
+.statusSelect textarea {
+  min-height: 72px;
+  resize: vertical;
 }
 .statusSelect option {
   background: #0a1724;
