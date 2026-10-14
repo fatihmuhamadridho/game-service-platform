@@ -1,8 +1,9 @@
 @reference 'tailwindcss';
 .page {
+  position: relative;
   --line: #20344a;
-  min-height: 100vh;
-  overflow-x: clip;
+
+  overflow-x: hidden;
   background: #07121e;
   color: #eff5fc;
   font-family: Arial, Helvetica, sans-serif;
@@ -11,9 +12,7 @@
   box-sizing: border-box;
 }
 .main {
-  max-width: calc(100% - 212px);
-  min-height: calc(100vh - 64px);
-  margin-left: 212px;
+  margin-left: 0;
   padding: 22px 20px 35px;
 }
 .heading {
@@ -175,6 +174,7 @@
   background: #0b1927;
 }
 .tableWrap {
+  position: relative;
   overflow-x: auto;
   border: 1px solid #1d3044;
   border-radius: 7px;
@@ -505,11 +505,16 @@
     width: min(100%, 280px);
   }
 }
+@media (min-width: 801px) {
+  .main {
+    margin-left: 212px;
+  }
+}
 @media (max-width: 800px) {
   .main {
     max-width: none;
     margin-left: 0;
-    padding: 17px 13px 80px;
+    padding: 17px 13px 24px;
   }
   .heading h1 {
     font-size: 21px;
@@ -536,7 +541,7 @@
 }
 @media (max-width: 480px) {
   .main {
-    padding: 14px 9px 78px;
+    padding: 14px 9px 24px;
   }
   .heading {
     align-items: flex-start;

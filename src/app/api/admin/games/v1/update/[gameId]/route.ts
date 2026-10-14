@@ -4,7 +4,7 @@ import { toAdminGameError, updateAdminGame } from '@backend/game/domain/admin-ga
 import { parseAdminGameInput } from '@backend/game/domain/admin-game.validation';
 
 export async function PATCH(request: Request, context: { params: Promise<{ gameId: string }> }) {
-  const denied = requireAdminApi('GAMB01001', request);
+  const denied = await requireAdminApi('GAMB01001', request);
   if (denied) return denied;
   let body: unknown;
   try {

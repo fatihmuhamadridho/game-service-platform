@@ -3,7 +3,7 @@ import { requireAdminApi } from '@backend/shared/admin-auth';
 import { createAdminCategory, toAdminCatalogError } from '@backend/catalog/admin-catalog.service';
 import { parseCreateCategoryInput } from '@backend/catalog/admin-catalog.validation';
 export async function POST(request: Request) {
-  const denied = requireAdminApi('SCAB01001', request);
+  const denied = await requireAdminApi('SCAB01001', request);
   if (denied) return denied;
   let body: unknown;
   try {

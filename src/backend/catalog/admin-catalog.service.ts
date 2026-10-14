@@ -33,7 +33,7 @@ async function audit(
 ) {
   try {
     const token = getAdminToken(request);
-    const claims = token ? verifyAdminAccessToken(token) : null;
+    const claims = token ? await verifyAdminAccessToken(token) : null;
     const actor = claims ? await db.orm.admin_account.where({ _id: claims.sub }).first() : null;
     await db.orm.activity_log.create({
       _id: new ObjectId().toHexString(),

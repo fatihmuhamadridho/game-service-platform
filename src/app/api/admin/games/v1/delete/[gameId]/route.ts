@@ -3,7 +3,7 @@ import { requireAdminApi } from '@backend/shared/admin-auth';
 import { deleteAdminGame, toAdminGameError } from '@backend/game/domain/admin-game.service';
 
 export async function DELETE(request: Request, context: { params: Promise<{ gameId: string }> }) {
-  const denied = requireAdminApi('GAMB01001', request);
+  const denied = await requireAdminApi('GAMB01001', request);
   if (denied) return denied;
   try {
     const { gameId } = await context.params;

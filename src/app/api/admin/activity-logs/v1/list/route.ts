@@ -3,7 +3,7 @@ import { requireAdminApi } from '@backend/shared/admin-auth';
 import { listAdminActivity, toAdminActivityError } from '@backend/activity/admin-activity.service';
 
 export async function GET(request: Request) {
-  const denied = requireAdminApi('ACTB01001', request);
+  const denied = await requireAdminApi('ACTB01001', request);
   if (denied) return denied;
   const query = new URL(request.url).searchParams;
   const page = Number(query.get('page') ?? '1');

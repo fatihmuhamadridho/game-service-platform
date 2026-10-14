@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { requireAdminApi } from '@backend/shared/admin-auth';
 import { listAdminServices, toAdminCatalogError } from '@backend/catalog/admin-catalog.service';
 export async function GET(request: Request) {
-  const denied = requireAdminApi('SRVB01001', request);
+  const denied = await requireAdminApi('SRVB01001', request);
   if (denied) return denied;
   try {
     return NextResponse.json({

@@ -3,7 +3,7 @@ import { requireAdminApi } from '@backend/shared/admin-auth';
 import { listAdminGames, toAdminGameError } from '@backend/game/domain/admin-game.service';
 
 export async function GET(request: Request) {
-  const denied = requireAdminApi('GAMB01001', request);
+  const denied = await requireAdminApi('GAMB01001', request);
   if (denied) return denied;
   try {
     const games = await listAdminGames();

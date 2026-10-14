@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { requireAdminApi } from '@backend/shared/admin-auth';
 import { listAdminRoles, toAdminRoleError } from '@backend/roles/admin-role.service';
 export async function GET(request: Request) {
-  const denied = requireAdminApi('ROLB01001', request);
+  const denied = await requireAdminApi('ROLB01001', request);
   if (denied) return denied;
   try {
     return NextResponse.json({

@@ -3,6 +3,7 @@
 .html,
 .body {
   @apply min-h-full;
+  background: #07121e;
 }
 
 .html {

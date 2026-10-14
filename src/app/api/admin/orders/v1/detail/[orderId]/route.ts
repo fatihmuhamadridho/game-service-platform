@@ -3,7 +3,7 @@ import { requireAdminApi } from '@backend/shared/admin-auth';
 import { getAdminOrder, toAdminOrderError } from '@backend/order/admin-order.service';
 
 export async function GET(request: Request, { params }: { params: Promise<{ orderId: string }> }) {
-  const denied = requireAdminApi('ORDB01001', request);
+  const denied = await requireAdminApi('ORDB01001', request);
   if (denied) return denied;
   try {
     const { orderId } = await params;

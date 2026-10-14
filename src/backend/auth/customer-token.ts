@@ -1,4 +1,6 @@
 import jwt from 'jsonwebtoken';
+import { randomUUID } from 'node:crypto';
+import { isAccessTokenRevoked, revokeAccessToken } from './access-token-revocation';
 
 export type CustomerTokenClaims = jwt.JwtPayload & {
   sub: string;
@@ -18,10 +20,11 @@ export function createCustomerAccessToken(claims: Omit<CustomerTokenClaims, 'iat
     expiresIn: '15m',
     issuer: 'jokihub-api',
     audience: 'jokihub-customer',
+    jwtid: randomUUID(),
   });
 }
 
-export function verifyCustomerAccessToken(token: string): CustomerTokenClaims | null {
+function verifyCustomerTokenSignature(token: string): CustomerTokenClaims | null {
   try {
     const claims = jwt.verify(token, getSecret(), {
       algorithms: ['HS256'],
@@ -39,4 +42,21 @@ export function verifyCustomerAccessToken(token: string): CustomerTokenClaims | 
   } catch {
     return null;
   }
+}
+
+export async function verifyCustomerAccessToken(token: string): Promise<CustomerTokenClaims | null> {
+  const claims = verifyCustomerTokenSignature(token);
+  if (!claims) return null;
+  try {
+    return (await isAccessTokenRevoked(token, claims.jti)) ? null : claims;
+  } catch {
+    return null;
+  }
+}
+
+export async function revokeCustomerAccessToken(token: string) {
+  const claims = verifyCustomerTokenSignature(token);
+  if (!claims || typeof claims.exp !== 'number') return false;
+  await revokeAccessToken(token, claims.jti, new Date(claims.exp * 1000));
+  return true;
 }

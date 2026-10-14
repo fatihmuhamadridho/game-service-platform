@@ -4,9 +4,9 @@ import { AdminOrderError, completeAdminOrder, toAdminOrderError } from '@backend
 import { requireAdminApi } from '@backend/shared/admin-auth';
 
 export async function POST(request: Request, { params }: { params: Promise<{ orderId: string }> }) {
-  const denied = requireAdminApi('ORDB01001', request);
+  const denied = await requireAdminApi('ORDB01001', request);
   if (denied) return denied;
-  const actor = verifyAdminAccessToken(getAdminToken(request));
+  const actor = await verifyAdminAccessToken(getAdminToken(request));
   if (!actor) {
     return NextResponse.json(
       { status: { code: 'ORDB01001', message: 'Sesi administrator tidak tersedia.' }, data: null },

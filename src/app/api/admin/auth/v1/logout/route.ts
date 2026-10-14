@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { ADMIN_COOKIE } from '@backend/auth/admin-token';
+import { ADMIN_COOKIE, getAdminTokens, revokeAdminAccessToken } from '@backend/auth/admin-token';
 import { clearRefreshCookie, revokeRefreshSession } from '@backend/auth/refresh-session';
 
 export async function POST(request: Request) {
@@ -10,7 +10,11 @@ export async function POST(request: Request) {
       { status: 400 }
     );
   try {
-    await revokeRefreshSession(request, 'ADMIN');
+    const results = await Promise.allSettled([
+      Promise.all(getAdminTokens(request).map(revokeAdminAccessToken)),
+      revokeRefreshSession(request, 'ADMIN'),
+    ]);
+    if (results.some((result) => result.status === 'rejected')) throw new Error('Admin logout revocation failed.');
   } catch {
     const response = NextResponse.json(
       { status: { code: 'ADMT03001', message: 'Logout admin sementara tidak tersedia.' }, data: null },

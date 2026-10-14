@@ -32,7 +32,7 @@ const permissionDefinitions: Record<PermissionKey, { code: string; name: string 
 async function audit(request: Request, action: string, roleId: string, fields: Record<string, unknown>) {
   try {
     const token = getAdminToken(request);
-    const claims = token ? verifyAdminAccessToken(token) : null;
+    const claims = token ? await verifyAdminAccessToken(token) : null;
     const actor = claims ? await db.orm.admin_account.where({ _id: claims.sub }).first() : null;
     const now = new Date();
     await db.orm.activity_log.create({
@@ -198,7 +198,7 @@ export async function createAdminRole(input: RoleInput, request: Request) {
     deleted_at: null,
   });
   const claims = getAdminToken(request);
-  const actorId = claims ? (verifyAdminAccessToken(claims)?.sub ?? null) : null;
+  const actorId = claims ? ((await verifyAdminAccessToken(claims))?.sub ?? null) : null;
   await replacePermissions(id, input.permissions ?? [], actorId);
   await audit(request, 'ADMIN_ROLE_CREATED', id, input as unknown as Record<string, unknown>);
   return getAdminRole(id);
@@ -222,7 +222,7 @@ export async function updateAdminRole(id: string, input: Partial<RoleInput>, req
   await db.orm.admin_role.where({ _id: id }).update(patch);
   if (input.permissions !== undefined) {
     const token = getAdminToken(request);
-    const actorId = token ? (verifyAdminAccessToken(token)?.sub ?? null) : null;
+    const actorId = token ? ((await verifyAdminAccessToken(token))?.sub ?? null) : null;
     await replacePermissions(id, input.permissions, actorId);
   }
   await audit(request, 'ADMIN_ROLE_UPDATED', id, {

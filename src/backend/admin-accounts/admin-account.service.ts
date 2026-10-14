@@ -236,7 +236,7 @@ export async function updateAdminAccount(id: string, value: unknown, request: Re
           _id: new ObjectId().toHexString(),
           admin_account_id: id,
           role_id: roleId,
-          assigned_by: verifyAdminAccessToken(getAdminToken(request))?.sub ?? null,
+          assigned_by: (await verifyAdminAccessToken(getAdminToken(request)))?.sub ?? null,
           assigned_at: now,
           revoked_at: null,
         });
@@ -247,7 +247,7 @@ export async function updateAdminAccount(id: string, value: unknown, request: Re
 
 export async function deleteAdminAccount(id: string, request: Request) {
   if (!ObjectId.isValid(id)) throw new AdminAccountError('USRB02001', 'ID admin tidak valid.', 400);
-  const actor = verifyAdminAccessToken(getAdminToken(request));
+  const actor = await verifyAdminAccessToken(getAdminToken(request));
   if (actor?.sub === id)
     throw new AdminAccountError('USRB02005', 'Akun yang sedang digunakan tidak dapat dihapus.', 409);
   const account = await db.orm.admin_account.where({ _id: id }).first();

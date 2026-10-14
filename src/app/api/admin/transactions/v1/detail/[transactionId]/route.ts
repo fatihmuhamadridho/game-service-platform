@@ -3,7 +3,7 @@ import { requireAdminApi } from '@backend/shared/admin-auth';
 import { getAdminTransaction, toAdminTransactionError } from '@backend/transaction/admin-transaction.service';
 
 export async function GET(request: Request, { params }: { params: Promise<{ transactionId: string }> }) {
-  const denied = requireAdminApi('TRXB01001', request);
+  const denied = await requireAdminApi('TRXB01001', request);
   if (denied) return denied;
   try {
     const { transactionId } = await params;

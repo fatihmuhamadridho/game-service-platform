@@ -3,7 +3,7 @@ import { requireAdminApi } from '@backend/shared/admin-auth';
 import { getAdminDashboardOverview, toAdminDashboardError } from '@backend/dashboard/admin-dashboard.service';
 
 export async function GET(request: Request) {
-  const denied = requireAdminApi('DASHB01001', request);
+  const denied = await requireAdminApi('DASHB01001', request);
   if (denied) return denied;
   const query = new URL(request.url).searchParams;
   const fromValue = query.get('from');

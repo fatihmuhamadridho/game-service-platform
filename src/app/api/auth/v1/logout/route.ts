@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
-import { CUSTOMER_COOKIE } from '@backend/auth/customer-auth';
+import { CUSTOMER_COOKIE, getCustomerTokens } from '@backend/auth/customer-auth';
+import { revokeCustomerAccessToken } from '@backend/auth/customer-token';
 import { clearRefreshCookie, revokeRefreshSession } from '@backend/auth/refresh-session';
 
 export async function POST(request: Request) {
@@ -11,7 +12,11 @@ export async function POST(request: Request) {
     );
   }
   try {
-    await revokeRefreshSession(request, 'CUSTOMER');
+    const results = await Promise.allSettled([
+      Promise.all(getCustomerTokens(request).map(revokeCustomerAccessToken)),
+      revokeRefreshSession(request, 'CUSTOMER'),
+    ]);
+    if (results.some((result) => result.status === 'rejected')) throw new Error('Customer logout revocation failed.');
   } catch {
     const response = NextResponse.json(
       { status: { code: 'AUTT03001', message: 'Logout sementara tidak tersedia.' }, data: null },

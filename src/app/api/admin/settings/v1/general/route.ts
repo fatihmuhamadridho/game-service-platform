@@ -8,7 +8,7 @@ import {
 } from '@backend/settings/admin-settings.service';
 
 export async function GET(request: Request) {
-  const denied = requireAdminApi('SETB01001', request);
+  const denied = await requireAdminApi('SETB01001', request);
   if (denied) return denied;
   try {
     return NextResponse.json({
@@ -25,7 +25,7 @@ export async function GET(request: Request) {
 }
 
 export async function PUT(request: Request) {
-  const denied = requireAdminApi('SETB01001', request);
+  const denied = await requireAdminApi('SETB01001', request);
   if (denied) return denied;
   let body: unknown;
   try {

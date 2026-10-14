@@ -3,7 +3,7 @@ import { requireAdminApi } from '@backend/shared/admin-auth';
 import { updateAdminService, toAdminCatalogError } from '@backend/catalog/admin-catalog.service';
 import { parseServiceInput } from '@backend/catalog/admin-catalog.validation';
 export async function PUT(request: Request, { params }: { params: Promise<{ serviceId: string }> }) {
-  const denied = requireAdminApi('SRVB01001', request);
+  const denied = await requireAdminApi('SRVB01001', request);
   if (denied) return denied;
   let body: unknown;
   try {

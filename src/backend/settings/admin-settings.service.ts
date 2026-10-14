@@ -60,7 +60,7 @@ export async function updateAdminSettings(input: SettingsInput, request: Request
   const now = new Date();
   const current = await db.orm.platform_settings.where({ singleton_key: 'current' }).first();
   const token = getAdminToken(request);
-  const claims = token ? verifyAdminAccessToken(token) : null;
+  const claims = token ? await verifyAdminAccessToken(token) : null;
   const patch = {
     site_name: input.siteName.trim(),
     site_description: input.siteDescription?.trim() || null,

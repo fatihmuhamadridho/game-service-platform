@@ -1,7 +1,7 @@
 import { apiFailure } from './api-response';
 import { getAdminToken, verifyAdminAccessToken } from '../auth/admin-token';
 
-export function requireAdminApi(code = 'GAMB01001', request?: Request) {
+export async function requireAdminApi(code = 'GAMB01001', request?: Request) {
   const prefix = code.slice(0, 3);
   const required: Record<string, string[]> = {
     DAS: ['dashboard-read'],
@@ -18,9 +18,13 @@ export function requireAdminApi(code = 'GAMB01001', request?: Request) {
   return requireAdminPermissions(code, request, required[prefix] ?? []);
 }
 
-export function requireAdminPermissions(code: string, request: Request | undefined, requiredPermissions: string[]) {
+export async function requireAdminPermissions(
+  code: string,
+  request: Request | undefined,
+  requiredPermissions: string[]
+) {
   const token = request ? getAdminToken(request) : '';
-  const claims = token ? verifyAdminAccessToken(token) : null;
+  const claims = token ? await verifyAdminAccessToken(token) : null;
   if (!claims) return apiFailure(code, 'Sesi administrator tidak tersedia.', 401);
   if (!claims.permissions.includes('*')) {
     if (!requiredPermissions.some((permission) => claims.permissions.includes(permission)))
@@ -29,7 +33,7 @@ export function requireAdminPermissions(code: string, request: Request | undefin
   return null;
 }
 
-export function adminApiUnavailable(code: string, request: Request) {
-  const denied = requireAdminApi(code, request);
+export async function adminApiUnavailable(code: string, request: Request) {
+  const denied = await requireAdminApi(code, request);
   return denied ?? apiFailure('ADMT05001', 'Handler endpoint ini belum tersedia.', 501);
 }

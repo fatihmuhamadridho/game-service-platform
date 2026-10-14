@@ -4,9 +4,9 @@ import { getAdminToken, verifyAdminAccessToken } from '@backend/auth/admin-token
 import { toAdminAccountError, validateAdminAccountInput } from '@backend/admin-accounts/admin-account.service';
 
 export async function POST(request: Request) {
-  const denied = requireAdminPermissions('USRB01001', request, ['settings-manage']);
+  const denied = await requireAdminPermissions('USRB01001', request, ['settings-manage']);
   if (denied) return denied;
-  if (verifyAdminAccessToken(getAdminToken(request))?.role !== 'SUPER_ADMIN')
+  if ((await verifyAdminAccessToken(getAdminToken(request)))?.role !== 'SUPER_ADMIN')
     return NextResponse.json(
       { status: { code: 'USRB01002', message: 'Hanya Super Admin dapat membuat akun admin.' }, data: null },
       { status: 403 }

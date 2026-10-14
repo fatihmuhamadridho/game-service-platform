@@ -3,9 +3,15 @@ import { verifyCustomerAccessToken } from './customer-token';
 
 export const CUSTOMER_COOKIE = '__Host-jokihub-session';
 
-export function getCustomerClaims(request: Request) {
+export async function getCustomerClaims(request: Request) {
   const token = request.headers.get('cookie')?.match(/(?:^|;\s*)__Host-jokihub-session=([^;]+)/)?.[1];
   return token ? verifyCustomerAccessToken(decodeURIComponent(token)) : null;
+}
+
+export function getCustomerTokens(request: Request) {
+  const bearer = request.headers.get('authorization')?.match(/^Bearer\s+(.+)$/i)?.[1];
+  const cookie = request.headers.get('cookie')?.match(/(?:^|;\s*)__Host-jokihub-session=([^;]+)/)?.[1];
+  return [...new Set([bearer, cookie].filter((token): token is string => Boolean(token)))];
 }
 
 export function setCustomerSession(response: NextResponse, token: string) {

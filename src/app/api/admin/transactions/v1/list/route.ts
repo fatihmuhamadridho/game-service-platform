@@ -3,7 +3,7 @@ import { requireAdminApi } from '@backend/shared/admin-auth';
 import { listAdminTransactions, toAdminTransactionError } from '@backend/transaction/admin-transaction.service';
 
 export async function GET(request: Request) {
-  const denied = requireAdminApi('TRXB01001', request);
+  const denied = await requireAdminApi('TRXB01001', request);
   if (denied) return denied;
   const query = new URL(request.url).searchParams;
   const page = Number(query.get('page') ?? '1');

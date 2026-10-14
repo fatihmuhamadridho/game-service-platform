@@ -3,7 +3,7 @@ import { requireAdminApi } from '@backend/shared/admin-auth';
 import { deleteAdminMember, toAdminMemberError } from '@backend/user/admin-member.service';
 
 export async function DELETE(request: Request, context: { params: Promise<{ userId: string }> }) {
-  const denied = requireAdminApi('USRB01001', request);
+  const denied = await requireAdminApi('USRB01001', request);
   if (denied) return denied;
   const { userId } = await context.params;
   try {

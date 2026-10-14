@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { requireAdminPermissions } from '@backend/shared/admin-auth';
 import { listAdminAccounts, toAdminAccountError } from '@backend/admin-accounts/admin-account.service';
 export async function GET(request: Request) {
-  const denied = requireAdminPermissions('USRB01001', request, ['settings-manage']);
+  const denied = await requireAdminPermissions('USRB01001', request, ['settings-manage']);
   if (denied) return denied;
   const query = new URL(request.url).searchParams;
   const page = Number(query.get('page') ?? '1');

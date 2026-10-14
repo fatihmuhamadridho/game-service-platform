@@ -3,7 +3,7 @@ import { requireAdminApi } from '@backend/shared/admin-auth';
 import { inviteAdminMember, parseAdminMemberInvitation, toAdminMemberError } from '@backend/user/admin-member.service';
 
 export async function POST(request: Request) {
-  const denied = requireAdminApi('USRB01001', request);
+  const denied = await requireAdminApi('USRB01001', request);
   if (denied) return denied;
 
   let body: unknown;

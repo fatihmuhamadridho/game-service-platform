@@ -4,7 +4,7 @@ import { reviewOrderPayment, toAdminOrderError } from '@backend/order/admin-orde
 import { requireAdminApi } from '@backend/shared/admin-auth';
 
 export async function POST(request: Request) {
-  const denied = requireAdminApi('ORDB01001', request);
+  const denied = await requireAdminApi('ORDB01001', request);
   if (denied) return denied;
   let body: Record<string, unknown>;
   try {
@@ -31,7 +31,7 @@ export async function POST(request: Request) {
       { status: 400 }
     );
   }
-  const actor = verifyAdminAccessToken(getAdminToken(request));
+  const actor = await verifyAdminAccessToken(getAdminToken(request));
   if (!actor)
     return NextResponse.json(
       { status: { code: 'ORDB01001', message: 'Sesi administrator tidak tersedia.' }, data: null },

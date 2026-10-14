@@ -30,7 +30,7 @@ const groups = [
     label: 'Order',
     items: [
       ['Pesanan', IconFileText],
-      ['Top Up Manual', IconWallet],
+      // ['Top Up Manual', IconWallet],
       // ['Refund', IconHistory],
       // ['Komplain', IconHelpCircle],
     ],

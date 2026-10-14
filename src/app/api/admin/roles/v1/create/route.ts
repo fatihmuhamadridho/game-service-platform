@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { requireAdminApi } from '@backend/shared/admin-auth';
 import { createAdminRole, parseRoleInput, toAdminRoleError } from '@backend/roles/admin-role.service';
 export async function POST(request: Request) {
-  const denied = requireAdminApi('ROLB01001', request);
+  const denied = await requireAdminApi('ROLB01001', request);
   if (denied) return denied;
   let body: unknown;
   try {

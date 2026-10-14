@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { requireAdminApi } from '@backend/shared/admin-auth';
 import { getAdminService, toAdminCatalogError } from '@backend/catalog/admin-catalog.service';
 export async function GET(request: Request, { params }: { params: Promise<{ serviceId: string }> }) {
-  const denied = requireAdminApi('SRVB01001', request);
+  const denied = await requireAdminApi('SRVB01001', request);
   if (denied) return denied;
   try {
     const { serviceId } = await params;

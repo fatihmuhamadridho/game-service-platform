@@ -6,13 +6,11 @@ import {
   IconActivity,
   IconArrowUpRight,
   IconCalendar,
-  IconChartBar,
   IconChevronDown,
   IconChevronRight,
   IconCreditCard,
   IconDeviceGamepad2,
   IconDots,
-  IconFileText,
   IconReceipt,
   IconUsers,
   IconWallet,
@@ -482,28 +480,6 @@ export const AdminDashboardPage = () => {
           </p>
         )}
       </div>
-      <nav className={styles.mobileNav}>
-        <a className={styles.mobileCurrent} href="/admin">
-          <IconChartBar />
-          Dashboard
-        </a>
-        <a href="#pesanan">
-          <IconFileText />
-          Pesanan
-        </a>
-        <a href="#layanan">
-          <IconDeviceGamepad2 />
-          Layanan
-        </a>
-        <a href="#user">
-          <IconUsers />
-          User
-        </a>
-        <a href="#lainnya">
-          <IconDots />
-          Lainnya
-        </a>
-      </nav>
     </main>
   );
 };

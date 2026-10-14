@@ -36,7 +36,7 @@
   white-space: nowrap;
 }
 
-.brand>span:last-child>span,
+.brand > span:last-child > span,
 .intro h1 span {
   color: #1685ff;
 }
@@ -171,7 +171,7 @@
   font-weight: 800;
 }
 
-.intro>p {
+.intro > p {
   max-width: 440px;
   margin: 0;
   color: #e1e8f1;
@@ -320,7 +320,7 @@
   box-shadow: 0 0 0 3px #0879ff26;
 }
 
-.inputWrap>svg {
+.inputWrap > svg {
   width: 14px;
   height: 14px;
   flex: 0 0 14px;
@@ -819,7 +819,7 @@
   background: #0b1c31;
 }
 
-.hoodie>span {
+.hoodie > span {
   position: absolute;
   top: 73px;
   left: 100px;
@@ -1063,7 +1063,7 @@
     letter-spacing: -1px;
   }
 
-  .intro>p {
+  .intro > p {
     max-width: 390px;
     font-size: 12px;
     line-height: 1.55;
@@ -1190,7 +1190,7 @@
     font-size: 28px;
   }
 
-  .intro>p {
+  .intro > p {
     max-width: 290px;
     font-size: 11px;
   }
@@ -1221,7 +1221,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-
   .page *,
   .page *::before,
   .page *::after {

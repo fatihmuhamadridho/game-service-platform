@@ -1,10 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   IconAdjustmentsHorizontal,
   IconChevronDown,
   IconDeviceGamepad2,
+  IconLayoutDashboard,
+  IconLogout,
   IconMenu2,
   IconSearch,
   IconShoppingCart,
@@ -13,6 +15,16 @@ import {
 } from '@tabler/icons-react';
 import styles from './Header.module.css';
 import { FEATURE_SPRINT_2 } from '@configs/base.config';
+
+type AccountType = 'ADMIN' | 'CUSTOMER';
+type HeaderAccount = {
+  accountType: AccountType;
+  name: string;
+  username: string;
+  role: string;
+  roleLabel: string;
+  canAccessDashboard: boolean;
+};
 
 type Props = {
   variant?: 'storefront' | 'checkout';
@@ -46,8 +58,131 @@ export const Header = ({
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [localSearch, setLocalSearch] = useState('');
+  const [account, setAccount] = useState<HeaderAccount | null>();
+  const [profileOpen, setProfileOpen] = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false);
+  const [logoutError, setLogoutError] = useState('');
+  const profileRef = useRef<HTMLDivElement>(null);
   const search = searchValue ?? localSearch;
   const updateSearch = onSearchChange ?? setLocalSearch;
+
+  useEffect(() => {
+    let active = true;
+    const loadAccount = async (requestedType?: string | null) => {
+      const savedType = requestedType ?? window.sessionStorage.getItem('jokihub-session-type');
+      const accountType = savedType === 'ADMIN' || savedType === 'CUSTOMER' ? savedType : null;
+      const sessionUrl = () =>
+        accountType ? `/api/auth/v1/session?accountType=${accountType}` : '/api/auth/v1/session';
+      try {
+        let response = await fetch(sessionUrl(), { cache: 'no-store' });
+        if (!response.ok && response.status === 401 && accountType) {
+          const refreshUrl =
+            accountType === 'ADMIN' ? '/api/admin/auth/v1/refresh-token' : '/api/auth/v1/refresh-token';
+          const refreshed = await fetch(refreshUrl, { method: 'POST', cache: 'no-store' });
+          if (refreshed.ok) response = await fetch(sessionUrl(), { cache: 'no-store' });
+        }
+        if (!active) return;
+        if (!response.ok) {
+          setAccount(null);
+          return;
+        }
+        const result = (await response.json()) as { data?: HeaderAccount | null };
+        setAccount(result.data ?? null);
+      } catch {
+        if (active) setAccount(null);
+      }
+    };
+    const onSessionEstablished = (event: Event) => {
+      void loadAccount((event as CustomEvent<AccountType>).detail);
+    };
+    const onSessionEnded = () => {
+      setAccount(null);
+      setProfileOpen(false);
+    };
+    void loadAccount();
+    window.addEventListener('jokihub:session-established', onSessionEstablished);
+    window.addEventListener('jokihub:session-ended', onSessionEnded);
+    return () => {
+      active = false;
+      window.removeEventListener('jokihub:session-established', onSessionEstablished);
+      window.removeEventListener('jokihub:session-ended', onSessionEnded);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!profileOpen) return;
+    const closeOnOutsideClick = (event: MouseEvent) => {
+      if (profileRef.current && !profileRef.current.contains(event.target as Node)) setProfileOpen(false);
+    };
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setProfileOpen(false);
+    };
+    document.addEventListener('mousedown', closeOnOutsideClick);
+    document.addEventListener('keydown', closeOnEscape);
+    return () => {
+      document.removeEventListener('mousedown', closeOnOutsideClick);
+      document.removeEventListener('keydown', closeOnEscape);
+    };
+  }, [profileOpen]);
+
+  const logout = async () => {
+    if (!account || loggingOut) return;
+    setLoggingOut(true);
+    setLogoutError('');
+    try {
+      const endpoint = account.accountType === 'ADMIN' ? '/api/admin/auth/v1/logout' : '/api/auth/v1/logout';
+      const response = await fetch(endpoint, { method: 'POST' });
+      if (!response.ok) throw new Error('Logout gagal. Coba lagi.');
+      window.sessionStorage.removeItem('jokihub-session-type');
+      window.dispatchEvent(new Event('jokihub:session-ended'));
+    } catch (error) {
+      setLogoutError(error instanceof Error ? error.message : 'Logout gagal. Coba lagi.');
+    } finally {
+      setLoggingOut(false);
+    }
+  };
+
+  const profileAction = account ? (
+    <div className={styles.profileMenu} ref={profileRef}>
+      <button
+        className={styles.profileToggle}
+        aria-label={`Menu akun ${account.name}`}
+        aria-haspopup="menu"
+        aria-expanded={profileOpen}
+        aria-controls="public-profile-menu"
+        onClick={() => setProfileOpen((open) => !open)}
+      >
+        <span className={styles.profileAvatar}>{account.name.trim().charAt(0).toUpperCase() || 'A'}</span>
+        <span className={styles.profileText}>
+          <b>{account.name}</b>
+          <small>{account.roleLabel}</small>
+        </span>
+        <IconChevronDown aria-hidden="true" />
+      </button>
+      {profileOpen && (
+        <div className={styles.profileDropdown} id="public-profile-menu" role="menu" aria-label="Menu akun">
+          <div className={styles.dropdownIdentity}>
+            <b>{account.name}</b>
+            <small>{account.roleLabel}</small>
+          </div>
+          {account.canAccessDashboard && (
+            <a href="/admin" role="menuitem" onClick={() => setProfileOpen(false)}>
+              <IconLayoutDashboard aria-hidden="true" /> Dashboard Admin
+            </a>
+          )}
+          <button role="menuitem" disabled={loggingOut} onClick={() => void logout()}>
+            <IconLogout aria-hidden="true" /> {loggingOut ? 'Keluar…' : 'Keluar'}
+          </button>
+          {logoutError && (
+            <p className={styles.logoutError} role="alert">
+              {logoutError}
+            </p>
+          )}
+        </div>
+      )}
+    </div>
+  ) : null;
+
   return (
     <header className={`${styles.header} ${variant === 'checkout' ? styles.checkout : ''}`}>
       <div className={styles.navWrap}>
@@ -85,28 +220,36 @@ export const Header = ({
         <div className={styles.actions}>
           {variant === 'storefront' ? (
             <>
-              {FEATURE_SPRINT_2 && (
-                <button className={styles.cart} aria-label="Keranjang">
-                  <IconShoppingCart />
-                  <i>2</i>
-                </button>
-              )}
-              <a className={styles.login} href="/login">
-                Masuk
-              </a>
-              <a className={styles.register} href="/register">
-                Daftar
-              </a>
-              {showMobileSearch && (
+              {account ? (
+                profileAction
+              ) : account === null ? (
+                <>
+                  {FEATURE_SPRINT_2 && (
+                    <button className={styles.cart} aria-label="Keranjang">
+                      <IconShoppingCart />
+                      <i>2</i>
+                    </button>
+                  )}
+                  <a className={styles.login} href="/login">
+                    Masuk
+                  </a>
+                  <a className={styles.register} href="/register">
+                    Daftar
+                  </a>
+                </>
+              ) : null}
+              {FEATURE_SPRINT_2 && showMobileSearch && (
                 <button className={styles.searchToggle} aria-label="Cari" onClick={() => setSearchOpen(!searchOpen)}>
                   <IconSearch />
                 </button>
               )}
             </>
           ) : (
-            <button className={styles.avatar} aria-label="Akun">
-              <IconUser />
-            </button>
+            (profileAction ?? (
+              <a className={styles.avatar} aria-label="Masuk" href="/login">
+                <IconUser />
+              </a>
+            ))
           )}
         </div>
       </div>
@@ -137,9 +280,21 @@ export const Header = ({
             <a href="/cek-pesanan" onClick={() => setMenuOpen(false)}>
               Cek Pesanan
             </a>
-            <a href="/bantuan" onClick={() => setMenuOpen(false)}>
-              Bantuan
-            </a>
+            {FEATURE_SPRINT_2 && (
+              <a href="/bantuan" onClick={() => setMenuOpen(false)}>
+                Bantuan
+              </a>
+            )}
+            {account === null && (
+              <div className={styles.drawerAuthActions}>
+                <a className={styles.drawerLogin} href="/login" onClick={() => setMenuOpen(false)}>
+                  Masuk
+                </a>
+                <a className={styles.drawerRegister} href="/register" onClick={() => setMenuOpen(false)}>
+                  Daftar
+                </a>
+              </div>
+            )}
           </nav>
         </div>
       )}

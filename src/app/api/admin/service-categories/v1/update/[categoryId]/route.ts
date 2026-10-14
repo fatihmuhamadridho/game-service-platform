@@ -3,7 +3,7 @@ import { requireAdminApi } from '@backend/shared/admin-auth';
 import { updateAdminCategory, toAdminCatalogError } from '@backend/catalog/admin-catalog.service';
 import { parseCategoryInput } from '@backend/catalog/admin-catalog.validation';
 export async function PUT(request: Request, { params }: { params: Promise<{ categoryId: string }> }) {
-  const denied = requireAdminApi('SCAB01001', request);
+  const denied = await requireAdminApi('SCAB01001', request);
   if (denied) return denied;
   let body: unknown;
   try {

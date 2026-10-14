@@ -4,7 +4,7 @@ import { getAdminToken, verifyAdminAccessToken } from '@backend/auth/admin-token
 import { parseAdminMemberUpdate, toAdminMemberError, updateAdminMember } from '@backend/user/admin-member.service';
 
 export async function PATCH(request: Request, context: { params: Promise<{ userId: string }> }) {
-  const denied = requireAdminApi('USRB01001', request);
+  const denied = await requireAdminApi('USRB01001', request);
   if (denied) return denied;
   const { userId } = await context.params;
   let body: Record<string, unknown>;
@@ -25,7 +25,7 @@ export async function PATCH(request: Request, context: { params: Promise<{ userI
   }
   try {
     const token = getAdminToken(request);
-    const actor = token ? verifyAdminAccessToken(token) : null;
+    const actor = token ? await verifyAdminAccessToken(token) : null;
     const user = await updateAdminMember(userId, input, actor?.sub ?? null);
     return NextResponse.json({
       status: { code: 'USRS00000', message: 'User berhasil diperbarui.' },

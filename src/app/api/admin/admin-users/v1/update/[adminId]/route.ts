@@ -3,7 +3,7 @@ import { requireAdminPermissions } from '@backend/shared/admin-auth';
 import { getAdminToken, verifyAdminAccessToken } from '@backend/auth/admin-token';
 import { toAdminAccountError, updateAdminAccount } from '@backend/admin-accounts/admin-account.service';
 export async function PATCH(request: Request, { params }: { params: Promise<{ adminId: string }> }) {
-  const denied = requireAdminPermissions('USRB01001', request, ['settings-manage']);
+  const denied = await requireAdminPermissions('USRB01001', request, ['settings-manage']);
   if (denied) return denied;
   let body: unknown;
   try {
@@ -18,7 +18,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ ad
     body &&
     typeof body === 'object' &&
     'roleIds' in body &&
-    verifyAdminAccessToken(getAdminToken(request))?.role !== 'SUPER_ADMIN'
+    (await verifyAdminAccessToken(getAdminToken(request)))?.role !== 'SUPER_ADMIN'
   )
     return NextResponse.json(
       { status: { code: 'USRB01002', message: 'Hanya Super Admin dapat mengubah assignment role.' }, data: null },
