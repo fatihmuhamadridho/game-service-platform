@@ -14,6 +14,7 @@ export const GamesPage = () => {
   const [games, setGames] = useState<GameCardView[]>([]);
   const [total, setTotal] = useState(0);
   const [loadError, setLoadError] = useState('');
+
   useEffect(() => {
     let alive = true;
     const query = new URLSearchParams({
@@ -22,14 +23,19 @@ export const GamesPage = () => {
       offset: '0',
       sort: sort === 'Nama A–Z' ? 'NAME_ASC' : 'POPULAR',
     });
+
     if (activeCategorySlug) query.set('category', activeCategorySlug);
+
     fetch(`/api/games/v1/list?${query}`)
       .then(async (response) => {
         const result = await response.json();
+
         if (!response.ok || !result.data) throw new Error(result.status?.message ?? 'Katalog game gagal dimuat.');
         if (!alive) return;
+
         const totalItems: number = result.data.pagination.total;
         const allGames = [...result.data.games];
+
         while (allGames.length < totalItems) {
           const nextQuery = new URLSearchParams(query);
           nextQuery.set('offset', String(allGames.length));
@@ -41,7 +47,9 @@ export const GamesPage = () => {
           if (!nextResult.data.games.length) break;
           allGames.push(...nextResult.data.games);
         }
+
         if (!alive) return;
+
         setTotal(totalItems);
         setServiceCategories(result.data.filters?.serviceCategories ?? []);
         setGames(
@@ -74,20 +82,25 @@ export const GamesPage = () => {
       alive = false;
     };
   }, [search, sort, activeCategorySlug]);
+
   const filters = ['Semua', ...serviceCategories.map((category) => category.name)];
+
   const categoryCounts: Record<string, number> = {
     Semua: total,
     ...Object.fromEntries(serviceCategories.map((category) => [category.name, category.count])),
   };
+
   const chooseFilter = (filter: string) => {
     setActiveFilter(filter);
     setActiveCategorySlug(serviceCategories.find((category) => category.name === filter)?.slug ?? '');
     setPage(1);
   };
+
   const updateSearch = (value: string) => {
     setSearch(value);
     setPage(1);
   };
+
   return (
     <GamesTemplate
       loadError={loadError}

@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Box } from 'rangkaui';
 import {
@@ -14,9 +15,10 @@ import {
 } from '@tabler/icons-react';
 import { Header } from '@common-ui/organisms/Header/Header';
 import { Footer } from '@common-ui/organisms/Footer/Footer';
+import { CheckoutHeader } from '@features/Checkout/views/organisms/CheckoutHeader.organism';
 import styles from './OrderTrackingResult.module.css';
 
-type Props = { orderId: string };
+type Props = { orderId: string; checkoutResult?: boolean };
 type TrackingData = {
   order: {
     orderNumber: string;
@@ -26,11 +28,13 @@ type TrackingData = {
     serviceName: string;
     customerWhatsappMasked: string;
     paymentStatusLabel: string;
+    paymentStatus: string;
   };
   timeline: Array<{ status: string; label: string; description: string | null; occurredAt: string }>;
 };
 
-export const OrderTrackingResultPage = ({ orderId }: Props) => {
+export const OrderTrackingResultPage = ({ orderId, checkoutResult = false }: Props) => {
+  const router = useRouter();
   const normalizedOrder = orderId.toUpperCase();
   const [tracking, setTracking] = useState<TrackingData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -45,22 +49,42 @@ export const OrderTrackingResultPage = ({ orderId }: Props) => {
         const token = sessionStorage.getItem(`jokihub-tracking:${normalizedOrder}`);
         if (!token) {
           polling = false;
+          if (checkoutResult) {
+            const returnTo = `/order/${normalizedOrder}/result`;
+            router.replace(
+              `/cek-pesanan?orderNumber=${encodeURIComponent(normalizedOrder)}&returnTo=${encodeURIComponent(returnTo)}`
+            );
+            return;
+          }
           if (alive) {
             setError('Sesi pelacakan berakhir. Verifikasi pesanan untuk melihat status terbaru.');
             setLoading(false);
           }
           return;
         }
-        const response = await fetch(`/api/orders/v1/tracking/${encodeURIComponent(normalizedOrder)}/status`, {
+        const endpoint = `/api/orders/v1/tracking/${encodeURIComponent(normalizedOrder)}/status${checkoutResult ? '?view=result' : ''}`;
+        const response = await fetch(endpoint, {
           headers: { Authorization: `Bearer ${token}` },
           cache: 'no-store',
         });
         const result = await response.json();
         if (!response.ok || !result.data) {
+          if (checkoutResult && response.status === 409) {
+            polling = false;
+            router.replace(`/order/${encodeURIComponent(normalizedOrder)}`);
+            return;
+          }
           if ([400, 401, 404].includes(response.status)) {
             sessionStorage.removeItem(`jokihub-tracking:${normalizedOrder}`);
             polling = false;
             if (alive) setTracking(null);
+            if (checkoutResult && response.status !== 404) {
+              const returnTo = `/order/${normalizedOrder}/result`;
+              router.replace(
+                `/cek-pesanan?orderNumber=${encodeURIComponent(normalizedOrder)}&returnTo=${encodeURIComponent(returnTo)}`
+              );
+              return;
+            }
           }
           throw new Error(result.status?.message ?? 'Pelacakan pesanan tidak tersedia.');
         }
@@ -81,17 +105,21 @@ export const OrderTrackingResultPage = ({ orderId }: Props) => {
       polling = false;
       window.clearInterval(timer);
     };
-  }, [normalizedOrder]);
+  }, [normalizedOrder, checkoutResult, router]);
+
+  const recoveryHref = `/cek-pesanan?orderNumber=${encodeURIComponent(normalizedOrder)}&returnTo=${encodeURIComponent(
+    checkoutResult ? `/order/${normalizedOrder}/result` : `/cek-pesanan/${normalizedOrder}`
+  )}`;
 
   if (!tracking)
     return (
       <main className={styles.page}>
-        <Header />
+        {checkoutResult ? <CheckoutHeader game="Pesanan" stage="result" /> : <Header />}
         <div className={styles.content}>
           <section className={styles.heading}>
             <h1>{loading ? 'Memuat status pesanan' : 'Verifikasi diperlukan'}</h1>
             <p role={error ? 'alert' : 'status'}>{error || 'Mengambil status pesanan…'}</p>
-            <Link href="/cek-pesanan">Kembali ke cek pesanan</Link>
+            <Link href={recoveryHref}>Verifikasi lewat Cek Pesanan</Link>
           </section>
         </div>
         <Footer />
@@ -101,21 +129,23 @@ export const OrderTrackingResultPage = ({ orderId }: Props) => {
 
   return (
     <main className={styles.page}>
-      <Header />
+      {checkoutResult ? <CheckoutHeader game={order.gameName} stage="result" /> : <Header />}
       <div className={styles.content}>
-        <nav className={styles.breadcrumb} aria-label="Breadcrumb">
-          <Link href="/homepagev2">Beranda</Link>
-          <span>/</span>
-          <Link href="/cek-pesanan">Cek Pesanan</Link>
-          <span>/</span>
-          <b>Detail Pesanan</b>
-        </nav>
+        {!checkoutResult && (
+          <nav className={styles.breadcrumb} aria-label="Breadcrumb">
+            <Link href="/">Beranda</Link>
+            <span>/</span>
+            <Link href="/cek-pesanan">Cek Pesanan</Link>
+            <span>/</span>
+            <b>Detail Pesanan</b>
+          </nav>
+        )}
         <section className={styles.heading}>
           <span className={styles.headingIcon}>
             <IconClipboardCheck aria-hidden="true" />
           </span>
-          <p>STATUS PESANAN</p>
-          <h1>Status Pesanan</h1>
+          <p>{checkoutResult ? 'HASIL PEMBAYARAN' : 'STATUS PESANAN'}</p>
+          <h1>{checkoutResult ? 'Hasil Pembayaran' : 'Status Pesanan'}</h1>
           <span className={styles.demoNote}>{order.paymentStatusLabel}</span>
           {error && <p role="status">Status terakhir ditampilkan. Pembaruan gagal dimuat.</p>}
         </section>

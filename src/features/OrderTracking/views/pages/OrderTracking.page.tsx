@@ -16,9 +16,15 @@ import { Header } from '@common-ui/organisms/Header/Header';
 import { Footer } from '@common-ui/organisms/Footer/Footer';
 import styles from './OrderTracking.module.css';
 
-export const OrderTrackingPage = () => {
+export const OrderTrackingPage = ({
+  initialOrderNumber = '',
+  returnTo = '',
+}: {
+  initialOrderNumber?: string;
+  returnTo?: string;
+}) => {
   const router = useRouter();
-  const [orderId, setOrderId] = useState('');
+  const [orderId, setOrderId] = useState(initialOrderNumber);
   const [phone, setPhone] = useState('');
   const [errors, setErrors] = useState<string[]>([]);
   const [submitting, setSubmitting] = useState(false);
@@ -42,7 +48,13 @@ export const OrderTrackingPage = () => {
       if (!response.ok || !result.data) throw new Error(result.status?.message ?? 'Pesanan tidak dapat diverifikasi.');
       if (typeof result.data.trackingToken !== 'string') throw new Error('Token pelacakan tidak tersedia. Coba lagi.');
       sessionStorage.setItem(`jokihub-tracking:${normalizedOrder}`, result.data.trackingToken);
-      router.push(`/cek-pesanan/${encodeURIComponent(normalizedOrder)}`);
+      const paymentRoute = `/order/${encodeURIComponent(normalizedOrder)}`;
+      const resultRoute = `${paymentRoute}/result`;
+      router.push(
+        returnTo === paymentRoute || returnTo === resultRoute
+          ? returnTo
+          : `/cek-pesanan/${encodeURIComponent(normalizedOrder)}`
+      );
     } catch (error) {
       setApiError(error instanceof Error ? error.message : 'Pelacakan pesanan tidak tersedia.');
     } finally {
@@ -55,7 +67,7 @@ export const OrderTrackingPage = () => {
       <Header />
       <div className={styles.content}>
         <nav className={styles.breadcrumb} aria-label="Breadcrumb">
-          <Link href="/homepagev2">Beranda</Link>
+          <Link href="/">Beranda</Link>
           <span>/</span>
           <b>Cek Pesanan</b>
         </nav>

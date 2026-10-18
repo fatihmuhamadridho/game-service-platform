@@ -356,7 +356,7 @@ export const AdminDashboardPage = () => {
                       <td>{order.date}</td>
                       <td>{order.user}</td>
                       <td>
-                        <a href={`/order/${gameSlug(order.game)}`}>
+                        <a href={`/order?game=${encodeURIComponent(gameSlug(order.game))}`}>
                           <span
                             className={`${styles.gameThumb} ${styles[order.game === 'Mobile Legends' ? 'ml' : order.game === 'Free Fire' ? 'ff' : order.game === 'Roblox' ? 'roblox' : order.game === 'Valorant' ? 'valo' : 'genshin']}`}
                           >

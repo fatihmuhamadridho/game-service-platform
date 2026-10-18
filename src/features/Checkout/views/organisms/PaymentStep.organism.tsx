@@ -61,7 +61,7 @@ export const PaymentStep = ({
           ) : (
             <>
               <PanelHeading
-                number="1"
+                number="2"
                 title="Instruksi Pembayaran"
                 description="Gunakan instruksi resmi dari pesanan yang dibuat."
               />
@@ -99,7 +99,7 @@ export const PaymentStep = ({
                 )}
               </div>
               <p className={styles.inlineMessage}>
-                <IconShieldCheck /> Setelah membayar, tekan tombol “Sudah Bayar”. Admin akan memvalidasi pembayaran.
+                <IconShieldCheck /> Setelah bayar, tekan “Sudah Bayar” untuk validasi admin.
               </p>
             </>
           )}

@@ -1,5 +1,5 @@
 import { Box, Button } from 'rangkaui';
-import { IconArrowRight, IconDeviceGamepad2 } from '@tabler/icons-react';
+import { IconArrowRight, IconBuildingBank, IconCheck, IconDeviceGamepad2, IconQrcode } from '@tabler/icons-react';
 import type { CheckoutService } from '../interfaces/checkout.interface';
 import { QuantityControl } from '../molecules/QuantityControl.molecule';
 import styles from './OrderSummary.module.css';
@@ -8,7 +8,6 @@ type Props = {
   service?: CheckoutService;
   quantity: number;
   total: number;
-  step: number;
   formatPrice: (value: number) => string;
   onQuantity: (value: number) => void;
   onContinue: () => void;
@@ -22,7 +21,6 @@ export const OrderSummary = ({
   service,
   quantity,
   total,
-  step,
   formatPrice,
   onQuantity,
   onContinue,
@@ -42,7 +40,7 @@ export const OrderSummary = ({
     <dl>
       <div>
         <dt>Layanan</dt>
-        <dd>{service?.name ?? 'Memuat layanan…'}</dd>
+        <dd>{service?.name ?? (game === 'Pilih game' ? 'Pilih game dan layanan' : 'Memuat layanan…')}</dd>
       </div>
       <div>
         <dt>Estimasi</dt>
@@ -59,20 +57,51 @@ export const OrderSummary = ({
         <QuantityControl value={quantity} onChange={onQuantity} />
       </div>
     )}
-    <label className={styles.paymentMethod}>
-      Metode pembayaran
-      <select value={paymentMethod} onChange={(event) => onPaymentMethod(event.target.value)}>
-        <option value="QRIS">QRIS</option>
-        <option value="BCA_TRANSFER">Transfer Bank BCA</option>
-      </select>
-    </label>
+    <fieldset className={styles.paymentMethod}>
+      <legend>Metode pembayaran</legend>
+      <label className={`${styles.paymentOption} ${paymentMethod === 'QRIS' ? styles.paymentOptionSelected : ''}`}>
+        <input
+          type="radio"
+          name="payment-method"
+          value="QRIS"
+          checked={paymentMethod === 'QRIS'}
+          onChange={() => onPaymentMethod('QRIS')}
+        />
+        <span className={styles.paymentIcon}>
+          <IconQrcode />
+        </span>
+        <span className={styles.paymentCopy}>
+          <b>QRIS</b>
+          <small>Bayar dengan aplikasi QRIS</small>
+        </span>
+        <IconCheck className={styles.paymentCheck} aria-hidden="true" />
+      </label>
+      <label
+        className={`${styles.paymentOption} ${paymentMethod === 'BCA_TRANSFER' ? styles.paymentOptionSelected : ''}`}
+      >
+        <input
+          type="radio"
+          name="payment-method"
+          value="BCA_TRANSFER"
+          checked={paymentMethod === 'BCA_TRANSFER'}
+          onChange={() => onPaymentMethod('BCA_TRANSFER')}
+        />
+        <span className={`${styles.paymentIcon} ${styles.bankIcon}`}>
+          <IconBuildingBank />
+        </span>
+        <span className={styles.paymentCopy}>
+          <b>Transfer Bank BCA</b>
+          <small>Transfer manual ke rekening BCA</small>
+        </span>
+        <IconCheck className={styles.paymentCheck} aria-hidden="true" />
+      </label>
+    </fieldset>
     <div className={styles.total}>
       <span>Total Pembayaran</span>
       <strong>{service?.price ? formatPrice(total) : '—'}</strong>
     </div>
     <Button className={styles.button} onClick={onContinue} disabled={disabled || !service}>
-      {submitting ? 'Membuat Pesanan…' : step === 3 ? 'Lanjut ke Pembayaran' : 'Lanjut Pembayaran'} <IconArrowRight />
+      {submitting ? 'Membuat Pesanan…' : 'Lanjut Pembayaran'} <IconArrowRight />
     </Button>
-    {step === 3 && <p className={styles.notice}>Pesanan dibuat oleh server. Pembayaran belum dikonfirmasi.</p>}
   </Box>
 );

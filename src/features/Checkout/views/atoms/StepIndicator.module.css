@@ -3,15 +3,15 @@
   margin: 25px 0 22px;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   position: relative;
 }
 .stepper:before {
   position: absolute;
   content: '';
   height: 1px;
-  left: 12.5%;
-  right: 12.5%;
+  left: 16.6667%;
+  right: 16.6667%;
   top: 17px;
   background: #35465c;
 }
@@ -19,8 +19,8 @@
   position: absolute;
   content: '';
   height: 2px;
-  left: 12.5%;
-  width: calc(var(--step-progress, 0%) * 0.75);
+  left: 16.6667%;
+  width: var(--step-progress, 0%);
   top: 17px;
   background: #0875ff;
 }

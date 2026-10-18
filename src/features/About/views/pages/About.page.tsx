@@ -36,7 +36,7 @@ export const AboutPage = () => (
     <Header />
     <div className={styles.content}>
       <nav className={styles.breadcrumb} aria-label="Breadcrumb">
-        <a href="/homepagev2">Beranda</a>
+        <a href="/">Beranda</a>
         <span>/</span>
         <b>Tentang Kami</b>
       </nav>

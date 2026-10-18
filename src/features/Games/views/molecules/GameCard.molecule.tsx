@@ -6,7 +6,7 @@ import styles from './GameCard.module.css';
 
 export const GameCard = ({ game }: { game: GameCardView }) => (
   <Box className={styles.card} bordered rounded>
-    <a href={`/order/${game.slug ?? game.name.toLowerCase().replaceAll(' ', '-')}`}>
+    <a href={`/order?game=${encodeURIComponent(game.slug ?? game.name.toLowerCase().replaceAll(' ', '-'))}`}>
       <div className={`${styles.art} ${styles[game.art]}`}>
         <span>{game.name}</span>
         <i />

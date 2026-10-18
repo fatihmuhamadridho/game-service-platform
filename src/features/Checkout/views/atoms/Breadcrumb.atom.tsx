@@ -1,19 +1,21 @@
 import { IconChevronRight } from '@tabler/icons-react';
+import Link from 'next/link';
 import styles from './Breadcrumb.module.css';
-type Props = { game: string; step?: number };
-export const Breadcrumb = ({ game, step = 0 }: Props) => (
+type Stage = 'selection' | 'payment' | 'result';
+type Props = { game: string; stage?: Stage };
+export const Breadcrumb = ({ game, stage = 'selection' }: Props) => (
   <nav className={styles.breadcrumb} aria-label="Breadcrumb">
-    <a href="/homepagev2">Beranda</a>
+    <Link href="/">Beranda</Link>
     <IconChevronRight />
-    <a href="/games">Shop</a>
+    <Link href="/games">Shop</Link>
     <IconChevronRight />
     <span>{game}</span>
     <IconChevronRight />
-    {step === 3 ? (
+    {stage !== 'selection' ? (
       <>
         <span>Pesan</span>
         <IconChevronRight />
-        <b>Pembayaran</b>
+        <b>{stage === 'result' ? 'Hasil Pembayaran' : 'Pembayaran'}</b>
       </>
     ) : (
       <b>Pesan</b>

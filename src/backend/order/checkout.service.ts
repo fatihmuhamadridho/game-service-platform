@@ -2,11 +2,13 @@ import { createHash, randomBytes } from 'node:crypto';
 import { ObjectId } from 'mongodb';
 import { db } from '@prisma/db';
 
+export type CheckoutPaymentMethod = 'QRIS' | 'BCA_TRANSFER';
+
 type CheckoutInput = {
   gameSlug: string;
   serviceId: string;
   quantity: number;
-  paymentMethod: 'QRIS' | 'BCA_TRANSFER';
+  paymentMethod: CheckoutPaymentMethod;
   customer: { name: string; whatsapp: string };
   item: { gameAccount: string; gameServer: string | null; customerNotes: string | null };
   idempotencyKey: string;
@@ -132,7 +134,7 @@ function digest(value: string) {
   return createHash('sha256').update(value).digest('hex');
 }
 
-function getPaymentInstructions(method: CheckoutInput['paymentMethod']) {
+export function getPaymentInstructions(method: CheckoutPaymentMethod) {
   if (method === 'QRIS') {
     const qrImageUrl = process.env['PAYMENT_QRIS_IMAGE_URL']?.trim();
     if (!qrImageUrl) return null;

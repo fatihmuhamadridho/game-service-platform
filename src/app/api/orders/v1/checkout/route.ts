@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { enforceAuthRateLimit } from '@backend/auth/auth-rate-limit';
 import { CheckoutError, createCheckoutOrder } from '@backend/order/checkout.service';
+import { issueOrderTrackingToken } from '@backend/order/tracking-token.service';
 
 type CheckoutBody = {
   gameSlug?: unknown;
@@ -78,8 +79,12 @@ export async function POST(request: Request) {
       item: { gameAccount, gameServer, customerNotes: notes },
       idempotencyKey: key,
     });
+    const tracking = await issueOrderTrackingToken(data.order.id);
     return NextResponse.json(
-      { status: { code: 'ORDS00000', message: 'Pesanan berhasil dibuat.' }, data },
+      {
+        status: { code: 'ORDS00000', message: 'Pesanan berhasil dibuat.' },
+        data: { ...data, trackingToken: tracking.token, trackingTokenExpiresAt: tracking.expiresAt },
+      },
       { status: data.idempotentReplay ? 200 : 201, headers: { 'Cache-Control': 'no-store' } }
     );
   } catch (error) {

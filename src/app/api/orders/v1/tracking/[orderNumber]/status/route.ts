@@ -36,6 +36,9 @@ const paymentLabels: Record<string, string> = {
 export async function GET(request: Request, { params }: RouteContext<'/api/orders/v1/tracking/[orderNumber]/status'>) {
   const { orderNumber: rawOrderNumber } = await params;
   const orderNumber = rawOrderNumber.toUpperCase();
+  const query = new URL(request.url).searchParams;
+  const resultView = query.get('view') === 'result';
+  if ([...query.keys()].some((key) => key !== 'view') || (query.has('view') && !resultView)) return fail();
   const token =
     request.headers
       .get('authorization')
@@ -61,6 +64,15 @@ export async function GET(request: Request, { params }: RouteContext<'/api/order
       .include('status_history')
       .first();
     if (!order) return fail();
+    if (resultView && !['PENDING_REVIEW', 'PAID'].includes(order.payment_status)) {
+      return NextResponse.json(
+        {
+          status: { code: 'ORDB02004', message: 'Hasil pembayaran tersedia setelah pembayaran dilaporkan.' },
+          data: null,
+        },
+        { status: 409, headers: { 'Cache-Control': 'no-store', Pragma: 'no-cache' } }
+      );
+    }
     const paymentHistoryGroups = await Promise.all(
       order.payments.map((payment) => db.orm.payment_status_history.where({ payment_id: payment._id }).all())
     );

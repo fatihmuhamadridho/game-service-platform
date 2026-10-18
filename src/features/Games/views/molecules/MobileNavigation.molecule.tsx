@@ -2,11 +2,11 @@ import { IconDeviceGamepad2, IconSearch, IconShoppingCart, IconUser } from '@tab
 import styles from './MobileNavigation.module.css';
 export const MobileNavigation = () => (
   <nav className={styles.nav} aria-label="Navigasi bawah">
-    <a href="/homepagev2">
+    <a href="/">
       <IconDeviceGamepad2 />
       <small>Beranda</small>
     </a>
-    <a href="/homepagev2#kategori">
+    <a href="/#kategori">
       <IconSearch />
       <small>Layanan</small>
     </a>

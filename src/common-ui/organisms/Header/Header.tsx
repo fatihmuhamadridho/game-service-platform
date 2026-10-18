@@ -36,7 +36,7 @@ type Props = {
   onMobileFilterToggle?: () => void;
 };
 const Logo = () => (
-  <a className={styles.logo} href="/homepagev2">
+  <a className={styles.logo} href="/">
     <span className={styles.logoIcon}>
       <IconDeviceGamepad2 />
     </span>
@@ -191,7 +191,7 @@ export const Header = ({
         </button>
         <Logo />
         <nav className={styles.desktopNav} aria-label="Navigasi utama">
-          <a className={activePage === 'home' ? styles.active : ''} href="/homepagev2">
+          <a className={activePage === 'home' ? styles.active : ''} href="/">
             Beranda
           </a>
           <a href="/games">Games</a>
@@ -271,7 +271,7 @@ export const Header = ({
                 <IconX />
               </button>
             </div>
-            <a href="/homepagev2" onClick={() => setMenuOpen(false)}>
+            <a href="/" onClick={() => setMenuOpen(false)}>
               Beranda
             </a>
             <a href="/games" onClick={() => setMenuOpen(false)}>

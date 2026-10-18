@@ -41,7 +41,7 @@ export const Footer = ({ variant = 'full' }: Props) =>
         </div>
         <div>
           <h3>Quick Links</h3>
-          <a href="/homepagev2">Beranda</a>
+          <a href="/">Beranda</a>
           <a href="/games">Layanan</a>
           <a href="/cek-pesanan">Cek Pesanan</a>
           <a href="/bantuan">Bantuan</a>
