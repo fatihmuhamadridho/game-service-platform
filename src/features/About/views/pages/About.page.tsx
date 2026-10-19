@@ -1,4 +1,3 @@
-import { Box } from 'rangkaui';
 import {
   IconArrowRight,
   IconBolt,
@@ -112,11 +111,11 @@ export const AboutPage = () => (
         </div>
         <div className={styles.valueGrid}>
           {values.map((value) => (
-            <Box key={value.title} className={styles.valueCard} bordered rounded>
+            <article key={value.title} className={styles.valueCard}>
               <span>{value.icon}</span>
               <h3>{value.title}</h3>
               <p>{value.description}</p>
-            </Box>
+            </article>
           ))}
         </div>
       </section>
