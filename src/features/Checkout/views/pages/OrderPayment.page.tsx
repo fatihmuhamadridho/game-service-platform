@@ -3,6 +3,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { upload } from '@vercel/blob/client';
+import { FEATURE_SPRINT_2 } from '@configs/base.config';
 import { Footer } from '@common-ui/organisms/Footer/Footer';
 import { CheckoutHeader } from '../organisms/CheckoutHeader.organism';
 import { PaymentStep } from '../organisms/PaymentStep.organism';
@@ -42,8 +44,12 @@ export const OrderPaymentPage = ({ orderNumber }: { orderNumber: string }) => {
   const [payment, setPayment] = useState<PaymentData | null>(null);
   const [loading, setLoading] = useState(true);
   const [reporting, setReporting] = useState(false);
+  const [proofFile, setProofFile] = useState<File | null>(null);
+  const [uploadingProof, setUploadingProof] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [proofUploaded, setProofUploaded] = useState(false);
+  const [proofMessage, setProofMessage] = useState('');
   const [message, setMessage] = useState('');
-  const [reportMessage, setReportMessage] = useState('');
   const paymentUrl = `/order/${encodeURIComponent(orderNumber)}`;
   const resultUrl = `${paymentUrl}/result`;
 
@@ -82,32 +88,78 @@ export const OrderPaymentPage = ({ orderNumber }: { orderNumber: string }) => {
     queueMicrotask(() => void loadPayment());
   }, [loadPayment]);
 
-  const reportPaid = async () => {
+  const uploadProof = async () => {
     const token = sessionStorage.getItem(`jokihub-tracking:${orderNumber}`);
     if (!token) {
       router.replace(recoveryUrl(orderNumber, paymentUrl));
       return;
     }
-    setReporting(true);
-    setReportMessage('');
+    if (!payment || !proofFile) return;
+    setUploadingProof(true);
+    setUploadProgress(0);
+    setProofMessage('');
     try {
-      const response = await fetch(`/api/orders/v1/tracking/${encodeURIComponent(orderNumber)}/payment`, {
-        method: 'POST',
-        headers: { Authorization: `Bearer ${token}` },
+      const extension = proofFile.type === 'image/png' ? 'png' : 'jpg';
+      const blob = await upload(`payment-proofs/${payment.payment.id}/${crypto.randomUUID()}.${extension}`, proofFile, {
+        access: 'private',
+        contentType: proofFile.type,
+        handleUploadUrl: `/api/orders/v1/payments/${encodeURIComponent(payment.payment.id)}/proofs/upload`,
+        clientPayload: JSON.stringify({ orderNumber: payment.order.orderNumber, trackingToken: token }),
+        onUploadProgress: ({ percentage }) => setUploadProgress(Math.round(percentage)),
       });
-      const result = (await response.json()) as CheckoutApiResponse<{ paymentStatus: string }>;
+      const response = await fetch(`/api/orders/v1/payments/${encodeURIComponent(payment.payment.id)}/proofs`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderNumber: payment.order.orderNumber, pathname: blob.pathname }),
+      });
+      const result = (await response.json()) as CheckoutApiResponse<{ status: string }>;
       if (response.status === 401) {
         sessionStorage.removeItem(`jokihub-tracking:${orderNumber}`);
         router.replace(recoveryUrl(orderNumber, paymentUrl));
         return;
       }
       if (!response.ok || !result.data) throw new Error(result.status.message);
-      router.push(resultUrl);
+      setProofUploaded(true);
+      setProofMessage('Bukti pembayaran berhasil diunggah dan menunggu pemeriksaan admin.');
     } catch (error) {
-      setReportMessage(error instanceof Error ? error.message : 'Konfirmasi pembayaran gagal dikirim.');
+      setProofMessage(error instanceof Error ? error.message : 'Bukti pembayaran gagal diunggah. Coba lagi.');
     } finally {
-      setReporting(false);
+      setUploadingProof(false);
     }
+  };
+
+  const reportPaid = () => {
+    if ((FEATURE_SPRINT_2 && !proofUploaded) || reporting) return;
+    if (!FEATURE_SPRINT_2) {
+      const token = sessionStorage.getItem(`jokihub-tracking:${orderNumber}`);
+      if (!token) {
+        router.replace(recoveryUrl(orderNumber, paymentUrl));
+        return;
+      }
+      setReporting(true);
+      void (async () => {
+        try {
+          const response = await fetch(`/api/orders/v1/tracking/${encodeURIComponent(orderNumber)}/payment`, {
+            method: 'POST',
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          const result = (await response.json()) as CheckoutApiResponse<{ paymentStatus: string }>;
+          if (response.status === 401) {
+            sessionStorage.removeItem(`jokihub-tracking:${orderNumber}`);
+            router.replace(recoveryUrl(orderNumber, paymentUrl));
+            return;
+          }
+          if (!response.ok || !result.data) throw new Error(result.status.message);
+          router.push(resultUrl);
+        } catch (error) {
+          setMessage(error instanceof Error ? error.message : 'Konfirmasi pembayaran gagal. Coba lagi.');
+          setReporting(false);
+        }
+      })();
+      return;
+    }
+    setReporting(true);
+    router.push(resultUrl);
   };
 
   const service: CheckoutService | undefined = payment
@@ -139,7 +191,26 @@ export const OrderPaymentPage = ({ orderNumber }: { orderNumber: string }) => {
           orderNumber={payment.order.orderNumber}
           reportingPayment={reporting}
           paymentReported={false}
-          reportMessage={reportMessage}
+          featureSprint2={FEATURE_SPRINT_2}
+          proofFile={proofFile}
+          onProofFileChange={(file) => {
+            if (
+              file &&
+              (file.size < 1 || file.size > 5 * 1024 * 1024 || !['image/jpeg', 'image/png'].includes(file.type))
+            ) {
+              setProofFile(null);
+              setProofMessage('Pilih gambar JPG atau PNG dengan ukuran maksimal 5 MB.');
+              return;
+            }
+            setProofFile(file);
+            setProofUploaded(false);
+            setProofMessage('');
+          }}
+          uploadingProof={uploadingProof}
+          uploadProgress={uploadProgress}
+          proofUploaded={proofUploaded}
+          proofMessage={proofMessage}
+          onUploadProof={uploadProof}
           onReportPaid={reportPaid}
         />
       ) : null}

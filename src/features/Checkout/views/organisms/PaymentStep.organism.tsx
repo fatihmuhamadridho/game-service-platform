@@ -1,6 +1,14 @@
 import { Box } from 'rangkaui';
 import Image from 'next/image';
-import { IconBuildingBank, IconCircleCheck, IconClock, IconQrcode, IconShieldCheck } from '@tabler/icons-react';
+import { useEffect, useState } from 'react';
+import {
+  IconBuildingBank,
+  IconCircleCheck,
+  IconClock,
+  IconQrcode,
+  IconShieldCheck,
+  IconUpload,
+} from '@tabler/icons-react';
 import type { CheckoutService } from '../interfaces/checkout.interface';
 import { PanelHeading } from '../atoms/PanelHeading.atom';
 import styles from './PaymentStep.module.css';
@@ -14,6 +22,7 @@ type Instructions = {
 };
 
 type Props = {
+  featureSprint2: boolean;
   game: string;
   service: CheckoutService;
   quantity: number;
@@ -25,11 +34,18 @@ type Props = {
   orderNumber: string;
   reportingPayment: boolean;
   paymentReported: boolean;
-  reportMessage: string;
+  proofFile: File | null;
+  onProofFileChange: (file: File | null) => void;
+  uploadingProof: boolean;
+  uploadProgress: number;
+  proofUploaded: boolean;
+  proofMessage: string;
+  onUploadProof: () => void;
   onReportPaid: () => void;
 };
 
 export const PaymentStep = ({
+  featureSprint2,
   game,
   service,
   quantity,
@@ -41,9 +57,27 @@ export const PaymentStep = ({
   orderNumber,
   reportingPayment,
   paymentReported,
-  reportMessage,
+  proofFile,
+  onProofFileChange,
+  uploadingProof,
+  uploadProgress,
+  proofUploaded,
+  proofMessage,
+  onUploadProof,
   onReportPaid,
 }: Props) => {
+  const [previewUrl, setPreviewUrl] = useState('');
+
+  useEffect(() => {
+    if (!proofFile) {
+      setPreviewUrl('');
+      return;
+    }
+    const url = URL.createObjectURL(proofFile);
+    setPreviewUrl(url);
+    return () => URL.revokeObjectURL(url);
+  }, [proofFile]);
+
   return (
     <div className={styles.layout}>
       <div className={styles.mainColumn}>
@@ -98,9 +132,62 @@ export const PaymentStep = ({
                   </p>
                 )}
               </div>
-              <p className={styles.inlineMessage}>
-                <IconShieldCheck /> Setelah bayar, tekan “Sudah Bayar” untuk validasi admin.
-              </p>
+              {featureSprint2 && (
+                <>
+                  <p className={styles.inlineMessage}>
+                    <IconShieldCheck /> Unggah bukti transfer agar pembayaran dapat diperiksa admin.
+                  </p>
+                  <div className={styles.proofUpload}>
+                    <label className={styles.proofField} htmlFor="payment-proof-file">
+                      Bukti pembayaran <span aria-hidden="true">*</span>
+                    </label>
+                    <input
+                      id="payment-proof-file"
+                      className={styles.proofInput}
+                      type="file"
+                      accept="image/jpeg,image/png"
+                      required
+                      disabled={uploadingProof || proofUploaded}
+                      onChange={(event) => onProofFileChange(event.currentTarget.files?.[0] ?? null)}
+                    />
+                    <small className={styles.proofHint}>JPG atau PNG, maksimal 5 MB.</small>
+                    {previewUrl && (
+                      <div className={styles.proofPreview}>
+                        <Image src={previewUrl} alt="Pratinjau bukti pembayaran" width={240} height={180} unoptimized />
+                        <span>{proofFile?.name}</span>
+                      </div>
+                    )}
+                    {uploadingProof && (
+                      <div
+                        className={styles.uploadProgress}
+                        role="progressbar"
+                        aria-label="Progres unggah bukti pembayaran"
+                        aria-valuemin={0}
+                        aria-valuemax={100}
+                        aria-valuenow={uploadProgress}
+                      >
+                        <span style={{ width: `${uploadProgress}%` }} />
+                        <small>Mengunggah… {uploadProgress}%</small>
+                      </div>
+                    )}
+                    {!proofUploaded && (
+                      <button
+                        className={styles.uploadButton}
+                        type="button"
+                        disabled={!proofFile || uploadingProof}
+                        onClick={onUploadProof}
+                      >
+                        <IconUpload /> {uploadingProof ? 'Mengunggah bukti…' : 'Unggah Bukti Pembayaran'}
+                      </button>
+                    )}
+                    {proofMessage && (
+                      <p className={styles.proofMessage} role={proofUploaded ? 'status' : 'alert'}>
+                        {proofMessage}
+                      </p>
+                    )}
+                  </div>
+                </>
+              )}
             </>
           )}
         </Box>
@@ -142,14 +229,14 @@ export const PaymentStep = ({
             <strong>{formatPrice(total)}</strong>
           </div>
           {!paymentReported && (
-            <button className={styles.payButton} type="button" disabled={reportingPayment} onClick={onReportPaid}>
-              {reportingPayment ? 'Mengirim konfirmasi…' : 'Sudah Bayar'}
+            <button
+              className={styles.payButton}
+              type="button"
+              disabled={reportingPayment || (featureSprint2 && !proofUploaded)}
+              onClick={onReportPaid}
+            >
+              {reportingPayment ? 'Membuka status pesanan…' : 'Sudah Bayar'}
             </button>
-          )}
-          {reportMessage && (
-            <p className={styles.inlineMessage} role={paymentReported ? 'status' : 'alert'}>
-              {reportMessage}
-            </p>
           )}
           <p className={styles.manualReview}>Pesanan diproses setelah admin memvalidasi pembayaran.</p>
         </Box>

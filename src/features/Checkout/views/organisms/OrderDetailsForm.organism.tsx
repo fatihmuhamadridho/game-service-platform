@@ -20,8 +20,8 @@ export const OrderDetailsForm = ({ errors, onChange }: Props) => {
         <label className={`${styles.phoneField} ${errors.includes('phone') ? styles.invalid : ''}`}>
           No. WhatsApp
           <div className={styles.phone}>
-            <span>
-              +62 <span>⌄</span>
+            <span className={styles.countryCode} aria-label="Kode negara Indonesia">
+              +62
             </span>
             <input
               name="phone"

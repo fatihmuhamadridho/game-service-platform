@@ -1,8 +1,15 @@
 import { NextResponse } from 'next/server';
 import { enforceAuthRateLimit } from '@backend/auth/auth-rate-limit';
 import { isPasswordRecoveryConfigured, requestPasswordReset } from '@backend/auth/password-recovery.service';
+import { FEATURE_PASSWORD_RECOVERY } from '@configs/base.config';
 
 export async function POST(request: Request) {
+  if (!FEATURE_PASSWORD_RECOVERY)
+    return NextResponse.json(
+      { status: { code: 'AUTT02004', message: 'Pemulihan password sedang dinonaktifkan.' }, data: null },
+      { status: 404, headers: { 'Cache-Control': 'no-store' } }
+    );
+
   const ipLimit = await enforceAuthRateLimit(request, 'recovery');
   if (ipLimit) return ipLimit;
 

@@ -1,5 +1,6 @@
 import { IconArrowRight, IconDiamond } from '@tabler/icons-react';
-import { Box, Button } from 'rangkaui';
+import Link from 'next/link';
+import { Box } from 'rangkaui';
 import styles from './PromoBanner.module.css';
 
 export const PromoBanner = () => (
@@ -11,12 +12,10 @@ export const PromoBanner = () => (
       <h2>Butuh Top Up Cepat?</h2>
       <p>Proses otomatis, masuk dalam hitungan detik!</p>
     </div>
-    <Button
-      className={styles.button}
-      onClick={() => document.getElementById('game')?.scrollIntoView({ behavior: 'smooth' })}
-    >
-      Top Up Sekarang <IconArrowRight />
-    </Button>
+    <Link className={styles.button} href="/order">
+      <span>Top Up Sekarang</span>
+      <IconArrowRight aria-hidden="true" />
+    </Link>
     <span className={styles.spark}>✦</span>
   </Box>
 );

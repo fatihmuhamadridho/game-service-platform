@@ -39,6 +39,10 @@
 .art:after {
   background: linear-gradient(0deg, #0a111bc7, transparent 60%);
 }
+.withImage:before,
+.withImage:after {
+  display: none;
+}
 .art span {
   position: relative;
   z-index: 1;

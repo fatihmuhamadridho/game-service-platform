@@ -1,6 +1,7 @@
 import { createHash, randomBytes } from 'node:crypto';
 import { ObjectId } from 'mongodb';
 import { db } from '@prisma/db';
+import { FEATURE_SPRINT_2 } from '@configs/base.config';
 
 export type CheckoutPaymentMethod = 'QRIS' | 'BCA_TRANSFER';
 
@@ -67,8 +68,18 @@ export async function reportPaymentAsPaid(input: { paymentId: string; orderNumbe
     throw new CheckoutError('ORDB02004', 'Batas pembayaran pesanan sudah berakhir.', 409);
   }
   if (payment.status !== 'UNPAID') {
-    if (payment.status === 'PENDING_REVIEW') return { paymentStatus: payment.status };
+    if (payment.status === 'PENDING_REVIEW') {
+      if (!FEATURE_SPRINT_2) return { paymentStatus: payment.status };
+      const proofs = await db.orm.payment_proof.where({ payment_id: input.paymentId }).all();
+      if (proofs.length) return { paymentStatus: payment.status };
+    }
     throw new CheckoutError('ORDB02004', 'Status pembayaran pesanan tidak dapat diubah.', 409);
+  }
+  if (FEATURE_SPRINT_2) {
+    const proofs = await db.orm.payment_proof.where({ payment_id: input.paymentId }).all();
+    if (!proofs.some((proof) => proof.uploaded_at > payment.updated_at)) {
+      throw new CheckoutError('ORDB02004', 'Unggah bukti pembayaran terbaru sebelum mengonfirmasi pembayaran.', 409);
+    }
   }
 
   const now = new Date();
@@ -355,7 +366,7 @@ export async function createCheckoutOrder(input: CheckoutInput): Promise<Checkou
         amount: Number(totalMinor) / 100,
         instructions: { ...instructions, reference },
       },
-      nextAction: 'UPLOAD_PAYMENT_PROOF',
+      nextAction: FEATURE_SPRINT_2 ? 'UPLOAD_PAYMENT_PROOF' : 'REPORT_PAYMENT',
       idempotentReplay: false,
     };
     await db.orm.checkout_idempotency.where({ _id: idempotency.recordId }).update({ response_json: response });

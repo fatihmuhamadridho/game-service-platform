@@ -14,6 +14,7 @@ import {
 } from '@tabler/icons-react';
 import { Header } from '@common-ui/organisms/Header/Header';
 import { Footer } from '@common-ui/organisms/Footer/Footer';
+import { FEATURE_SPRINT_2 } from '@configs/base.config';
 import styles from './OrderTracking.module.css';
 
 export const OrderTrackingPage = ({
@@ -78,7 +79,7 @@ export const OrderTrackingPage = ({
           <h1>Cek Pesanan</h1>
           <p>Pantau status pesanan layanan game kamu dengan mudah.</p>
         </section>
-        <section className={styles.lookupLayout}>
+        <section className={`${styles.lookupLayout} ${!FEATURE_SPRINT_2 ? styles.lookupLayoutWide : ''}`}>
           <Box className={styles.lookupCard} bordered rounded>
             <div className={styles.cardHeading}>
               <span>
@@ -126,13 +127,15 @@ export const OrderTrackingPage = ({
               <IconShieldCheck /> Data pesanan kamu hanya digunakan untuk verifikasi.
             </p>
           </Box>
-          <aside className={styles.helpCard}>
-            <h2>Butuh bantuan?</h2>
-            <p>Pastikan nomor pesanan dan nomor WhatsApp sesuai dengan detail pesanan kamu.</p>
-            <Link href="/bantuan">
-              <IconHeadset /> Hubungi Bantuan <IconArrowRight />
-            </Link>
-          </aside>
+          {FEATURE_SPRINT_2 && (
+            <aside className={styles.helpCard}>
+              <h2>Butuh bantuan?</h2>
+              <p>Pastikan nomor pesanan dan nomor WhatsApp sesuai dengan detail pesanan kamu.</p>
+              <Link href="/bantuan">
+                <IconHeadset /> Hubungi Bantuan <IconArrowRight />
+              </Link>
+            </aside>
+          )}
         </section>
         <section className={styles.steps}>
           <h2>Bagaimana cara cek pesanan?</h2>

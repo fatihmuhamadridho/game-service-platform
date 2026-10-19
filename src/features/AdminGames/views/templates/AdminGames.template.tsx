@@ -3,8 +3,10 @@
 import { useState, type ChangeEvent, type FormEvent } from 'react';
 import { Box } from 'rangkaui';
 import { IconDeviceGamepad2, IconEdit, IconPlus, IconSearch, IconTrash, IconX } from '@tabler/icons-react';
+import { getGameArtworkPath } from '@utils/game-artwork';
 import { AdminHeader } from '@common-ui/organisms/AdminDashboard/AdminHeader';
 import { AdminSidebar } from '@common-ui/organisms/AdminDashboard/AdminSidebar';
+import { GameArtworkImage } from '@common-ui/atoms/GameArtworkImage/GameArtworkImage.atom';
 import type {
   AdminGameForm,
   AdminGameFormMode,
@@ -59,6 +61,7 @@ export const AdminGamesTemplate = ({
   saving,
 }: Props) => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const formArtwork = getGameArtworkPath(form.artworkKey || form.slug);
   const updateField = <K extends keyof AdminGameForm>(field: K, value: AdminGameForm[K]) =>
     onFormChange((current) => ({ ...current, [field]: value }));
   const handleNameChange = (value: string) =>
@@ -171,8 +174,12 @@ export const AdminGamesTemplate = ({
                   <tr key={game.id}>
                     <td>
                       <span className={styles.gameName}>
-                        <i>
-                          <IconDeviceGamepad2 />
+                        <i className={styles.gameThumbnail}>
+                          {getGameArtworkPath(game.artworkKey) ? (
+                            <GameArtworkImage src={getGameArtworkPath(game.artworkKey)!} sizes="30px" />
+                          ) : (
+                            <IconDeviceGamepad2 />
+                          )}
                         </i>
                         <b>{game.name}</b>
                       </span>
@@ -274,13 +281,17 @@ export const AdminGamesTemplate = ({
                 />
               </label>
               <label>
-                Artwork key
+                Artwork key atau path lokal
                 <input
                   maxLength={160}
                   value={form.artworkKey ?? ''}
                   onChange={(event: ChangeEvent<HTMLInputElement>) => updateField('artworkKey', event.target.value)}
-                  placeholder="mobile-legends"
+                  placeholder="ml atau /images/games/mobile-legends.webp"
                 />
+                <small>Path lokal harus berada di public/images/games/.</small>
+                <div className={styles.artworkPreview} aria-label={`Pratinjau artwork ${form.name || 'game'}`}>
+                  {formArtwork ? <GameArtworkImage src={formArtwork} sizes="180px" /> : <IconDeviceGamepad2 />}
+                </div>
               </label>
               <label>
                 Urutan tampil

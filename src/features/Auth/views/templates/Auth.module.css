@@ -1229,3 +1229,171 @@
     animation-duration: 0.01ms !important;
   }
 }
+
+.intro {
+  grid-column: 1;
+  grid-row: 1;
+}
+.card {
+  grid-column: 2;
+  grid-row: 1;
+}
+.artwork {
+  grid-column: 3;
+  grid-row: 1;
+  align-self: end;
+  height: 600px;
+  min-width: 0;
+  pointer-events: none;
+}
+.heroImage {
+  object-fit: contain;
+  object-position: center bottom;
+}
+
+@media (min-width: 1051px) {
+  .authLayout {
+    width: min(1280px, calc(100% - 80px));
+    min-height: calc(100svh - 110px);
+    grid-template-columns: minmax(260px, 1fr) 440px minmax(220px, 0.9fr);
+    gap: 32px;
+    padding: 56px 0;
+  }
+
+  .intro {
+    align-self: center;
+  }
+
+  .intro h1 {
+    font-size: clamp(38px, 3vw, 46px);
+    line-height: 1.12;
+  }
+
+  .intro > p {
+    max-width: 350px;
+    line-height: 1.7;
+  }
+
+  .benefits {
+    margin-top: 32px;
+    gap: 20px;
+  }
+
+  .card,
+  .registerCard {
+    padding: 28px;
+  }
+
+  .cardHeading,
+  .registerCard .cardHeading {
+    margin-bottom: 22px;
+  }
+
+  .cardHeading h2 {
+    font-size: 22px;
+    font-weight: 750;
+  }
+
+  .cardHeading p {
+    font-size: 12px;
+    line-height: 1.6;
+  }
+
+  .field,
+  .registerCard .field {
+    font-size: 12px;
+    gap: 7px;
+    margin-bottom: 14px;
+  }
+
+  .inputWrap,
+  .registerCard .inputWrap {
+    height: 44px;
+    padding: 0 12px;
+  }
+
+  .inputWrap input {
+    font-size: 12px;
+  }
+
+  .submit {
+    height: 46px;
+    font-size: 13px;
+  }
+
+  .terms,
+  .forgot,
+  .divider,
+  .switchMode {
+    font-size: 11px;
+  }
+
+  .switchMode a {
+    color: #31aaff;
+  }
+
+  .artwork {
+    align-self: center;
+    height: 580px;
+  }
+
+  .authLayout::before,
+  .authLayout::after {
+    display: none;
+  }
+}
+
+@media (max-width: 1050px) {
+  .authLayout {
+    grid-template-columns: minmax(230px, 1fr) minmax(300px, 390px);
+  }
+  .artwork {
+    position: absolute;
+    right: 33%;
+    bottom: 0;
+    width: 280px;
+    height: 390px;
+    opacity: 0.22;
+  }
+  .card {
+    grid-column: 2;
+  }
+}
+
+@media (max-width: 720px) {
+  .authLayout {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .intro {
+    min-height: 190px;
+  }
+  .intro h1,
+  .intro > p {
+    max-width: 62%;
+  }
+  .intro h1 {
+    font-size: clamp(25px, 6.5vw, 31px);
+  }
+  .eyebrow {
+    display: none;
+  }
+  .artwork {
+    right: -12px;
+    top: 8px;
+    bottom: auto;
+    width: 170px;
+    height: 190px;
+    opacity: 0.9;
+  }
+  .card {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 360px) {
+  .artwork {
+    right: -8px;
+  }
+}

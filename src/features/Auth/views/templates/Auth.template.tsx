@@ -1,8 +1,10 @@
+import Image from 'next/image';
 import type { ReactNode } from 'react';
-import { IconCheck, IconRosetteDiscountCheck, IconShieldCheck, IconSparkles, IconUser } from '@tabler/icons-react';
+import { IconRosetteDiscountCheck, IconShieldCheck, IconSparkles, IconUser } from '@tabler/icons-react';
 import { Header } from '@common-ui/organisms/Header/Header';
 import { Footer } from '@common-ui/organisms/Footer/Footer';
 import { AuthSocial } from '../molecules/AuthSocial.molecule';
+import { FEATURE_GOOGLE_AUTH, FEATURE_REGISTER, FEATURE_SPRINT_2 } from '@configs/base.config';
 import styles from './Auth.module.css';
 
 type Props = { mode: 'login' | 'register' | 'recovery' | 'reset'; children: ReactNode };
@@ -83,41 +85,14 @@ export function AuthTemplate({ mode, children }: Props) {
           </ul>
         </div>
         <div className={styles.artwork} aria-hidden="true">
-          <div className={styles.artGlow} />
-          <div className={`${styles.floatingTile} ${styles.tileCrown}`}>
-            <IconRosetteDiscountCheck />
-          </div>
-          <div className={`${styles.floatingTile} ${styles.tileGem}`}>
-            <IconSparkles />
-          </div>
-          <div className={styles.gamer}>
-            <div className={styles.headphones}>
-              <span />
-            </div>
-            <div className={styles.hair}>
-              <span />
-              <i />
-            </div>
-            <div className={styles.face}>
-              <i className={styles.eyeLeft} />
-              <i className={styles.eyeRight} />
-              <i className={styles.cheekLeft} />
-              <i className={styles.cheekRight} />
-              <i className={styles.smile} />
-            </div>
-            <div className={styles.neck} />
-            <div className={styles.hoodie}>
-              <span>J</span>
-            </div>
-            <div className={styles.controller}>
-              <i />
-              <i />
-              <b>✦</b>
-            </div>
-          </div>
-          <div className={styles.floatLabel}>
-            <IconCheck /> Joki terpercaya
-          </div>
+          <Image
+            src="/images/hero-login.png"
+            alt=""
+            fill
+            sizes="(max-width: 720px) 180px, (max-width: 1050px) 280px, 440px"
+            priority
+            className={styles.heroImage}
+          />
         </div>
         <section
           className={`${styles.card} ${isRegister ? styles.registerCard : ''}`}
@@ -137,7 +112,7 @@ export function AuthTemplate({ mode, children }: Props) {
             </p>
           </div>
           {children}
-          {!isAccountAction && (
+          {!isAccountAction && (FEATURE_GOOGLE_AUTH || FEATURE_SPRINT_2) && (
             <>
               <div className={styles.divider}>
                 <span />
@@ -147,12 +122,14 @@ export function AuthTemplate({ mode, children }: Props) {
               <AuthSocial verb={isRegister ? 'Daftar' : 'Masuk'} />
             </>
           )}
-          <p className={styles.switchMode}>
-            {isRegister ? 'Sudah punya akun?' : isAccountAction ? 'Ingat password?' : 'Belum punya akun?'}{' '}
-            <a href={isRegister || isAccountAction ? '/login' : '/register'}>
-              {isRegister || isAccountAction ? 'Masuk sekarang' : 'Daftar sekarang'}
-            </a>
-          </p>
+          {(isRegister || isAccountAction || FEATURE_REGISTER) && (
+            <p className={styles.switchMode}>
+              {isRegister ? 'Sudah punya akun?' : isAccountAction ? 'Ingat password?' : 'Belum punya akun?'}{' '}
+              <a href={isRegister || isAccountAction ? '/login' : '/register'}>
+                {isRegister || isAccountAction ? 'Masuk sekarang' : 'Daftar sekarang'}
+              </a>
+            </p>
+          )}
         </section>
       </section>
       <Footer />

@@ -3,8 +3,15 @@ import { setCustomerSession } from '@backend/auth/customer-auth';
 import { registerCustomer, toAuthenticationServiceError } from '@backend/auth/authentication.service';
 import { createRefreshSession, setRefreshCookie } from '@backend/auth/refresh-session';
 import { enforceAuthRateLimit } from '@backend/auth/auth-rate-limit';
+import { FEATURE_REGISTER } from '@configs/base.config';
 
 export async function POST(request: Request) {
+  if (!FEATURE_REGISTER)
+    return NextResponse.json(
+      { status: { code: 'AUTT02004', message: 'Pendaftaran akun sedang dinonaktifkan.' }, data: null },
+      { status: 404, headers: { 'Cache-Control': 'no-store' } }
+    );
+
   const ipLimit = await enforceAuthRateLimit(request, 'register');
   if (ipLimit) return ipLimit;
   let body: Record<string, unknown>;

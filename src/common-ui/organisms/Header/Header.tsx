@@ -14,7 +14,7 @@ import {
   IconX,
 } from '@tabler/icons-react';
 import styles from './Header.module.css';
-import { FEATURE_SPRINT_2 } from '@configs/base.config';
+import { FEATURE_REGISTER, FEATURE_SPRINT_2 } from '@configs/base.config';
 
 type AccountType = 'ADMIN' | 'CUSTOMER';
 type HeaderAccount = {
@@ -233,9 +233,11 @@ export const Header = ({
                   <a className={styles.login} href="/login">
                     Masuk
                   </a>
-                  <a className={styles.register} href="/register">
-                    Daftar
-                  </a>
+                  {FEATURE_REGISTER && (
+                    <a className={styles.register} href="/register">
+                      Daftar
+                    </a>
+                  )}
                 </>
               ) : null}
               {FEATURE_SPRINT_2 && showMobileSearch && (
@@ -290,9 +292,11 @@ export const Header = ({
                 <a className={styles.drawerLogin} href="/login" onClick={() => setMenuOpen(false)}>
                   Masuk
                 </a>
-                <a className={styles.drawerRegister} href="/register" onClick={() => setMenuOpen(false)}>
-                  Daftar
-                </a>
+                {FEATURE_REGISTER && (
+                  <a className={styles.drawerRegister} href="/register" onClick={() => setMenuOpen(false)}>
+                    Daftar
+                  </a>
+                )}
               </div>
             )}
           </nav>

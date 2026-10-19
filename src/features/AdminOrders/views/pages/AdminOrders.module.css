@@ -5,7 +5,7 @@
   --line: #20344a;
   display: flex;
   flex-direction: column;
-  overflow-x: hidden;
+  overflow-x: clip;
   background: #07121e;
   color: #eff5fc;
   font-family: Arial, Helvetica, sans-serif;
@@ -470,6 +470,31 @@
 .statusSelect textarea {
   min-height: 72px;
   resize: vertical;
+}
+
+.proofLink {
+  max-width: min(100%, 480px);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: #8dcaff;
+  font-size: 10px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.proofLink:hover span {
+  text-decoration: underline;
+}
+
+.proofImage {
+  width: 100%;
+  height: auto;
+  max-height: 320px;
+  object-fit: contain;
+  border: 1px solid #2a4058;
+  border-radius: 8px;
+  background: #0a1724;
 }
 
 .statusSelect option {

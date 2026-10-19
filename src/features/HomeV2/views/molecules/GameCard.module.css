@@ -28,6 +28,9 @@
   place-items: center;
   background: radial-gradient(circle at 55% 32%, #9cb7dc, #344963 42%, #111d2b);
 }
+.withImage {
+  background: #101a28;
+}
 .art > span {
   z-index: 2;
   font-size: 48px;

@@ -1,4 +1,5 @@
 import type { AdminGameInput } from './admin-game.service';
+import { isValidGameArtworkReference } from '@utils/game-artwork';
 
 const keys = new Set(['name', 'slug', 'serviceSummary', 'artworkKey', 'isActive', 'isPopular', 'sortOrder']);
 
@@ -29,9 +30,7 @@ export function parseAdminGameInput(value: unknown, partial = false): Partial<Ad
   if (
     body.artworkKey !== undefined &&
     body.artworkKey !== null &&
-    (typeof body.artworkKey !== 'string' ||
-      body.artworkKey.trim().length > 160 ||
-      /^https?:\/\//i.test(body.artworkKey))
+    (typeof body.artworkKey !== 'string' || !isValidGameArtworkReference(body.artworkKey.trim()))
   )
     return null;
   if (body.isActive !== undefined && typeof body.isActive !== 'boolean') return null;

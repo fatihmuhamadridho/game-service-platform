@@ -3,7 +3,7 @@
   position: relative;
   --line: #20344a;
 
-  overflow-x: hidden;
+  overflow-x: clip;
   background: #07121e;
   color: #eff5fc;
   font-family: Arial, Helvetica, sans-serif;

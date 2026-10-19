@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import { RegisterPage } from '@features/Auth/views/pages/Register.page';
+import { notFound } from 'next/navigation';
+import { FEATURE_REGISTER } from '@configs/base.config';
 
 export const metadata: Metadata = {
   title: 'Daftar Akun | JokiHub',
@@ -7,5 +9,7 @@ export const metadata: Metadata = {
 };
 
 export default function RegisterRoute() {
+  if (!FEATURE_REGISTER) notFound();
+
   return <RegisterPage />;
 }

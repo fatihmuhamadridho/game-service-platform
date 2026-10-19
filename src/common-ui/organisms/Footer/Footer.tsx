@@ -1,5 +1,6 @@
 import { IconBrandDiscord, IconBrandInstagram, IconBrandTiktok, IconBrandYoutube } from '@tabler/icons-react';
 import { BrandLogo } from '../Header/BrandLogo';
+import { FEATURE_SPRINT_2 } from '@configs/base.config';
 import styles from './Footer.module.css';
 
 type Props = { variant?: 'full' | 'compact' };
@@ -44,7 +45,7 @@ export const Footer = ({ variant = 'full' }: Props) =>
           <a href="/">Beranda</a>
           <a href="/games">Layanan</a>
           <a href="/cek-pesanan">Cek Pesanan</a>
-          <a href="/bantuan">Bantuan</a>
+          {FEATURE_SPRINT_2 && <a href="/bantuan">Bantuan</a>}
           <a href="#tentang">Tentang Kami</a>
         </div>
         <div>
@@ -55,13 +56,15 @@ export const Footer = ({ variant = 'full' }: Props) =>
           <a href="/games">Pulsa &amp; Paket Data</a>
           <a href="/games">E-Wallet</a>
         </div>
-        <div>
-          <h3>Bantuan</h3>
-          <a href="#bantuan">Pusat Bantuan</a>
-          <a href="#syarat">Syarat &amp; Ketentuan</a>
-          <a href="#privasi">Kebijakan Privasi</a>
-          <a href="/bantuan">Hubungi Kami</a>
-        </div>
+        {FEATURE_SPRINT_2 && (
+          <div>
+            <h3>Bantuan</h3>
+            <a href="#bantuan">Pusat Bantuan</a>
+            <a href="#syarat">Syarat &amp; Ketentuan</a>
+            <a href="#privasi">Kebijakan Privasi</a>
+            <a href="/bantuan">Hubungi Kami</a>
+          </div>
+        )}
         <div>
           <h3>Kontak Kami</h3>
           <a href="mailto:cs@jokihub.id">✉ &nbsp;cs@jokihub.id</a>

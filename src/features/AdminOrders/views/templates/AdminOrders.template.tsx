@@ -1,8 +1,10 @@
 'use client';
 
 import { useState, type ChangeEvent } from 'react';
+import Image from 'next/image';
 import { Box } from 'rangkaui';
 import { IconEye, IconFileText, IconSearch, IconX } from '@tabler/icons-react';
+import { FEATURE_SPRINT_2 } from '@configs/base.config';
 import { AdminHeader } from '@common-ui/organisms/AdminDashboard/AdminHeader';
 import { AdminSidebar } from '@common-ui/organisms/AdminDashboard/AdminSidebar';
 import type { AdminOrderStatus, AdminOrderStatusFilter, AdminOrderView } from '../interfaces/admin-order.interface';
@@ -267,28 +269,38 @@ export const AdminOrdersTemplate = ({
             <div className={styles.statusSelect}>
               Status Pesanan <b>{detailOrder.status}</b>
             </div>
-            <div className={styles.statusSelect}>
-              Bukti pembayaran
-              {detailOrder.proofs?.length ? (
-                detailOrder.proofs.map((proof) => (
-                  <p key={proof.id}>
-                    {proof.viewUrl ? (
-                      <a href={proof.viewUrl} target="_blank" rel="noreferrer">
-                        Lihat bukti
-                      </a>
-                    ) : (
-                      'File bukti tidak tersedia'
-                    )}
-                    {' · '}
-                    {new Date(proof.uploadedAt).toLocaleString('id-ID')}
-                    {' · '}
-                    {Math.ceil(proof.fileSizeBytes / 1024)} KB
-                  </p>
-                ))
-              ) : (
-                <b>Validasi dilakukan manual; pelanggan tidak mengunggah bukti.</b>
-              )}
-            </div>
+            {FEATURE_SPRINT_2 && (
+              <div className={styles.statusSelect}>
+                Bukti pembayaran
+                {detailOrder.proofs?.length ? (
+                  detailOrder.proofs.map((proof) => (
+                    <p key={proof.id}>
+                      {proof.viewUrl ? (
+                        <a className={styles.proofLink} href={proof.viewUrl} target="_blank" rel="noreferrer">
+                          <Image
+                            className={styles.proofImage}
+                            src={proof.viewUrl}
+                            alt={`Bukti pembayaran ${detailOrder.id}`}
+                            width={480}
+                            height={320}
+                            unoptimized
+                          />
+                          <span>Buka gambar ukuran penuh</span>
+                        </a>
+                      ) : (
+                        'File bukti tidak tersedia'
+                      )}
+                      {' · '}
+                      {new Date(proof.uploadedAt).toLocaleString('id-ID')}
+                      {' · '}
+                      {Math.ceil(proof.fileSizeBytes / 1024)} KB
+                    </p>
+                  ))
+                ) : (
+                  <b>Validasi dilakukan manual; pelanggan tidak mengunggah bukti.</b>
+                )}
+              </div>
+            )}
             {detailOrder.paymentStatus === 'Menunggu Validasi' && detailOrder.paymentId && (
               <div className={styles.statusSelect}>
                 <label htmlFor="payment-review-note">Catatan validasi (opsional)</label>

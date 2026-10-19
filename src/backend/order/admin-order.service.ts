@@ -1,7 +1,6 @@
 import { ObjectId } from 'mongodb';
 import { randomBytes } from 'node:crypto';
 import { db } from '@prisma/db';
-import { createPrivateObjectViewUrl } from './private-object-storage.service';
 
 export class AdminOrderError extends Error {
   constructor(
@@ -109,26 +108,16 @@ export async function getAdminOrder(id: string) {
   }));
   const proofRows = await db.orm.payment_proof.all();
   const paymentIds = new Set(order.payments.map((payment) => String(payment._id)));
-  const proofs = await Promise.all(
-    proofRows
-      .filter((proof) => paymentIds.has(String(proof.payment_id)))
-      .map(async (proof) => {
-        let viewUrl: string | null = null;
-        try {
-          viewUrl = await createPrivateObjectViewUrl(proof.object_key);
-        } catch {
-          /* Storage may be unavailable. */
-        }
-        return {
-          id: String(proof._id),
-          paymentId: String(proof.payment_id),
-          mimeType: proof.mime_type,
-          fileSizeBytes: proof.file_size_bytes,
-          uploadedAt: proof.uploaded_at.toISOString(),
-          viewUrl,
-        };
-      })
-  );
+  const proofs = proofRows
+    .filter((proof) => paymentIds.has(String(proof.payment_id)))
+    .map((proof) => ({
+      id: String(proof._id),
+      paymentId: String(proof.payment_id),
+      mimeType: proof.mime_type,
+      fileSizeBytes: proof.file_size_bytes,
+      uploadedAt: proof.uploaded_at.toISOString(),
+      viewUrl: `/api/admin/orders/v1/proofs/${String(proof._id)}/image`,
+    }));
   return {
     ...orderView(order),
     customerWhatsapp: order.customer_whatsapp,

@@ -72,6 +72,14 @@
   gap: 14px;
   align-items: start;
 }
+.lookupLayoutWide {
+  max-width: 820px;
+  grid-template-columns: minmax(0, 1fr);
+}
+.lookupLayoutWide .lookupCard {
+  width: 100%;
+  justify-self: center;
+}
 .lookupCard,
 .helpCard {
   border: 1px solid #29394d !important;
@@ -296,6 +304,12 @@
   .lookupLayout {
     grid-template-columns: 1fr;
     gap: 10px;
+  }
+  .lookupLayoutWide {
+    max-width: 100%;
+  }
+  .lookupLayoutWide .lookupCard {
+    width: 100%;
   }
   .lookupCard,
   .helpCard {

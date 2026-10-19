@@ -1,4 +1,5 @@
 import { IconArrowRight, IconBolt, IconDiamond, IconShieldCheck } from '@tabler/icons-react';
+import Image from 'next/image';
 import { Button } from 'rangkaui';
 import styles from './HeroSection.module.css';
 
@@ -57,41 +58,15 @@ export const HeroSection = () => (
         </Button>
       </div>
     </div>
-    <div className={styles.visual} aria-label="Ilustrasi gamer" role="img">
-      <div className={styles.glow} />
-      <div className={styles.badge}>
-        <IconBolt />
-        <span>
-          <b>TOP UP</b>
-          <small>Instan</small>
-        </span>
-      </div>
-      <div className={styles.badge2}>
-        <IconShieldCheck />
-        <span>
-          <b>Aman</b>
-          <small>Terpercaya</small>
-        </span>
-      </div>
-      <div className={styles.gamer}>
-        <div className={styles.halo} />
-        <div className={styles.headphones} />
-        <div className={styles.head}>
-          <span className={styles.hair} />
-          <i className={styles.eyeLeft} />
-          <i className={styles.eyeRight} />
-          <b className={styles.smile} />
-        </div>
-        <div className={styles.body}>
-          <span className={styles.line} />
-          <span className={styles.controller}>
-            <i />
-            <i />
-            <b />
-          </span>
-        </div>
-      </div>
-      <div className={styles.floor} />
+    <div className={styles.visual}>
+      <Image
+        src="/images/hero.png"
+        alt="Gamer bermain di laptop dengan headset"
+        fill
+        priority
+        sizes="(max-width: 700px) 100vw, 50vw"
+        className={styles.illustration}
+      />
     </div>
   </section>
 );

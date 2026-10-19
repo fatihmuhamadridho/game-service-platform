@@ -42,6 +42,8 @@
   height: 40px !important;
   padding: 0 18px !important;
   display: inline-flex !important;
+  flex: none;
+  white-space: nowrap;
   align-items: center;
   justify-content: center;
   gap: 8px;
@@ -51,9 +53,23 @@
   color: #fff !important;
   font-size: 12px !important;
   font-weight: 700 !important;
+  text-decoration: none;
+  transition:
+    background 160ms ease,
+    transform 160ms ease;
+}
+.button:hover {
+  background: linear-gradient(110deg, #1476ff, #1689ff) !important;
+  transform: translateY(-1px);
 }
 .button svg {
   width: 17px;
+  height: 17px;
+  flex: none;
+}
+.button:focus-visible {
+  outline: 2px solid #8ac8ff;
+  outline-offset: 3px;
 }
 .spark {
   position: absolute;
@@ -94,5 +110,11 @@
   .spark {
     right: 14px;
     top: 11px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button {
+    transition: none;
   }
 }

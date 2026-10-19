@@ -23,14 +23,14 @@
   border-radius: 7px;
   background: linear-gradient(110deg, #172538, #131f2e);
 }
-.phone > span {
+.countryCode {
   min-width: 60px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 4px;
   border-right: 1px solid #2a3b50;
   color: #e3eaf3;
+  font-size: 11px;
 }
 .phone input {
   border: 0;

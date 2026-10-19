@@ -5,6 +5,7 @@ import { IconEye, IconEyeOff, IconLock, IconUser } from '@tabler/icons-react';
 import styles from '../templates/Auth.module.css';
 import { AuthSubmit } from '../atoms/AuthSubmit.atom';
 import { useRouter } from 'next/navigation';
+import { FEATURE_PASSWORD_RECOVERY } from '@configs/base.config';
 
 export function LoginForm() {
   const [busy, setBusy] = useState(false);
@@ -81,9 +82,11 @@ export function LoginForm() {
             </button>
           </span>
         </label>
-        <button type="button" className={styles.forgot} onClick={() => router.push('/forgot-password')}>
-          Lupa password?
-        </button>
+        {FEATURE_PASSWORD_RECOVERY && (
+          <button type="button" className={styles.forgot} onClick={() => router.push('/forgot-password')}>
+            Lupa password?
+          </button>
+        )}
         <AuthSubmit disabled={busy}>{busy ? 'Memeriksa…' : 'Masuk'}</AuthSubmit>
         {notice && (
           <p className={styles.notice} role="status">

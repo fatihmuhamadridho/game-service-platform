@@ -2,7 +2,7 @@
 .page {
   position: relative;
   --line: #20344a;
-  overflow-x: hidden;
+  overflow-x: clip;
   background: #07121e;
   color: #eff5fc;
   font-family: Arial, Helvetica, sans-serif;
@@ -214,6 +214,9 @@
   color: #f1f6fc;
 }
 .gameName i {
+  position: relative;
+  flex: none;
+  overflow: hidden;
   width: 30px;
   height: 30px;
   display: grid;
@@ -226,6 +229,10 @@
 .gameName i svg {
   width: 17px;
   height: 17px;
+}
+.gameThumbnail svg {
+  position: relative;
+  z-index: 1;
 }
 .gameName b {
   font-size: 10px;
@@ -390,6 +397,27 @@
   color: #d8e3f0;
   font-size: 10px;
   font-weight: 600;
+}
+.dialog label > small {
+  color: #8fa5bd;
+  font-size: 9px;
+  font-weight: 400;
+}
+.artworkPreview {
+  position: relative;
+  width: min(100%, 180px);
+  aspect-ratio: 16 / 9;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid #263b52;
+  border-radius: 7px;
+  background: #101a28;
+  color: #69b5ff;
+}
+.artworkPreview svg {
+  width: 26px;
+  height: 26px;
 }
 .dialog input:not([type='checkbox']),
 .dialog select {
