@@ -9,7 +9,8 @@ const initialSettings: AdminSettingsForm = {
   siteDescription: 'Solusi top up game, joki, dan kebutuhan digital.',
   contactEmail: '',
   contactWhatsapp: '',
-  instagramUrl: '',
+  socialLinks: [],
+  businessHours: '',
   maintenanceMode: false,
   allowRegistration: true,
   defaultCurrency: 'IDR',
@@ -28,7 +29,12 @@ export const AdminSettingsPage = () => {
         const payload = await response.json();
         if (!response.ok) throw new Error(payload.status?.message ?? 'Gagal memuat pengaturan.');
         const value = payload.data.settings;
-        setSettings({ ...value, siteDescription: value.siteDescription ?? '', instagramUrl: value.instagramUrl ?? '' });
+        setSettings({
+          ...value,
+          siteDescription: value.siteDescription ?? '',
+          socialLinks: value.socialLinks ?? [],
+          businessHours: value.businessHours ?? '',
+        });
       } catch (cause) {
         setError(cause instanceof Error ? cause.message : 'Gagal memuat pengaturan.');
       } finally {
@@ -46,7 +52,7 @@ export const AdminSettingsPage = () => {
         body: JSON.stringify({
           ...settings,
           siteDescription: settings.siteDescription || null,
-          instagramUrl: settings.instagramUrl || null,
+          businessHours: settings.businessHours || null,
         }),
       });
       const payload = await response.json();
@@ -55,7 +61,8 @@ export const AdminSettingsPage = () => {
       setSettings({
         ...payload.data.settings,
         siteDescription: payload.data.settings.siteDescription ?? '',
-        instagramUrl: payload.data.settings.instagramUrl ?? '',
+        socialLinks: payload.data.settings.socialLinks ?? [],
+        businessHours: payload.data.settings.businessHours ?? '',
       });
       window.setTimeout(() => setSaved(false), 3000);
     } catch (cause) {

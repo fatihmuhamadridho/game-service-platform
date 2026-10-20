@@ -1,13 +1,8 @@
 'use client';
 
-import { useMemo, useState, type FormEvent } from 'react';
+import { useCallback, useEffect, useMemo, useState, type FormEvent } from 'react';
 import type { AdminGameForm, AdminGameStatusFilter, AdminGameView } from '../interfaces/admin-game.interface';
 import { AdminGamesTemplate } from '../templates/AdminGames.template';
-
-type Props = {
-  initialGames: AdminGameView[];
-  loadError?: string;
-};
 
 const emptyForm: AdminGameForm = {
   name: '',
@@ -25,14 +20,48 @@ const slugify = (value: string) =>
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '');
 
-export const AdminGamesClientPage = ({ initialGames, loadError }: Props) => {
+const dateFormatter = new Intl.DateTimeFormat('id-ID', {
+  day: 'numeric',
+  month: 'short',
+  year: 'numeric',
+  timeZone: 'Asia/Jakarta',
+});
+
+export const AdminGamesClientPage = () => {
   const [query, setQuery] = useState('');
-  const [games] = useState(initialGames);
+  const [games, setGames] = useState<AdminGameView[]>([]);
+  const [loadError, setLoadError] = useState('');
+  const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState<AdminGameStatusFilter>('Semua');
   const [formMode, setFormMode] = useState<'create' | 'edit' | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState<AdminGameForm>(emptyForm);
   const [deleteTarget, setDeleteTarget] = useState<AdminGameView | null>(null);
+
+  const loadGames = useCallback(async () => {
+    setLoading(true);
+    setLoadError('');
+    try {
+      const response = await fetch('/api/admin/games/v1/list', { cache: 'no-store' });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.status?.message ?? 'Data game gagal dimuat.');
+      const games = (result.data?.games ?? []) as AdminGameView[];
+      setGames(
+        games.map((game) => ({
+          ...game,
+          updatedAt: dateFormatter.format(new Date(game.updatedAt)),
+        }))
+      );
+    } catch (error) {
+      setLoadError(error instanceof Error ? error.message : 'Data game gagal dimuat.');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    void loadGames();
+  }, [loadGames]);
 
   const filteredGames = useMemo(
     () =>
@@ -93,7 +122,7 @@ export const AdminGamesClientPage = ({ initialGames, loadError }: Props) => {
       const result = await response.json();
       if (!response.ok) throw new Error(result.status?.message ?? 'Perubahan tidak dapat disimpan.');
       setFormMode(null);
-      window.location.reload();
+      await loadGames();
     } catch (error) {
       setActionError(error instanceof Error ? error.message : 'Perubahan tidak dapat disimpan.');
     } finally {
@@ -111,7 +140,7 @@ export const AdminGamesClientPage = ({ initialGames, loadError }: Props) => {
       const result = await response.json();
       if (!response.ok) throw new Error(result.status?.message ?? 'Game tidak dapat dihapus.');
       setDeleteTarget(null);
-      window.location.reload();
+      await loadGames();
     } catch (error) {
       setActionError(error instanceof Error ? error.message : 'Game tidak dapat dihapus.');
     }
@@ -137,6 +166,7 @@ export const AdminGamesClientPage = ({ initialGames, loadError }: Props) => {
       onDeleteSelect={setDeleteTarget}
       onDeleteConfirm={confirmDelete}
       loadError={loadError}
+      loading={loading}
       actionError={actionError}
       saving={saving}
     />

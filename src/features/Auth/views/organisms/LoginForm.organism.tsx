@@ -37,6 +37,7 @@ export function LoginForm() {
       if (!response.ok) throw new Error(result.status?.message ?? 'Email/username atau password salah.');
       const accountType = result.data?.accountType === 'ADMIN' ? 'ADMIN' : 'CUSTOMER';
       window.sessionStorage.setItem('jokihub-session-type', accountType);
+      window.localStorage.setItem('jokihub-session-type', accountType);
       window.dispatchEvent(new CustomEvent('jokihub:session-established', { detail: accountType }));
       router.replace(accountType === 'ADMIN' ? '/admin' : '/');
     } catch {

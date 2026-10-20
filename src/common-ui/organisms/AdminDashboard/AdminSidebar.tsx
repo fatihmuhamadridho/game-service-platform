@@ -106,11 +106,14 @@ const routeFor = (label: string) =>
 
 export const AdminSidebar = ({ open, onClose, activeItem = 'Dashboard' }: Props) => {
   const router = useRouter();
+
   const logout = async () => {
     try {
       const response = await fetch('/api/admin/auth/v1/logout', { method: 'POST' });
       if (response.ok) {
         window.sessionStorage.removeItem('jokihub-session-type');
+        window.localStorage.removeItem('jokihub-session-type');
+        window.dispatchEvent(new Event('jokihub:session-ended'));
         router.replace('/login');
         router.refresh();
       }
@@ -118,6 +121,7 @@ export const AdminSidebar = ({ open, onClose, activeItem = 'Dashboard' }: Props)
       /* Keep session UI available if logout request fails. */
     }
   };
+
   return (
     <>
       <aside className={`${styles.sidebar} ${open ? styles.open : ''}`}>

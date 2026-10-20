@@ -3,7 +3,8 @@ export type AdminSettingsForm = {
   siteDescription: string;
   contactEmail: string;
   contactWhatsapp: string;
-  instagramUrl: string;
+  socialLinks: Array<{ label: string; url: string }>;
+  businessHours: string;
   maintenanceMode: boolean;
   allowRegistration: boolean;
   defaultCurrency: 'IDR';

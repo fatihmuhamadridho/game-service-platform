@@ -26,6 +26,9 @@ type HeaderAccount = {
   canAccessDashboard: boolean;
 };
 
+const hasRefreshCookieHint = (type: AccountType) =>
+  document.cookie.split(';').some((cookie) => cookie.trim() === `jokihub-${type.toLowerCase()}-refresh-present=1`);
+
 type Props = {
   variant?: 'storefront' | 'checkout';
   activePage?: 'home' | 'games';
@@ -69,43 +72,86 @@ export const Header = ({
   useEffect(() => {
     let active = true;
     const loadAccount = async (requestedType?: string | null) => {
-      const savedType = requestedType ?? window.sessionStorage.getItem('jokihub-session-type');
-      const accountType = savedType === 'ADMIN' || savedType === 'CUSTOMER' ? savedType : null;
+      const savedType =
+        requestedType ??
+        window.sessionStorage.getItem('jokihub-session-type') ??
+        window.localStorage.getItem('jokihub-session-type');
+      const savedAccountType = savedType === 'ADMIN' || savedType === 'CUSTOMER' ? savedType : null;
+      const accountType =
+        savedAccountType ??
+        (hasRefreshCookieHint('ADMIN') ? 'ADMIN' : hasRefreshCookieHint('CUSTOMER') ? 'CUSTOMER' : null);
+      if (!accountType || !hasRefreshCookieHint(accountType)) {
+        window.sessionStorage.removeItem('jokihub-session-type');
+        window.localStorage.removeItem('jokihub-session-type');
+        setAccount(null);
+        return;
+      }
       const sessionUrl = () =>
-        accountType ? `/api/auth/v1/session?accountType=${accountType}` : '/api/auth/v1/session';
+        `/api/auth/v1/session?accountType=${accountType}`;
       try {
         let response = await fetch(sessionUrl(), { cache: 'no-store' });
-        if (!response.ok && response.status === 401 && accountType) {
+        if (!response.ok && response.status === 401) {
+          const refreshType = accountType ?? response.headers.get('X-Account-Type');
+          if (refreshType !== 'ADMIN' && refreshType !== 'CUSTOMER') {
+            if (active) setAccount(null);
+            return;
+          }
           const refreshUrl =
-            accountType === 'ADMIN' ? '/api/admin/auth/v1/refresh-token' : '/api/auth/v1/refresh-token';
+            refreshType === 'ADMIN' ? '/api/admin/auth/v1/refresh-token' : '/api/auth/v1/refresh-token';
           const refreshed = await fetch(refreshUrl, { method: 'POST', cache: 'no-store' });
-          if (refreshed.ok) response = await fetch(sessionUrl(), { cache: 'no-store' });
+          if (refreshed.ok) response = await fetch(`/api/auth/v1/session?accountType=${refreshType}`, { cache: 'no-store' });
         }
         if (!active) return;
         if (!response.ok) {
           setAccount(null);
+          if (response.status === 401) {
+            window.sessionStorage.removeItem('jokihub-session-type');
+            window.localStorage.removeItem('jokihub-session-type');
+            window.dispatchEvent(new Event('jokihub:session-ended'));
+          }
           return;
         }
         const result = (await response.json()) as { data?: HeaderAccount | null };
-        setAccount(result.data ?? null);
+        const nextAccount = result.data ?? null;
+        setAccount(nextAccount);
+        if (nextAccount?.accountType) {
+          window.sessionStorage.setItem('jokihub-session-type', nextAccount.accountType);
+          window.localStorage.setItem('jokihub-session-type', nextAccount.accountType);
+        }
       } catch {
         if (active) setAccount(null);
       }
     };
+
     const onSessionEstablished = (event: Event) => {
       void loadAccount((event as CustomEvent<AccountType>).detail);
     };
+
     const onSessionEnded = () => {
       setAccount(null);
       setProfileOpen(false);
     };
+
+    const onStorage = (event: StorageEvent) => {
+      if (event.key !== 'jokihub-session-type') return;
+      if (event.newValue === 'ADMIN' || event.newValue === 'CUSTOMER') {
+        window.sessionStorage.setItem('jokihub-session-type', event.newValue);
+        void loadAccount(event.newValue);
+      } else {
+        setAccount(null);
+        setProfileOpen(false);
+        window.sessionStorage.removeItem('jokihub-session-type');
+      }
+    };
     void loadAccount();
     window.addEventListener('jokihub:session-established', onSessionEstablished);
     window.addEventListener('jokihub:session-ended', onSessionEnded);
+    window.addEventListener('storage', onStorage);
     return () => {
       active = false;
       window.removeEventListener('jokihub:session-established', onSessionEstablished);
       window.removeEventListener('jokihub:session-ended', onSessionEnded);
+      window.removeEventListener('storage', onStorage);
     };
   }, []);
 
@@ -134,6 +180,7 @@ export const Header = ({
       const response = await fetch(endpoint, { method: 'POST' });
       if (!response.ok) throw new Error('Logout gagal. Coba lagi.');
       window.sessionStorage.removeItem('jokihub-session-type');
+      window.localStorage.removeItem('jokihub-session-type');
       window.dispatchEvent(new Event('jokihub:session-ended'));
     } catch (error) {
       setLogoutError(error instanceof Error ? error.message : 'Logout gagal. Coba lagi.');

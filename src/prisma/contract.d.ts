@@ -18,7 +18,7 @@ import type {
 } from '@prisma/orm-mongo/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'10ed40812601af3c45651c1f9879ac5162f351e21ef01d809479dd7b0a789856'>;
+  StorageHashBase<'e7d9a038dced8421cccb19973d9f5dfadcbe32242658786c01a214830c597927'>;
 export type ExecutionHash =
   ExecutionHashBase<'e5dae1463334facbbc6d87d072d755c4807c898d3e505acc4be74a184402b96d'>;
 export type ProfileHash =
@@ -278,6 +278,7 @@ export type FieldOutputTypes = {
     readonly PlatformSettings: {
       readonly _id: CodecTypes['mongo/objectId@1']['output'];
       readonly allow_registration: CodecTypes['mongo/bool@1']['output'];
+      readonly business_hours: CodecTypes['mongo/string@1']['output'] | null;
       readonly contact_email: CodecTypes['mongo/string@1']['output'];
       readonly contact_whatsapp: CodecTypes['mongo/string@1']['output'];
       readonly created_at: CodecTypes['mongo/date@1']['output'];
@@ -287,6 +288,7 @@ export type FieldOutputTypes = {
       readonly singleton_key: CodecTypes['mongo/string@1']['output'];
       readonly site_description: CodecTypes['mongo/string@1']['output'] | null;
       readonly site_name: CodecTypes['mongo/string@1']['output'];
+      readonly social_links: CodecTypes['mongo/json@1']['output'] | null;
       readonly timezone: CodecTypes['mongo/string@1']['output'];
       readonly updated_at: CodecTypes['mongo/date@1']['output'];
       readonly updated_by: CodecTypes['mongo/objectId@1']['output'] | null;
@@ -594,6 +596,7 @@ export type FieldInputTypes = {
     readonly PlatformSettings: {
       readonly _id: CodecTypes['mongo/objectId@1']['input'];
       readonly allow_registration: CodecTypes['mongo/bool@1']['input'];
+      readonly business_hours: CodecTypes['mongo/string@1']['input'] | null;
       readonly contact_email: CodecTypes['mongo/string@1']['input'];
       readonly contact_whatsapp: CodecTypes['mongo/string@1']['input'];
       readonly created_at: CodecTypes['mongo/date@1']['input'];
@@ -603,6 +606,7 @@ export type FieldInputTypes = {
       readonly singleton_key: CodecTypes['mongo/string@1']['input'];
       readonly site_description: CodecTypes['mongo/string@1']['input'] | null;
       readonly site_name: CodecTypes['mongo/string@1']['input'];
+      readonly social_links: CodecTypes['mongo/json@1']['input'] | null;
       readonly timezone: CodecTypes['mongo/string@1']['input'];
       readonly updated_at: CodecTypes['mongo/date@1']['input'];
       readonly updated_by: CodecTypes['mongo/objectId@1']['input'] | null;
@@ -971,6 +975,7 @@ export namespace Models {
   export type unbound_PlatformSettings = {
     _id: CodecTypes['mongo/objectId@1']['output'];
     allow_registration: CodecTypes['mongo/bool@1']['output'];
+    business_hours: CodecTypes['mongo/string@1']['output'] | null;
     contact_email: CodecTypes['mongo/string@1']['output'];
     contact_whatsapp: CodecTypes['mongo/string@1']['output'];
     created_at: CodecTypes['mongo/date@1']['output'];
@@ -980,6 +985,7 @@ export namespace Models {
     singleton_key: CodecTypes['mongo/string@1']['output'];
     site_description: CodecTypes['mongo/string@1']['output'] | null;
     site_name: CodecTypes['mongo/string@1']['output'];
+    social_links: CodecTypes['mongo/json@1']['output'] | null;
     timezone: CodecTypes['mongo/string@1']['output'];
     updated_at: CodecTypes['mongo/date@1']['output'];
     updated_by: CodecTypes['mongo/objectId@1']['output'] | null;
@@ -2173,6 +2179,7 @@ type ContractBase = Omit<
                   readonly properties: {
                     readonly _id: { readonly bsonType: 'objectId' };
                     readonly allow_registration: { readonly bsonType: 'bool' };
+                    readonly business_hours: { readonly bsonType: readonly ['null', 'string'] };
                     readonly contact_email: { readonly bsonType: 'string' };
                     readonly contact_whatsapp: { readonly bsonType: 'string' };
                     readonly created_at: { readonly bsonType: 'date' };
@@ -2182,6 +2189,18 @@ type ContractBase = Omit<
                     readonly singleton_key: { readonly bsonType: 'string' };
                     readonly site_description: { readonly bsonType: readonly ['null', 'string'] };
                     readonly site_name: { readonly bsonType: 'string' };
+                    readonly social_links: {
+                      readonly bsonType: readonly [
+                        'object',
+                        'array',
+                        'string',
+                        'double',
+                        'int',
+                        'long',
+                        'bool',
+                        'null',
+                      ];
+                    };
                     readonly timezone: { readonly bsonType: 'string' };
                     readonly updated_at: { readonly bsonType: 'date' };
                     readonly updated_by: { readonly bsonType: readonly ['null', 'objectId'] };
@@ -3923,6 +3942,10 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'mongo/bool@1' };
               };
+              readonly business_hours: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'mongo/string@1' };
+              };
               readonly contact_email: {
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'mongo/string@1' };
@@ -3958,6 +3981,10 @@ type ContractBase = Omit<
               readonly site_name: {
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'mongo/string@1' };
+              };
+              readonly social_links: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'mongo/json@1' };
               };
               readonly timezone: {
                 readonly nullable: false;

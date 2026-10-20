@@ -7,12 +7,14 @@ export type SettingsInput = {
   siteDescription: string | null;
   contactEmail: string;
   contactWhatsapp: string;
-  instagramUrl: string | null;
+  socialLinks: SocialLink[];
+  businessHours: string | null;
   maintenanceMode: boolean;
   allowRegistration: boolean;
   defaultCurrency: 'IDR';
   timezone: 'Asia/Jakarta' | 'Asia/Makassar' | 'Asia/Jayapura';
 };
+export type SocialLink = { label: string; url: string };
 export class AdminSettingsError extends Error {
   constructor(
     readonly code: string,
@@ -28,19 +30,45 @@ const defaults: SettingsInput = {
   siteDescription: '',
   contactEmail: '',
   contactWhatsapp: '',
-  instagramUrl: null,
+  socialLinks: [],
+  businessHours: null,
   maintenanceMode: false,
   allowRegistration: true,
   defaultCurrency: 'IDR',
   timezone: 'Asia/Jakarta',
 };
 type SettingsRow = Awaited<ReturnType<typeof db.orm.platform_settings.all>>[number];
+function parseSocialLinks(value: unknown): SocialLink[] {
+  if (!Array.isArray(value)) return [];
+  return value.flatMap((item) => {
+    if (!item || typeof item !== 'object') return [];
+    const link = item as Record<string, unknown>;
+    if (typeof link.label !== 'string' || typeof link.url !== 'string') return [];
+    return [{ label: link.label, url: link.url }];
+  });
+}
+function isSocialLink(value: unknown): value is SocialLink {
+  if (!value || typeof value !== 'object') return false;
+  const link = value as Record<string, unknown>;
+  if (typeof link.label !== 'string' || !link.label.trim() || link.label.trim().length > 40) return false;
+  if (typeof link.url !== 'string' || link.url.length > 255) return false;
+  try {
+    return new URL(link.url).protocol === 'https:';
+  } catch {
+    return false;
+  }
+}
 const serialize = (row: SettingsRow): SettingsInput => ({
   siteName: row.site_name,
   siteDescription: row.site_description ?? '',
   contactEmail: row.contact_email,
   contactWhatsapp: row.contact_whatsapp,
-  instagramUrl: row.instagram_url,
+  socialLinks: parseSocialLinks(row.social_links).length
+    ? parseSocialLinks(row.social_links)
+    : row.instagram_url
+      ? [{ label: 'Instagram', url: row.instagram_url }]
+      : [],
+  businessHours: row.business_hours ?? null,
   maintenanceMode: row.maintenance_mode,
   allowRegistration: row.allow_registration,
   defaultCurrency: row.default_currency as SettingsInput['defaultCurrency'],
@@ -56,6 +84,18 @@ export async function getAdminSettings() {
   };
 }
 
+export async function getPublicSiteSettings() {
+  const { settings } = await getAdminSettings();
+  return {
+    siteName: settings.siteName,
+    siteDescription: settings.siteDescription,
+    contactEmail: settings.contactEmail,
+    contactWhatsapp: settings.contactWhatsapp,
+    socialLinks: settings.socialLinks,
+    businessHours: settings.businessHours,
+  };
+}
+
 export async function updateAdminSettings(input: SettingsInput, request: Request) {
   const now = new Date();
   const current = await db.orm.platform_settings.where({ singleton_key: 'current' }).first();
@@ -66,7 +106,9 @@ export async function updateAdminSettings(input: SettingsInput, request: Request
     site_description: input.siteDescription?.trim() || null,
     contact_email: input.contactEmail.trim().toLowerCase(),
     contact_whatsapp: input.contactWhatsapp.trim(),
-    instagram_url: input.instagramUrl?.trim() || null,
+    instagram_url: input.socialLinks.find((link) => link.label.toLowerCase() === 'instagram')?.url ?? null,
+    social_links: input.socialLinks.map((link) => ({ label: link.label.trim(), url: link.url.trim() })),
+    business_hours: input.businessHours?.trim() || null,
     maintenance_mode: input.maintenanceMode,
     allow_registration: input.allowRegistration,
     default_currency: input.defaultCurrency,
@@ -123,12 +165,14 @@ export function parseSettingsInput(value: unknown): SettingsInput | null {
     (body.siteDescription !== null && typeof body.siteDescription !== 'string') ||
     (typeof body.siteDescription === 'string' && body.siteDescription.length > 500) ||
     typeof body.contactEmail !== 'string' ||
-    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(body.contactEmail) ||
+    (body.contactEmail !== '' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(body.contactEmail)) ||
     typeof body.contactWhatsapp !== 'string' ||
-    !/^\+?[1-9]\d{7,14}$/.test(body.contactWhatsapp.replace(/[\s()-]/g, '')) ||
-    (body.instagramUrl !== null && typeof body.instagramUrl !== 'string') ||
-    (typeof body.instagramUrl === 'string' &&
-      (!/^https:\/\//i.test(body.instagramUrl) || body.instagramUrl.length > 255)) ||
+    (body.contactWhatsapp !== '' && !/^\+?[1-9]\d{7,14}$/.test(body.contactWhatsapp.replace(/[\s()-]/g, ''))) ||
+    (body.businessHours !== null && typeof body.businessHours !== 'string') ||
+    (typeof body.businessHours === 'string' && body.businessHours.length > 160) ||
+    !Array.isArray(body.socialLinks) ||
+    body.socialLinks.length > 12 ||
+    body.socialLinks.some((link) => !isSocialLink(link)) ||
     typeof body.maintenanceMode !== 'boolean' ||
     typeof body.allowRegistration !== 'boolean' ||
     body.defaultCurrency !== 'IDR' ||
@@ -140,5 +184,6 @@ export function parseSettingsInput(value: unknown): SettingsInput | null {
 
 export function toAdminSettingsError(error: unknown) {
   if (error instanceof AdminSettingsError) return error;
+  console.error('[AdminSettings] Unexpected settings storage failure.', error);
   return new AdminSettingsError('SETT03001', 'Pengaturan platform sementara tidak tersedia.', 500);
 }

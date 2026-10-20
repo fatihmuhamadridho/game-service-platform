@@ -2340,6 +2340,13 @@
                   "kind": "scalar"
                 }
               },
+              "business_hours": {
+                "nullable": true,
+                "type": {
+                  "codecId": "mongo/string@1",
+                  "kind": "scalar"
+                }
+              },
               "contact_email": {
                 "nullable": false,
                 "type": {
@@ -2400,6 +2407,13 @@
                 "nullable": false,
                 "type": {
                   "codecId": "mongo/string@1",
+                  "kind": "scalar"
+                }
+              },
+              "social_links": {
+                "nullable": true,
+                "type": {
+                  "codecId": "mongo/json@1",
                   "kind": "scalar"
                 }
               },
@@ -4896,6 +4910,12 @@
                     "allow_registration": {
                       "bsonType": "bool"
                     },
+                    "business_hours": {
+                      "bsonType": [
+                        "null",
+                        "string"
+                      ]
+                    },
                     "contact_email": {
                       "bsonType": "string"
                     },
@@ -4928,6 +4948,18 @@
                     },
                     "site_name": {
                       "bsonType": "string"
+                    },
+                    "social_links": {
+                      "bsonType": [
+                        "object",
+                        "array",
+                        "string",
+                        "double",
+                        "int",
+                        "long",
+                        "bool",
+                        "null"
+                      ]
                     },
                     "timezone": {
                       "bsonType": "string"
@@ -5312,7 +5344,7 @@
         "kind": "mongo-database"
       }
     },
-    "storageHash": "10ed40812601af3c45651c1f9879ac5162f351e21ef01d809479dd7b0a789856"
+    "storageHash": "e7d9a038dced8421cccb19973d9f5dfadcbe32242658786c01a214830c597927"
   },
   "execution": {
     "executionHash": "e5dae1463334facbbc6d87d072d755c4807c898d3e505acc4be74a184402b96d",

@@ -1,15 +1,23 @@
 import { NextResponse } from 'next/server';
-import { setCustomerSession } from '@backend/auth/customer-auth';
-import { rotateRefreshSession, setRefreshCookie } from '@backend/auth/refresh-session';
+import { CUSTOMER_COOKIE, setCustomerSession } from '@backend/auth/customer-auth';
+import { clearRefreshCookie, rotateRefreshSession, setRefreshCookie } from '@backend/auth/refresh-session';
 
 export async function POST(request: Request) {
   try {
     const rotated = await rotateRefreshSession(request, 'CUSTOMER');
     if (!rotated) {
-      return NextResponse.json(
+      const response = NextResponse.json(
         { status: { code: 'AUTB01001', message: 'Sesi tidak tersedia atau sudah berakhir.' }, data: null },
         { status: 401, headers: { 'Cache-Control': 'no-store' } }
       );
+      response.cookies.set(CUSTOMER_COOKIE, '', {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'lax',
+        path: '/',
+        maxAge: 0,
+      });
+      return clearRefreshCookie(response, 'CUSTOMER');
     }
     const response = NextResponse.json(
       { status: { code: 'AUTS00000', message: 'Sesi diperbarui.' }, data: { accountType: 'CUSTOMER', expiresIn: 900 } },

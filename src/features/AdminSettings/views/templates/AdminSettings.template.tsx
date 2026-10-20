@@ -2,7 +2,15 @@
 
 import { useState, type ChangeEvent, type FormEvent } from 'react';
 import { Box } from 'rangkaui';
-import { IconAdjustments, IconDeviceFloppy, IconMail, IconMessageCircle, IconWorld } from '@tabler/icons-react';
+import {
+  IconAdjustments,
+  IconDeviceFloppy,
+  IconMail,
+  IconMessageCircle,
+  IconPlus,
+  IconTrash,
+  IconWorld,
+} from '@tabler/icons-react';
 import { AdminHeader } from '@common-ui/organisms/AdminDashboard/AdminHeader';
 import { AdminSidebar } from '@common-ui/organisms/AdminDashboard/AdminSidebar';
 import type { AdminSettingsForm } from '../interfaces/admin-settings.interface';
@@ -16,6 +24,8 @@ type Props = {
   error?: string;
   loading?: boolean;
 };
+
+const SOCIAL_PLATFORMS = ['Discord', 'Instagram', 'TikTok', 'YouTube'] as const;
 
 export const AdminSettingsTemplate = ({
   settings,
@@ -91,7 +101,6 @@ export const AdminSettingsTemplate = ({
                   <IconMail />
                   <input
                     type="email"
-                    required
                     value={settings.contactEmail}
                     onChange={(event: ChangeEvent<HTMLInputElement>) => updateField('contactEmail', event.target.value)}
                   />
@@ -100,7 +109,6 @@ export const AdminSettingsTemplate = ({
               <label>
                 WhatsApp Bantuan
                 <input
-                  required
                   value={settings.contactWhatsapp}
                   onChange={(event: ChangeEvent<HTMLInputElement>) =>
                     updateField('contactWhatsapp', event.target.value)
@@ -108,13 +116,97 @@ export const AdminSettingsTemplate = ({
                 />
               </label>
               <label>
-                Instagram
+                Jam Operasional
                 <input
-                  type="url"
-                  value={settings.instagramUrl}
-                  onChange={(event: ChangeEvent<HTMLInputElement>) => updateField('instagramUrl', event.target.value)}
+                  maxLength={160}
+                  value={settings.businessHours}
+                  onChange={(event: ChangeEvent<HTMLInputElement>) => updateField('businessHours', event.target.value)}
+                  placeholder="Senin–Minggu, 08.00–24.00 WIB"
                 />
               </label>
+              <div className={styles.socialLinks}>
+                <div className={styles.socialLinksHeading}>
+                  <b>Media Sosial</b>
+                  <button
+                    type="button"
+                    className={styles.addSocialLink}
+                    disabled={settings.socialLinks.length >= SOCIAL_PLATFORMS.length}
+                    onClick={() => {
+                      const nextPlatform = SOCIAL_PLATFORMS.find(
+                        (platform) => !settings.socialLinks.some((link) => link.label === platform)
+                      );
+
+                      if (nextPlatform) {
+                        updateField('socialLinks', [...settings.socialLinks, { label: nextPlatform, url: '' }]);
+                      }
+                    }}
+                  >
+                    <IconPlus /> Tambah tautan
+                  </button>
+                </div>
+                {settings.socialLinks.map((link, index) => (
+                  <div className={styles.socialLinkRow} key={index}>
+                    <label>
+                      Platform
+                      <select
+                        required
+                        value={link.label}
+                        onChange={(event: ChangeEvent<HTMLSelectElement>) =>
+                          updateField(
+                            'socialLinks',
+                            settings.socialLinks.map((item, itemIndex) =>
+                              itemIndex === index ? { ...item, label: event.target.value } : item
+                            )
+                          )
+                        }
+                      >
+                        {SOCIAL_PLATFORMS.map((platform) => (
+                          <option
+                            key={platform}
+                            value={platform}
+                            disabled={settings.socialLinks.some(
+                              (item, itemIndex) => itemIndex !== index && item.label === platform
+                            )}
+                          >
+                            {platform}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                    <label>
+                      URL
+                      <input
+                        required
+                        type="url"
+                        maxLength={255}
+                        value={link.url}
+                        onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                          updateField(
+                            'socialLinks',
+                            settings.socialLinks.map((item, itemIndex) =>
+                              itemIndex === index ? { ...item, url: event.target.value } : item
+                            )
+                          )
+                        }
+                        placeholder="https://..."
+                      />
+                    </label>
+                    <button
+                      type="button"
+                      className={styles.removeSocialLink}
+                      aria-label={`Hapus tautan ${link.label || index + 1}`}
+                      onClick={() =>
+                        updateField(
+                          'socialLinks',
+                          settings.socialLinks.filter((_, i) => i !== index)
+                        )
+                      }
+                    >
+                      <IconTrash />
+                    </button>
+                  </div>
+                ))}
+              </div>
             </div>
           </Box>
           <Box className={styles.panel} bordered rounded>

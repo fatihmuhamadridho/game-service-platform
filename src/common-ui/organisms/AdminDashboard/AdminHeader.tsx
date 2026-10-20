@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { IconBell, IconChevronDown, IconDeviceGamepad2, IconLogout, IconMenu2, IconSearch } from '@tabler/icons-react';
 import styles from './AdminHeader.module.css';
 import { FEATURE_SPRINT_2 } from '@configs/base.config';
@@ -14,7 +14,29 @@ type Props = {
 
 export const AdminHeader = ({ query, onQueryChange, onMenuOpen }: Props) => {
   const [profileOpen, setProfileOpen] = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false);
+  const [logoutError, setLogoutError] = useState('');
   const actionsRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
+
+  const logout = async () => {
+    if (loggingOut) return;
+    setLoggingOut(true);
+    setLogoutError('');
+    try {
+      const response = await fetch('/api/admin/auth/v1/logout', { method: 'POST' });
+      if (!response.ok) throw new Error('Logout gagal. Coba lagi.');
+      window.sessionStorage.removeItem('jokihub-session-type');
+      window.localStorage.removeItem('jokihub-session-type');
+      window.dispatchEvent(new Event('jokihub:session-ended'));
+      router.replace('/login');
+      router.refresh();
+    } catch (error) {
+      setLogoutError(error instanceof Error ? error.message : 'Logout gagal. Coba lagi.');
+    } finally {
+      setLoggingOut(false);
+    }
+  };
 
   useEffect(() => {
     if (!profileOpen) return;
@@ -94,9 +116,14 @@ export const AdminHeader = ({ query, onQueryChange, onMenuOpen }: Props) => {
               <b>Fatih Muhamad Ridho</b>
               <small>Super Admin</small>
             </div>
-            <Link href="/login" role="menuitem" onClick={() => setProfileOpen(false)}>
-              <IconLogout aria-hidden="true" /> Keluar
-            </Link>
+            <button role="menuitem" disabled={loggingOut} onClick={() => void logout()}>
+              <IconLogout aria-hidden="true" /> {loggingOut ? 'Keluar…' : 'Keluar'}
+            </button>
+            {logoutError && (
+              <p className={styles.logoutError} role="alert">
+                {logoutError}
+              </p>
+            )}
           </div>
         )}
       </div>

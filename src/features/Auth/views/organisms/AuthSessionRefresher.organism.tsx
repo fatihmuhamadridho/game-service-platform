@@ -7,12 +7,16 @@ const refreshIntervalMs = 8 * 60 * 1000;
 
 type AccountType = 'CUSTOMER' | 'ADMIN';
 
+const hasRefreshCookieHint = (type: AccountType) =>
+  document.cookie.split(';').some((cookie) => cookie.trim() === `jokihub-${type.toLowerCase()}-refresh-present=1`);
+
 export function AuthSessionRefresher() {
   useEffect(() => {
     let lastRefreshAt = Date.now();
     let active = true;
 
     const refresh = async (accountType: AccountType): Promise<boolean | null> => {
+      if (!hasRefreshCookieHint(accountType)) return false;
       const lockKey = `jokihub-refresh-lock-${accountType.toLowerCase()}`;
       const now = Date.now();
       const lockOwner = `${now}-${Math.random().toString(36).slice(2)}`;
@@ -31,9 +35,14 @@ export function AuthSessionRefresher() {
         if (response.ok) {
           lastRefreshAt = Date.now();
           window.sessionStorage.setItem(sessionKey, accountType);
+          window.localStorage.setItem(sessionKey, accountType);
           return true;
         }
-        if (response.status === 401) window.sessionStorage.removeItem(sessionKey);
+        if (response.status === 401) {
+          window.sessionStorage.removeItem(sessionKey);
+          window.localStorage.removeItem(sessionKey);
+          window.dispatchEvent(new Event('jokihub:session-ended'));
+        }
         else return null;
       } catch {
         // Keep current access session; next timer/focus event retries while refresh token remains valid.
@@ -52,6 +61,10 @@ export function AuthSessionRefresher() {
       const requested = new URLSearchParams(window.location.search).get('refresh');
       if (requested !== 'admin' && requested !== 'customer') return false;
       const type = requested === 'admin' ? 'ADMIN' : 'CUSTOMER';
+      if (!hasRefreshCookieHint(type)) {
+        window.history.replaceState(null, '', '/login');
+        return false;
+      }
       void refresh(type).then((ok) => {
         if (!active) return;
         if (ok === null) {
@@ -77,7 +90,8 @@ export function AuthSessionRefresher() {
     const refreshCurrentSession = () => {
       if (Date.now() - lastRefreshAt < refreshIntervalMs) return;
       const type = window.sessionStorage.getItem(sessionKey);
-      if (type === 'ADMIN' || type === 'CUSTOMER') void refresh(type);
+      if ((type === 'ADMIN' || type === 'CUSTOMER') && hasRefreshCookieHint(type)) void refresh(type);
+      else if (type === 'ADMIN' || type === 'CUSTOMER') window.sessionStorage.removeItem(sessionKey);
       lastRefreshAt = Date.now();
     };
     const timer = window.setInterval(refreshCurrentSession, refreshIntervalMs);

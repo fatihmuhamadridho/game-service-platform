@@ -21,6 +21,7 @@
     "init:auth-revoked-access-token": "tsx scripts/ensure-auth-revoked-access-token-index.ts",
     "verify:db": "prisma db verify",
     "seed:demo-catalog": "tsx scripts/seed-demo-catalog.ts",
+    "backfill:footer-settings": "tsx scripts/backfill-footer-settings.ts",
     "seed:superadmin": "tsx scripts/seed-superadmin.ts"
   },
   "dependencies": {

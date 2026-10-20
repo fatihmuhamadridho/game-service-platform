@@ -1,15 +1,23 @@
 import { NextResponse } from 'next/server';
 import { ADMIN_COOKIE } from '@backend/auth/admin-token';
-import { rotateRefreshSession, setRefreshCookie } from '@backend/auth/refresh-session';
+import { clearRefreshCookie, rotateRefreshSession, setRefreshCookie } from '@backend/auth/refresh-session';
 
 export async function POST(request: Request) {
   try {
     const rotated = await rotateRefreshSession(request, 'ADMIN');
     if (!rotated) {
-      return NextResponse.json(
+      const response = NextResponse.json(
         { status: { code: 'ADMB01001', message: 'Sesi admin tidak tersedia atau sudah berakhir.' }, data: null },
         { status: 401, headers: { 'Cache-Control': 'no-store' } }
       );
+      response.cookies.set(ADMIN_COOKIE, '', {
+        httpOnly: true,
+        secure: process.env['NODE_ENV'] === 'production',
+        sameSite: 'strict',
+        path: '/',
+        maxAge: 0,
+      });
+      return clearRefreshCookie(response, 'ADMIN');
     }
     const response = NextResponse.json(
       {

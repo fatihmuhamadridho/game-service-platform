@@ -1,60 +1,131 @@
-import { IconBrandDiscord, IconBrandInstagram, IconBrandTiktok, IconBrandYoutube } from '@tabler/icons-react';
+'use client';
+
+import { IconBrandDiscord, IconBrandInstagram, IconBrandTiktok, IconBrandYoutube, IconLink } from '@tabler/icons-react';
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { BrandLogo } from '../Header/BrandLogo';
 import { FEATURE_SPRINT_2 } from '@configs/base.config';
 import styles from './Footer.module.css';
 
 type Props = { variant?: 'full' | 'compact' };
-export const Footer = ({ variant = 'full' }: Props) =>
-  variant === 'compact' ? (
+type PublicSettings = {
+  siteName: string;
+  siteDescription: string;
+  contactEmail: string;
+  contactWhatsapp: string;
+  socialLinks: Array<{ label: string; url: string }>;
+  businessHours: string | null;
+};
+type ServiceCategory = { name: string; slug: string };
+
+const defaultSettings: PublicSettings = {
+  siteName: 'JokiHub',
+  siteDescription: '',
+  contactEmail: '',
+  contactWhatsapp: '',
+  socialLinks: [],
+  businessHours: null,
+};
+
+const SocialIcon = ({ label }: { label: string }) => {
+  const normalizedLabel = label.toLowerCase();
+  if (normalizedLabel.includes('discord')) return <IconBrandDiscord />;
+  if (normalizedLabel.includes('instagram')) return <IconBrandInstagram />;
+  if (normalizedLabel.includes('youtube')) return <IconBrandYoutube />;
+  if (normalizedLabel.includes('tiktok')) return <IconBrandTiktok />;
+  return <IconLink />;
+};
+
+export const Footer = ({ variant = 'full' }: Props) => {
+  const [settings, setSettings] = useState(defaultSettings);
+  const [serviceCategories, setServiceCategories] = useState<ServiceCategory[]>([]);
+  useEffect(() => {
+    let active = true;
+    const loadSettings = async () => {
+      try {
+        const response = await fetch('/api/settings/v1/public', { cache: 'no-store' });
+        if (!response.ok) return;
+        const result = (await response.json()) as { data?: Partial<PublicSettings> | null };
+        if (active && result.data) setSettings({ ...defaultSettings, ...result.data });
+      } catch {}
+    };
+    const loadServiceCategories = async () => {
+      try {
+        const response = await fetch('/api/service-categories/v1/list', { cache: 'no-store' });
+        if (!response.ok) return;
+        const result = (await response.json()) as { data?: { categories?: ServiceCategory[] } };
+        if (active) setServiceCategories(result.data?.categories ?? []);
+      } catch {}
+    };
+    void loadSettings();
+    void loadServiceCategories();
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const whatsappHref = settings.contactWhatsapp ? `https://wa.me/${settings.contactWhatsapp.replace(/\D/g, '')}` : null;
+  const description = settings.siteDescription.trim();
+  const year = new Date().getFullYear();
+
+  return variant === 'compact' ? (
     <footer className={styles.compact} id="bantuan">
-      <BrandLogo />
-      <p>Solusi top up game, joki, dan kebutuhan digital terpercaya, cepat dan aman untuk para gamers.</p>
+      <BrandLogo name={settings.siteName} />
+      {description && <p>{description}</p>}
       <div className={styles.socials}>
-        <a href="#discord" aria-label="Discord">
-          <IconBrandDiscord />
-        </a>
-        <a href="#instagram" aria-label="Instagram">
-          <IconBrandInstagram />
-        </a>
-        <a href="#youtube" aria-label="YouTube">
-          <IconBrandYoutube />
-        </a>
+        {settings.socialLinks.map((link) => (
+          <a
+            key={`${link.label}-${link.url}`}
+            href={link.url}
+            aria-label={link.label}
+            title={link.label}
+            target="_blank"
+            rel="noreferrer"
+          >
+            <SocialIcon label={link.label} />
+          </a>
+        ))}
       </div>
-      <small>© 2026 JokiHub. Semua hak dilindungi.</small>
+      <small>
+        © {year} {settings.siteName}. Semua hak dilindungi.
+      </small>
     </footer>
   ) : (
     <footer className={styles.footer} id="bantuan">
       <div className={styles.grid}>
         <div className={styles.brand}>
-          <BrandLogo />
-          <p>Solusi top up game, joki, dan kebutuhan digital terpercaya, cepat dan aman untuk para gamers.</p>
+          <BrandLogo name={settings.siteName} />
+          {description && <p>{description}</p>}
           <div className={styles.socials}>
-            <a href="#social" aria-label="Discord">
-              <IconBrandDiscord />
-            </a>
-            <a href="#social" aria-label="Instagram">
-              <IconBrandInstagram />
-            </a>
-            <a href="#social" aria-label="YouTube">
-              <IconBrandYoutube />
-            </a>
+            {settings.socialLinks.map((link) => (
+              <a
+                key={`${link.label}-${link.url}`}
+                href={link.url}
+                aria-label={link.label}
+                title={link.label}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <SocialIcon label={link.label} />
+              </a>
+            ))}
           </div>
         </div>
         <div>
           <h3>Quick Links</h3>
-          <a href="/">Beranda</a>
+          <Link href="/">Beranda</Link>
           <a href="/games">Layanan</a>
-          <a href="/cek-pesanan">Cek Pesanan</a>
+          <Link href="/cek-pesanan">Cek Pesanan</Link>
           {FEATURE_SPRINT_2 && <a href="/bantuan">Bantuan</a>}
           <a href="#tentang">Tentang Kami</a>
         </div>
         <div>
           <h3>Layanan</h3>
-          <a href="/games">Top Up Game</a>
-          <a href="/games">Joki Game</a>
-          <a href="/games">Voucher Game</a>
-          <a href="/games">Pulsa &amp; Paket Data</a>
-          <a href="/games">E-Wallet</a>
+          {serviceCategories.map((category) => (
+            <Link key={category.slug} href="/games">
+              {category.name}
+            </Link>
+          ))}
         </div>
         {FEATURE_SPRINT_2 && (
           <div>
@@ -67,17 +138,19 @@ export const Footer = ({ variant = 'full' }: Props) =>
         )}
         <div>
           <h3>Kontak Kami</h3>
-          <a href="mailto:cs@jokihub.id">✉ &nbsp;cs@jokihub.id</a>
-          <a href="#whatsapp">◉ &nbsp;+62 812-3456-7890</a>
-          <span>
-            ◷ &nbsp;Senin - Minggu
-            <br />
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;08.00 - 24.00 WIB
-          </span>
+          {settings.contactEmail && <a href={`mailto:${settings.contactEmail}`}>✉ &nbsp;{settings.contactEmail}</a>}
+          {whatsappHref && (
+            <a href={whatsappHref} target="_blank" rel="noreferrer">
+              ◉ &nbsp;{settings.contactWhatsapp}
+            </a>
+          )}
+          {settings.businessHours && <span>◷ &nbsp;{settings.businessHours}</span>}
         </div>
       </div>
       <div className={styles.bottom}>
-        <span>© 2026 JokiHub. Semua hak dilindungi.</span>
+        <span>
+          © {year} {settings.siteName}. Semua hak dilindungi.
+        </span>
         <span>
           <a href="#syarat">Syarat &amp; Ketentuan</a>
           <a href="#privasi">Kebijakan Privasi</a>
@@ -85,3 +158,4 @@ export const Footer = ({ variant = 'full' }: Props) =>
       </div>
     </footer>
   );
+};

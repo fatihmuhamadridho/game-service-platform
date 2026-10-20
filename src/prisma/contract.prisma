@@ -371,6 +371,8 @@ model PlatformSettings {
   contact_email      String
   contact_whatsapp   String
   instagram_url      String?
+  social_links       Json?
+  business_hours     String?
   maintenance_mode   Bool
   allow_registration Bool
   default_currency   String

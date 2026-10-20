@@ -7,7 +7,7 @@ import { createCustomerAccessToken } from './customer-token';
 import { ADMIN_REFRESH_COOKIE, CUSTOMER_REFRESH_COOKIE } from './session-cookies';
 
 export type RefreshAccountType = 'CUSTOMER' | 'ADMIN';
-const REFRESH_LIFETIME_SECONDS = 60 * 60 * 24 * 30;
+const REFRESH_LIFETIME_SECONDS = 60 * 60 * 24 * 7;
 
 type RefreshCookieOptions = { httpOnly: true; secure: boolean; sameSite: 'lax' | 'strict'; path: '/'; maxAge: number };
 
@@ -35,6 +35,10 @@ function refreshCookieOptions(type: RefreshAccountType, maxAge: number): Refresh
   };
 }
 
+function refreshCookieHintName(type: RefreshAccountType) {
+  return type === 'CUSTOMER' ? 'jokihub-customer-refresh-present' : 'jokihub-admin-refresh-present';
+}
+
 export function setRefreshCookie(
   response: import('next/server').NextResponse,
   type: RefreshAccountType,
@@ -45,6 +49,13 @@ export function setRefreshCookie(
     token,
     refreshCookieOptions(type, REFRESH_LIFETIME_SECONDS)
   );
+  response.cookies.set(refreshCookieHintName(type), '1', {
+    httpOnly: false,
+    secure: type === 'CUSTOMER' || process.env['NODE_ENV'] === 'production',
+    sameSite: type === 'CUSTOMER' ? 'lax' : 'strict',
+    path: '/',
+    maxAge: REFRESH_LIFETIME_SECONDS,
+  });
   response.headers.set('Cache-Control', 'no-store');
   return response;
 }
@@ -55,6 +66,13 @@ export function clearRefreshCookie(response: import('next/server').NextResponse,
     '',
     refreshCookieOptions(type, 0)
   );
+  response.cookies.set(refreshCookieHintName(type), '', {
+    httpOnly: false,
+    secure: type === 'CUSTOMER' || process.env['NODE_ENV'] === 'production',
+    sameSite: type === 'CUSTOMER' ? 'lax' : 'strict',
+    path: '/',
+    maxAge: 0,
+  });
   response.headers.set('Cache-Control', 'no-store');
   return response;
 }
@@ -77,14 +95,19 @@ export async function createRefreshSession(type: RefreshAccountType, accountId: 
 }
 
 async function revokeSessionFamily(type: RefreshAccountType, accountId: string, familyId: string, now = new Date()) {
-  const sessions = (
-    await db.orm.auth_refresh_session.where({ account_type: type, account_id: accountId, family_id: familyId }).all()
-  ).filter((session) => !session.is_revoked);
-  await Promise.all(
-    sessions.map((session) =>
-      db.orm.auth_refresh_session.where({ _id: session._id }).update({ is_revoked: true, revoked_at: now })
-    )
-  );
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    const sessions = (
+      await db.orm.auth_refresh_session.where({ account_type: type, account_id: accountId, family_id: familyId }).all()
+    ).filter((session) => !session.is_revoked);
+    if (sessions.length === 0) return;
+    await Promise.all(
+      sessions.map((session) =>
+        db.orm.auth_refresh_session
+          .where({ _id: session._id, is_revoked: false })
+          .updateAndCount({ is_revoked: true, revoked_at: now })
+      )
+    );
+  }
 }
 
 async function revokeAccountSessions(type: RefreshAccountType, accountId: string, now = new Date()) {
@@ -107,7 +130,7 @@ export async function revokeRefreshSession(request: Request, type: RefreshAccoun
   const token = readCookie(request, cookieName);
   if (!token) return;
   const session = await db.orm.auth_refresh_session.where({ token_hash: tokenHash(token), account_type: type }).first();
-  if (session && !session.is_revoked) {
+  if (session) {
     await revokeSessionFamily(type, String(session.account_id), String(session.family_id));
   }
 }

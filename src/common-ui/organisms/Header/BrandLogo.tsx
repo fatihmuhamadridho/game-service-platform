@@ -1,12 +1,11 @@
 import { IconDeviceGamepad2 } from '@tabler/icons-react';
+import Link from 'next/link';
 import styles from './Header.module.css';
-export const BrandLogo = () => (
-  <a className={styles.logo} href="/">
+export const BrandLogo = ({ name = 'JokiHub' }: { name?: string }) => (
+  <Link className={styles.logo} href="/">
     <span className={styles.logoIcon}>
       <IconDeviceGamepad2 />
     </span>
-    <span>
-      Joki<span>Hub</span>
-    </span>
-  </a>
+    <span>{name}</span>
+  </Link>
 );

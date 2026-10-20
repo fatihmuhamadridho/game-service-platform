@@ -34,6 +34,7 @@ type Props = {
   onDeleteSelect: (game: AdminGameView | null) => void;
   onDeleteConfirm: () => void;
   loadError?: string;
+  loading: boolean;
   actionError: string;
   saving: boolean;
 };
@@ -57,6 +58,7 @@ export const AdminGamesTemplate = ({
   onDeleteSelect,
   onDeleteConfirm,
   loadError,
+  loading,
   actionError,
   saving,
 }: Props) => {
@@ -155,7 +157,7 @@ export const AdminGamesTemplate = ({
               </label>
             </div>
           </div>
-          <div className={styles.tableWrap}>
+          <div className={styles.tableWrap} aria-busy={loading}>
             <table>
               <thead>
                 <tr>
@@ -213,7 +215,9 @@ export const AdminGamesTemplate = ({
                 ))}
               </tbody>
             </table>
-            {!filteredGames.length && (
+            {loading ? (
+              <div className={styles.empty} role="status">Memuat daftar game…</div>
+            ) : !filteredGames.length && (
               <div className={styles.empty}>
                 <IconDeviceGamepad2 />
                 <b>{games.length ? 'Game tidak ditemukan' : 'Belum ada game'}</b>
