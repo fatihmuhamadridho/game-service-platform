@@ -1,5 +1,7 @@
 'use client';
 
+import { apiFetch } from '@services/apiFetch.service';
+
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { AdminOrderStatusFilter, AdminOrderView } from '../interfaces/admin-order.interface';
 import { AdminOrdersTemplate } from '../templates/AdminOrders.template';
@@ -24,7 +26,7 @@ export const AdminOrdersPage = () => {
         ...(query ? { search: query } : {}),
         ...(statusFilter !== 'Semua Status' ? { status: statusFilter } : {}),
       });
-      const response = await fetch(`/api/admin/orders/v1/list?${params}`, { cache: 'no-store' });
+      const response = await apiFetch(`/api/admin/orders/v1/list?${params}`, { cache: 'no-store' });
       const payload = await response.json();
       if (!response.ok) throw new Error(payload.status?.message ?? 'Gagal memuat pesanan.');
       setOrders(payload.data.orders as ApiOrder[]);
@@ -41,7 +43,7 @@ export const AdminOrdersPage = () => {
   const filteredOrders = useMemo(() => orders, [orders]);
   const viewOrder = async (order: AdminOrderView) => {
     try {
-      const response = await fetch(`/api/admin/orders/v1/detail/${order.internalId}`, { cache: 'no-store' });
+      const response = await apiFetch(`/api/admin/orders/v1/detail/${order.internalId}`, { cache: 'no-store' });
       const payload = await response.json();
       if (!response.ok) throw new Error(payload.status?.message ?? 'Gagal memuat detail pesanan.');
       const detail = payload.data.order;
@@ -60,7 +62,7 @@ export const AdminOrdersPage = () => {
   };
   const reviewPayment = async (paymentId: string, decision: 'APPROVE' | 'REJECT', note: string) => {
     if (!detailOrder) return;
-    const response = await fetch('/api/admin/orders/v1/payment-review', {
+    const response = await apiFetch('/api/admin/orders/v1/payment-review', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ orderId: detailOrder.internalId, paymentId, decision, note }),
@@ -71,7 +73,7 @@ export const AdminOrdersPage = () => {
     await load();
   };
   const completeOrder = async (orderId: string) => {
-    const response = await fetch(`/api/admin/orders/v1/complete/${encodeURIComponent(orderId)}`, { method: 'POST' });
+    const response = await apiFetch(`/api/admin/orders/v1/complete/${encodeURIComponent(orderId)}`, { method: 'POST' });
     const payload = await response.json();
     if (!response.ok) throw new Error(payload.status?.message ?? 'Status pesanan gagal diperbarui.');
     setDetailOrder(null);

@@ -1,5 +1,7 @@
 'use client';
 
+import { apiFetch } from '@services/apiFetch.service';
+
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Box } from 'rangkaui';
 import {
@@ -89,7 +91,7 @@ export const AdminDashboardPage = () => {
       granularity,
     });
     try {
-      const response = await fetch(`/api/admin/dashboard/v1/overview?${params}`, { cache: 'no-store' });
+      const response = await apiFetch(`/api/admin/dashboard/v1/overview?${params}`, { cache: 'no-store' });
       const payload = await response.json();
       if (!response.ok) throw new Error(payload.status?.message ?? 'Gagal memuat dashboard.');
       setOverview(payload.data.overview as Overview);

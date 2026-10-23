@@ -1,5 +1,7 @@
 'use client';
 
+import { apiFetch } from '@services/apiFetch.service';
+
 import { useEffect, useState, type FormEvent } from 'react';
 import type { AdminSettingsForm } from '../interfaces/admin-settings.interface';
 import { AdminSettingsTemplate } from '../templates/AdminSettings.template';
@@ -25,7 +27,7 @@ export const AdminSettingsPage = () => {
   useEffect(() => {
     void Promise.resolve().then(async () => {
       try {
-        const response = await fetch('/api/admin/settings/v1/general', { cache: 'no-store' });
+        const response = await apiFetch('/api/admin/settings/v1/general', { cache: 'no-store' });
         const payload = await response.json();
         if (!response.ok) throw new Error(payload.status?.message ?? 'Gagal memuat pengaturan.');
         const value = payload.data.settings;
@@ -46,7 +48,7 @@ export const AdminSettingsPage = () => {
     event.preventDefault();
     setError('');
     try {
-      const response = await fetch('/api/admin/settings/v1/general', {
+      const response = await apiFetch('/api/admin/settings/v1/general', {
         method: 'PUT',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({

@@ -30,12 +30,14 @@ export class FetchService {
   private stripTrailingSlashes(value: string) {
     let end = value.length;
     while (end > 0 && value.codePointAt(end - 1) === 47 /* '/' */) end--;
+    while (end > 0 && value.codePointAt(end - 1) === 47) end--;
     return end === value.length ? value : value.slice(0, end);
   }
 
   private stripLeadingSlashes(value: string) {
     let start = 0;
     while (start < value.length && value.codePointAt(start) === 47 /* '/' */) start++;
+    while (start < value.length && value.codePointAt(start) === 47) start++;
     return start === 0 ? value : value.slice(start);
   }
 
@@ -54,6 +56,7 @@ export class FetchService {
       method,
       headers: this.buildHeaders(headers),
       body: body === undefined ? undefined : JSON.stringify(body),
+      credentials: 'include',
     });
 
     if (!response.ok) {

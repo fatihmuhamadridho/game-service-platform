@@ -1,5 +1,7 @@
 'use client';
 
+import { apiFetch } from '@services/apiFetch.service';
+
 import { IconBrandDiscord, IconBrandInstagram, IconBrandTiktok, IconBrandYoutube, IconLink } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
@@ -43,7 +45,7 @@ export const Footer = ({ variant = 'full' }: Props) => {
     let active = true;
     const loadSettings = async () => {
       try {
-        const response = await fetch('/api/settings/v1/public', { cache: 'no-store' });
+        const response = await apiFetch('/api/settings/v1/public', { cache: 'no-store' });
         if (!response.ok) return;
         const result = (await response.json()) as { data?: Partial<PublicSettings> | null };
         if (active && result.data) setSettings({ ...defaultSettings, ...result.data });
@@ -51,7 +53,7 @@ export const Footer = ({ variant = 'full' }: Props) => {
     };
     const loadServiceCategories = async () => {
       try {
-        const response = await fetch('/api/service-categories/v1/list', { cache: 'no-store' });
+        const response = await apiFetch('/api/service-categories/v1/list', { cache: 'no-store' });
         if (!response.ok) return;
         const result = (await response.json()) as { data?: { categories?: ServiceCategory[] } };
         if (active) setServiceCategories(result.data?.categories ?? []);

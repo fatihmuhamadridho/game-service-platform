@@ -19,7 +19,6 @@
       }
     ],
     "paths": {
-      "@backend/*": ["./src/backend/*"],
       "@prisma/*": ["./src/prisma/*"],
       "@common-ui/*": ["./src/common-ui/*"],
       "@core/*": ["./src/core/*"],

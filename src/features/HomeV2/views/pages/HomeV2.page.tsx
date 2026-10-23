@@ -1,5 +1,7 @@
 'use client';
 
+import { apiFetch } from '@services/apiFetch.service';
+
 import { useEffect, useState } from 'react';
 import { IconBolt, IconCheck, IconDeviceGamepad2, IconDiamond, IconShieldCheck, IconWallet } from '@tabler/icons-react';
 import type { HomeBenefit, HomeCategory, HomeGame } from '../interfaces/homeV2.interface';
@@ -26,7 +28,7 @@ export const HomeV2Page = () => {
   const [liveCategories, setLiveCategories] = useState<HomeCategory[]>([]);
   useEffect(() => {
     let alive = true;
-    fetch('/api/games/v1/popular')
+    apiFetch('/api/games/v1/popular', { credentials: 'omit' })
       .then((response) => response.json())
       .then(
         (result: {
@@ -53,7 +55,7 @@ export const HomeV2Page = () => {
   }, []);
   useEffect(() => {
     let alive = true;
-    fetch('/api/service-categories/v1/list')
+    apiFetch('/api/service-categories/v1/list', { credentials: 'omit' })
       .then(async (response) => {
         const result = await response.json();
         if (!response.ok || !result.data) throw new Error('Kategori belum tersedia.');

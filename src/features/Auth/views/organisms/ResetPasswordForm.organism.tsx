@@ -1,5 +1,7 @@
 'use client';
 
+import { apiFetch } from '@services/apiFetch.service';
+
 import { useState, type FormEvent } from 'react';
 import { IconLock } from '@tabler/icons-react';
 import { AuthSubmit } from '../atoms/AuthSubmit.atom';
@@ -24,7 +26,7 @@ export function ResetPasswordForm() {
     }
     const token = new URLSearchParams(window.location.search).get('token') ?? '';
     try {
-      const response = await fetch('/api/auth/v1/reset-password', {
+      const response = await apiFetch('/api/auth/v1/reset-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ token, password: password.value }),

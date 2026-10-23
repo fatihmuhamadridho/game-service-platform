@@ -1,5 +1,7 @@
 'use client';
 
+import { apiFetch } from '@services/apiFetch.service';
+
 import { useEffect, useRef, useState } from 'react';
 import {
   IconAdjustmentsHorizontal,
@@ -89,7 +91,7 @@ export const Header = ({
       const sessionUrl = () =>
         `/api/auth/v1/session?accountType=${accountType}`;
       try {
-        let response = await fetch(sessionUrl(), { cache: 'no-store' });
+        let response = await apiFetch(sessionUrl(), { cache: 'no-store' });
         if (!response.ok && response.status === 401) {
           const refreshType = accountType ?? response.headers.get('X-Account-Type');
           if (refreshType !== 'ADMIN' && refreshType !== 'CUSTOMER') {
@@ -98,8 +100,8 @@ export const Header = ({
           }
           const refreshUrl =
             refreshType === 'ADMIN' ? '/api/admin/auth/v1/refresh-token' : '/api/auth/v1/refresh-token';
-          const refreshed = await fetch(refreshUrl, { method: 'POST', cache: 'no-store' });
-          if (refreshed.ok) response = await fetch(`/api/auth/v1/session?accountType=${refreshType}`, { cache: 'no-store' });
+          const refreshed = await apiFetch(refreshUrl, { method: 'POST', cache: 'no-store' });
+          if (refreshed.ok) response = await apiFetch(`/api/auth/v1/session?accountType=${refreshType}`, { cache: 'no-store' });
         }
         if (!active) return;
         if (!response.ok) {
@@ -177,7 +179,7 @@ export const Header = ({
     setLogoutError('');
     try {
       const endpoint = account.accountType === 'ADMIN' ? '/api/admin/auth/v1/logout' : '/api/auth/v1/logout';
-      const response = await fetch(endpoint, { method: 'POST' });
+      const response = await apiFetch(endpoint, { method: 'POST' });
       if (!response.ok) throw new Error('Logout gagal. Coba lagi.');
       window.sessionStorage.removeItem('jokihub-session-type');
       window.localStorage.removeItem('jokihub-session-type');

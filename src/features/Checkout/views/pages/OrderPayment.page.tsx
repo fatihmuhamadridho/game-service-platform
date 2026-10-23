@@ -1,5 +1,7 @@
 'use client';
 
+import { apiFetch } from '@services/apiFetch.service';
+
 import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -60,7 +62,7 @@ export const OrderPaymentPage = ({ orderNumber }: { orderNumber: string }) => {
       return;
     }
     try {
-      const response = await fetch(`/api/orders/v1/tracking/${encodeURIComponent(orderNumber)}/payment`, {
+      const response = await apiFetch(`/api/orders/v1/tracking/${encodeURIComponent(orderNumber)}/payment`, {
         headers: { Authorization: `Bearer ${token}` },
         cache: 'no-store',
       });
@@ -107,7 +109,7 @@ export const OrderPaymentPage = ({ orderNumber }: { orderNumber: string }) => {
         clientPayload: JSON.stringify({ orderNumber: payment.order.orderNumber, trackingToken: token }),
         onUploadProgress: ({ percentage }) => setUploadProgress(Math.round(percentage)),
       });
-      const response = await fetch(`/api/orders/v1/payments/${encodeURIComponent(payment.payment.id)}/proofs`, {
+      const response = await apiFetch(`/api/orders/v1/payments/${encodeURIComponent(payment.payment.id)}/proofs`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({ orderNumber: payment.order.orderNumber, pathname: blob.pathname }),
@@ -139,7 +141,7 @@ export const OrderPaymentPage = ({ orderNumber }: { orderNumber: string }) => {
       setReporting(true);
       void (async () => {
         try {
-          const response = await fetch(`/api/orders/v1/tracking/${encodeURIComponent(orderNumber)}/payment`, {
+          const response = await apiFetch(`/api/orders/v1/tracking/${encodeURIComponent(orderNumber)}/payment`, {
             method: 'POST',
             headers: { Authorization: `Bearer ${token}` },
           });

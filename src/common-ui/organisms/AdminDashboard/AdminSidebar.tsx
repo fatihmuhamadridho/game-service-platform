@@ -1,5 +1,7 @@
 'use client';
 
+import { apiFetch } from '@services/apiFetch.service';
+
 import { useRouter } from 'next/navigation';
 import {
   IconAdjustments,
@@ -109,7 +111,7 @@ export const AdminSidebar = ({ open, onClose, activeItem = 'Dashboard' }: Props)
 
   const logout = async () => {
     try {
-      const response = await fetch('/api/admin/auth/v1/logout', { method: 'POST' });
+      const response = await apiFetch('/api/admin/auth/v1/logout', { method: 'POST' });
       if (response.ok) {
         window.sessionStorage.removeItem('jokihub-session-type');
         window.localStorage.removeItem('jokihub-session-type');

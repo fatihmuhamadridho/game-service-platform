@@ -1,5 +1,7 @@
 'use client';
 
+import { apiFetch } from '@services/apiFetch.service';
+
 import { useCallback, useEffect, useMemo, useState, type FormEvent } from 'react';
 import type {
   AdminAccountForm,
@@ -33,8 +35,8 @@ export const AdminManagementPage = () => {
     });
     try {
       const [adminResponse, roleResponse] = await Promise.all([
-        fetch(`/api/admin/admin-users/v1/list?${params}`, { cache: 'no-store' }),
-        fetch('/api/admin/roles/v1/list', { cache: 'no-store' }),
+        apiFetch(`/api/admin/admin-users/v1/list?${params}`, { cache: 'no-store' }),
+        apiFetch('/api/admin/roles/v1/list', { cache: 'no-store' }),
       ]);
       const [adminPayload, rolePayload] = await Promise.all([adminResponse.json(), roleResponse.json()]);
       if (!adminResponse.ok || !roleResponse.ok)
@@ -105,7 +107,7 @@ export const AdminManagementPage = () => {
         : { roleIds: form.roleIds, status: form.status === 'Aktif' ? 'ACTIVE' : 'INACTIVE' }),
     };
     try {
-      const response = await fetch(
+      const response = await apiFetch(
         formMode === 'edit' && editingId
           ? `/api/admin/admin-users/v1/update/${editingId}`
           : '/api/admin/admin-users/v1/create',
@@ -127,7 +129,7 @@ export const AdminManagementPage = () => {
     if (!deleteTarget) return;
     setError('');
     try {
-      const response = await fetch(`/api/admin/admin-users/v1/delete/${deleteTarget.id}`, { method: 'DELETE' });
+      const response = await apiFetch(`/api/admin/admin-users/v1/delete/${deleteTarget.id}`, { method: 'DELETE' });
       const payload = await response.json();
       if (!response.ok) throw new Error(payload.status?.message ?? 'Gagal menonaktifkan akun admin.');
       setDeleteTarget(null);
@@ -138,7 +140,7 @@ export const AdminManagementPage = () => {
   };
   const viewAdmin = async (admin: AdminAccountView) => {
     try {
-      const response = await fetch(`/api/admin/admin-users/v1/detail/${admin.id}`, { cache: 'no-store' });
+      const response = await apiFetch(`/api/admin/admin-users/v1/detail/${admin.id}`, { cache: 'no-store' });
       const payload = await response.json();
       if (!response.ok) throw new Error(payload.status?.message ?? 'Gagal memuat detail admin.');
       const detail = payload.data.admin;

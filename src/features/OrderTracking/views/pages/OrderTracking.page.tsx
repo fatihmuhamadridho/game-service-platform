@@ -1,5 +1,7 @@
 'use client';
 
+import { apiFetch } from '@services/apiFetch.service';
+
 import { useState, type FormEvent } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -40,7 +42,7 @@ export const OrderTrackingPage = ({
     setApiError('');
     try {
       const normalizedOrder = orderId.trim().toUpperCase();
-      const response = await fetch('/api/orders/v1/tracking/lookup', {
+      const response = await apiFetch('/api/orders/v1/tracking/lookup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ orderNumber: normalizedOrder, whatsapp: phone.trim() }),

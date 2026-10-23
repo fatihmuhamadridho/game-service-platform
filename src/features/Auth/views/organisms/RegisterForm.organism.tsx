@@ -1,5 +1,7 @@
 'use client';
 
+import { apiFetch } from '@services/apiFetch.service';
+
 import { useState, type FormEvent } from 'react';
 import { IconEye, IconEyeOff, IconLock, IconMail, IconUser } from '@tabler/icons-react';
 import styles from '../templates/Auth.module.css';
@@ -26,7 +28,7 @@ export function RegisterForm() {
     const formData = new FormData(form);
     setBusy(true);
     try {
-      const response = await fetch('/api/auth/v1/register', {
+      const response = await apiFetch('/api/auth/v1/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

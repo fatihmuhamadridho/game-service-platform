@@ -1,5 +1,7 @@
 'use client';
 
+import { apiFetch } from '@services/apiFetch.service';
+
 import { useEffect } from 'react';
 
 const sessionKey = 'jokihub-session-type';
@@ -31,7 +33,7 @@ export function AuthSessionRefresher() {
 
       try {
         const endpoint = accountType === 'ADMIN' ? '/api/admin/auth/v1/refresh-token' : '/api/auth/v1/refresh-token';
-        const response = await fetch(endpoint, { method: 'POST', cache: 'no-store' });
+        const response = await apiFetch(endpoint, { method: 'POST', cache: 'no-store' });
         if (response.ok) {
           lastRefreshAt = Date.now();
           window.sessionStorage.setItem(sessionKey, accountType);

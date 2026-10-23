@@ -1,5 +1,7 @@
 'use client';
 
+import { apiFetch } from '@services/apiFetch.service';
+
 import { useCallback, useEffect, useMemo, useState, type FormEvent } from 'react';
 import type {
   Permission,
@@ -31,7 +33,7 @@ export const AdminAccountsRolesPage = () => {
   const [error, setError] = useState('');
   const load = useCallback(async () => {
     try {
-      const response = await fetch('/api/admin/roles/v1/list', { cache: 'no-store' });
+      const response = await apiFetch('/api/admin/roles/v1/list', { cache: 'no-store' });
       const payload = await response.json();
       if (!response.ok) throw new Error(payload.status?.message ?? 'Gagal memuat role.');
       setRoles(payload.data.roles as RoleView[]);
@@ -75,7 +77,7 @@ export const AdminAccountsRolesPage = () => {
       return;
     }
     try {
-      const response = await fetch(
+      const response = await apiFetch(
         formMode === 'edit' && editingId ? `/api/admin/roles/v1/update/${editingId}` : '/api/admin/roles/v1/create',
         {
           method: formMode === 'edit' ? 'PUT' : 'POST',
@@ -109,7 +111,7 @@ export const AdminAccountsRolesPage = () => {
     if (!deleteTarget) return;
     setError('');
     try {
-      const response = await fetch(`/api/admin/roles/v1/delete/${deleteTarget.id}`, { method: 'DELETE' });
+      const response = await apiFetch(`/api/admin/roles/v1/delete/${deleteTarget.id}`, { method: 'DELETE' });
       const payload = await response.json();
       if (!response.ok) throw new Error(payload.status?.message ?? 'Gagal menghapus role.');
       setDeleteTarget(null);

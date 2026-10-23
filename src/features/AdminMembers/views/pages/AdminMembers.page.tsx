@@ -1,5 +1,7 @@
 'use client';
 
+import { apiFetch } from '@services/apiFetch.service';
+
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type {
   MemberStatus,
@@ -57,7 +59,7 @@ export const AdminMembersPage = () => {
       ...(status ? { status } : {}),
     });
     try {
-      const response = await fetch(`/api/admin/users/v1/list?${params}`, { cache: 'no-store' });
+      const response = await apiFetch(`/api/admin/users/v1/list?${params}`, { cache: 'no-store' });
       const payload = await response.json();
       if (!response.ok) throw new Error(payload.status?.message ?? 'Gagal memuat member.');
       setMembers((payload.data.users as ApiMember[]).map(mapMember));
@@ -79,7 +81,7 @@ export const AdminMembersPage = () => {
   const viewMember = async (member: MemberView) => {
     setError('');
     try {
-      const response = await fetch(`/api/admin/users/v1/detail/${member.id}`, { cache: 'no-store' });
+      const response = await apiFetch(`/api/admin/users/v1/detail/${member.id}`, { cache: 'no-store' });
       const payload = await response.json();
       if (!response.ok) throw new Error(payload.status?.message ?? 'Gagal memuat detail member.');
       setDetailTarget(mapMember(payload.data.user as ApiMember));
@@ -92,7 +94,7 @@ export const AdminMembersPage = () => {
     if (!selectedMember || selectedMember.id !== id) return;
     setError('');
     try {
-      const response = await fetch(`/api/admin/users/v1/update/${id}`, {
+      const response = await apiFetch(`/api/admin/users/v1/update/${id}`, {
         method: 'PATCH',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ status: status === 'Aktif' ? 'ACTIVE' : 'BLOCKED' }),

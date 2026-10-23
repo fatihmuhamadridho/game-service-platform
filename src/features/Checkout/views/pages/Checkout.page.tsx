@@ -1,5 +1,7 @@
 'use client';
 
+import { apiFetch } from '@services/apiFetch.service';
+
 import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import type {
@@ -11,7 +13,7 @@ import type {
 import { CheckoutTemplate } from '../templates/Checkout.template';
 const formatPrice = (price: number) => `Rp ${price.toLocaleString('id-ID')}`;
 const fetchServices = async (slug: string) => {
-  const response = await fetch(`/api/games/v1/${encodeURIComponent(slug)}/services`);
+  const response = await apiFetch(`/api/games/v1/${encodeURIComponent(slug)}/services`);
   const result = (await response.json()) as CheckoutApiResponse<{
     services: Array<{ id: string; name: string; price: number | null; customPrice: boolean; estimate: string }>;
   }>;
@@ -44,7 +46,7 @@ export const CheckoutPage = ({ initialGameSlug = '' }: { initialGameSlug?: strin
     let alive = true;
     void (async () => {
       try {
-        const response = await fetch('/api/games/v1/list?limit=100');
+        const response = await apiFetch('/api/games/v1/list?limit=100');
         const result = (await response.json()) as CheckoutApiResponse<{
           games: Array<{ id: string; name: string; slug: string; artworkKey: string | null }>;
         }>;
@@ -96,7 +98,7 @@ export const CheckoutPage = ({ initialGameSlug = '' }: { initialGameSlug?: strin
       const game = games.find((item) => item.name === selectedGame);
       if (!game) throw new Error('Game tidak valid.');
       const key = crypto.randomUUID();
-      const response = await fetch('/api/orders/v1/checkout', {
+      const response = await apiFetch('/api/orders/v1/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Idempotency-Key': key },
         body: JSON.stringify({

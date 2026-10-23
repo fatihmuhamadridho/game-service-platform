@@ -14,6 +14,7 @@ export class AxiosService {
 
     this.client = axios.create({
       baseURL: this.options.baseURL ?? BASE_API_URL,
+      withCredentials: true,
     });
   }
 

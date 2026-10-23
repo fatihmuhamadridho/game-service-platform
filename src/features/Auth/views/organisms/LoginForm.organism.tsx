@@ -1,5 +1,7 @@
 'use client';
 
+import { apiFetch } from '@services/apiFetch.service';
+
 import { useState, type FormEvent } from 'react';
 import { IconEye, IconEyeOff, IconLock, IconUser } from '@tabler/icons-react';
 import styles from '../templates/Auth.module.css';
@@ -19,7 +21,7 @@ export function LoginForm() {
     const form = new FormData(event.currentTarget);
     const identifier = String(form.get('identifier') ?? '').trim();
     try {
-      const response = await fetch('/api/auth/v1/login', {
+      const response = await apiFetch('/api/auth/v1/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ identifier, password: String(form.get('password') ?? '') }),

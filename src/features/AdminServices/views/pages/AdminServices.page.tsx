@@ -1,5 +1,7 @@
 'use client';
 
+import { apiFetch } from '@services/apiFetch.service';
+
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import type {
   AdminServiceForm,
@@ -19,7 +21,7 @@ export const AdminServicesPage = () => {
   const [error, setError] = useState('');
   const load = async () => {
     try {
-      const response = await fetch('/api/admin/services/v1/list', { cache: 'no-store' });
+      const response = await apiFetch('/api/admin/services/v1/list', { cache: 'no-store' });
       const payload = await response.json();
       if (!response.ok) throw new Error(payload.status?.message ?? 'Gagal memuat layanan.');
       setServices(payload.data.services);
@@ -76,7 +78,7 @@ export const AdminServicesPage = () => {
     event.preventDefault();
     setError('');
     try {
-      const response = await fetch(
+      const response = await apiFetch(
         formMode === 'edit' && editingId
           ? `/api/admin/services/v1/update/${editingId}`
           : '/api/admin/services/v1/create',
@@ -107,7 +109,7 @@ export const AdminServicesPage = () => {
     if (!deleteTarget) return;
     setError('');
     try {
-      const response = await fetch(`/api/admin/services/v1/delete/${deleteTarget.id}`, { method: 'DELETE' });
+      const response = await apiFetch(`/api/admin/services/v1/delete/${deleteTarget.id}`, { method: 'DELETE' });
       const payload = await response.json();
       if (!response.ok) throw new Error(payload.status?.message ?? 'Gagal menghapus layanan.');
       setDeleteTarget(null);

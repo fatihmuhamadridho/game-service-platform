@@ -1,5 +1,7 @@
 'use client';
 
+import { apiFetch } from '@services/apiFetch.service';
+
 import { useCallback, useEffect, useMemo, useState, type FormEvent } from 'react';
 import type { AdminGameForm, AdminGameStatusFilter, AdminGameView } from '../interfaces/admin-game.interface';
 import { AdminGamesTemplate } from '../templates/AdminGames.template';
@@ -42,7 +44,7 @@ export const AdminGamesClientPage = () => {
     setLoading(true);
     setLoadError('');
     try {
-      const response = await fetch('/api/admin/games/v1/list', { cache: 'no-store' });
+      const response = await apiFetch('/api/admin/games/v1/list', { cache: 'no-store' });
       const result = await response.json();
       if (!response.ok) throw new Error(result.status?.message ?? 'Data game gagal dimuat.');
       const games = (result.data?.games ?? []) as AdminGameView[];
@@ -101,7 +103,7 @@ export const AdminGamesClientPage = () => {
     setSaving(true);
     setActionError('');
     try {
-      const response = await fetch(
+      const response = await apiFetch(
         formMode === 'edit' && editingId
           ? `/api/admin/games/v1/update/${encodeURIComponent(editingId)}`
           : '/api/admin/games/v1/create',
@@ -134,7 +136,7 @@ export const AdminGamesClientPage = () => {
     if (!deleteTarget) return;
     setActionError('');
     try {
-      const response = await fetch(`/api/admin/games/v1/delete/${encodeURIComponent(deleteTarget.id)}`, {
+      const response = await apiFetch(`/api/admin/games/v1/delete/${encodeURIComponent(deleteTarget.id)}`, {
         method: 'DELETE',
       });
       const result = await response.json();

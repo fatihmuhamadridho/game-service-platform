@@ -1,5 +1,7 @@
 'use client';
 
+import { apiFetch } from '@services/apiFetch.service';
+
 import { useEffect, useState } from 'react';
 import type { GameCardView } from '../interfaces/game.interface';
 import { GamesTemplate } from '../templates/Games.template';
@@ -26,7 +28,7 @@ export const GamesPage = () => {
 
     if (activeCategorySlug) query.set('category', activeCategorySlug);
 
-    fetch(`/api/games/v1/list?${query}`)
+    apiFetch(`/api/games/v1/list?${query}`)
       .then(async (response) => {
         const result = await response.json();
 
@@ -39,7 +41,7 @@ export const GamesPage = () => {
         while (allGames.length < totalItems) {
           const nextQuery = new URLSearchParams(query);
           nextQuery.set('offset', String(allGames.length));
-          const nextResponse = await fetch(`/api/games/v1/list?${nextQuery}`);
+          const nextResponse = await apiFetch(`/api/games/v1/list?${nextQuery}`);
           const nextResult = await nextResponse.json();
           if (!nextResponse.ok || !nextResult.data) {
             throw new Error(nextResult.status?.message ?? 'Katalog game gagal dimuat.');

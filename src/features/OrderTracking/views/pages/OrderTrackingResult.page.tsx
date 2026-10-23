@@ -1,5 +1,7 @@
 'use client';
 
+import { apiFetch } from '@services/apiFetch.service';
+
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -63,7 +65,7 @@ export const OrderTrackingResultPage = ({ orderId, checkoutResult = false }: Pro
           return;
         }
         const endpoint = `/api/orders/v1/tracking/${encodeURIComponent(normalizedOrder)}/status${checkoutResult ? '?view=result' : ''}`;
-        const response = await fetch(endpoint, {
+        const response = await apiFetch(endpoint, {
           headers: { Authorization: `Bearer ${token}` },
           cache: 'no-store',
         });

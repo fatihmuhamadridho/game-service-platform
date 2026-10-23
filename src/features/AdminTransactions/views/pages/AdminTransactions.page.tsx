@@ -1,5 +1,7 @@
 'use client';
 
+import { apiFetch } from '@services/apiFetch.service';
+
 import { useCallback, useEffect, useState } from 'react';
 import type {
   TransactionMethodFilter,
@@ -28,7 +30,7 @@ export const AdminTransactionsPage = () => {
         ...(statusFilter !== 'Semua Status' ? { status: statusFilter } : {}),
         ...(methodFilter !== 'Semua Metode' ? { method: methodFilter } : {}),
       });
-      const response = await fetch(`/api/admin/transactions/v1/list?${params}`, { cache: 'no-store' });
+      const response = await apiFetch(`/api/admin/transactions/v1/list?${params}`, { cache: 'no-store' });
       const payload = await response.json();
       if (!response.ok) throw new Error(payload.status?.message ?? 'Gagal memuat transaksi.');
       setTransactions(payload.data.transactions as TransactionView[]);
@@ -43,7 +45,7 @@ export const AdminTransactionsPage = () => {
   }, [load]);
   const viewTransaction = async (transaction: TransactionView) => {
     try {
-      const response = await fetch(`/api/admin/transactions/v1/detail/${transaction.internalId}`, {
+      const response = await apiFetch(`/api/admin/transactions/v1/detail/${transaction.internalId}`, {
         cache: 'no-store',
       });
       const payload = await response.json();

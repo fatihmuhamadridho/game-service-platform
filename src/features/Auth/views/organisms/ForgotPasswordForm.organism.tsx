@@ -1,5 +1,7 @@
 'use client';
 
+import { apiFetch } from '@services/apiFetch.service';
+
 import { useState, type FormEvent } from 'react';
 import { IconMail } from '@tabler/icons-react';
 import { AuthSubmit } from '../atoms/AuthSubmit.atom';
@@ -15,7 +17,7 @@ export function ForgotPasswordForm() {
     setNotice('');
     const form = new FormData(event.currentTarget);
     try {
-      const response = await fetch('/api/auth/v1/forgot-password', {
+      const response = await apiFetch('/api/auth/v1/forgot-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: form.get('email') }),
